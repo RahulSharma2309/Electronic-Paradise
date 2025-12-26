@@ -1,0 +1,41 @@
+name: CI - Build & Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and start services
+        working-directory: infra
+        run: |
+          docker-compose up --build -d
+
+      - name: Wait for gateway health
+        working-directory: infra
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          bash ./wait-for.sh http://localhost:5000/api/health 120
+
+      - name: Run smoke tests
+        working-directory: infra
+        run: |
+          # make smoke-test executable
+          chmod +x ./smoke-test.sh
+          bash ./smoke-test.sh
+
+      - name: Teardown
+        if: always()
+        working-directory: infra
+        run: |
+          docker-compose down --volumes --remove-orphans

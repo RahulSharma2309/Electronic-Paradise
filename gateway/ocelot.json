@@ -1,0 +1,43 @@
+{
+  "ReverseProxy": {
+    "Routes": {
+      "auth": {
+        "ClusterId": "authCluster",
+        "Match": { "Path": "/api/auth/{**catch-all}" }
+      },
+      "users": {
+        "ClusterId": "userCluster",
+        "Match": { "Path": "/api/users/{**catch-all}" }
+      },
+      "products": {
+        "ClusterId": "productCluster",
+        "Match": { "Path": "/api/products/{**catch-all}" }
+      },
+      "orders": {
+        "ClusterId": "orderCluster",
+        "Match": { "Path": "/api/orders/{**catch-all}" }
+      },
+      "payments": {
+        "ClusterId": "paymentCluster",
+        "Match": { "Path": "/api/payments/{**catch-all}" }
+      }
+    },
+    "Clusters": {
+      "authCluster": {
+        "Destinations": { "auth1": { "Address": "http://localhost:5001/" } }
+      },
+      "userCluster": {
+        "Destinations": { "user1": { "Address": "http://localhost:5005/" } }
+      },
+      "productCluster": {
+        "Destinations": { "product1": { "Address": "http://localhost:5002/" } }
+      },
+      "orderCluster": {
+        "Destinations": { "order1": { "Address": "http://localhost:5004/" } }
+      },
+      "paymentCluster": {
+        "Destinations": { "payment1": { "Address": "http://localhost:5003/" } }
+      }
+    }
+  }
+}

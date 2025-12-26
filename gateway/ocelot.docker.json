@@ -1,0 +1,47 @@
+{
+  "ReverseProxy": {
+    "Routes": {
+      "auth": {
+        "ClusterId": "authCluster",
+        "Match": { "Path": "/api/auth/{**catch-all}" }
+      },
+      "users": {
+        "ClusterId": "userCluster",
+        "Match": { "Path": "/api/users/{**catch-all}" }
+      },
+      "products": {
+        "ClusterId": "productCluster",
+        "Match": { "Path": "/api/products/{**catch-all}" }
+      },
+      "orders": {
+        "ClusterId": "orderCluster",
+        "Match": { "Path": "/api/orders/{**catch-all}" }
+      },
+      "payments": {
+        "ClusterId": "paymentCluster",
+        "Match": { "Path": "/api/payments/{**catch-all}" }
+      }
+    },
+    "Clusters": {
+      "authCluster": {
+        "Destinations": { "auth1": { "Address": "http://auth-service:80/" } }
+      },
+      "userCluster": {
+        "Destinations": { "user1": { "Address": "http://user-service:80/" } }
+      },
+      "productCluster": {
+        "Destinations": {
+          "product1": { "Address": "http://product-service:80/" }
+        }
+      },
+      "orderCluster": {
+        "Destinations": { "order1": { "Address": "http://order-service:80/" } }
+      },
+      "paymentCluster": {
+        "Destinations": {
+          "payment1": { "Address": "http://payment-service:80/" }
+        }
+      }
+    }
+  }
+}

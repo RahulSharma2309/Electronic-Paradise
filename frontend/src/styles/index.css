@@ -1,0 +1,179 @@
+/* Global Styles - Modern E-Commerce Theme */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* E-Commerce Color Palette */
+  --primary-color: #FF6B35;
+  --primary-dark: #E85A28;
+  --primary-light: #FF8C5A;
+  --secondary-color: #2E5266;
+  --accent-color: #F7931E;
+  --success-color: #10B981;
+  --error-color: #EF4444;
+  --warning-color: #F59E0B;
+  
+  /* Neutral Colors */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-tertiary: #F1F3F5;
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --border-color: #E5E7EB;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #F8F9FA 0%, #F1F3F5 100%);
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  box-shadow: var(--shadow-xl);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  color: #fff;
+  padding: 20px 40px;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 3px solid var(--primary-dark);
+}
+
+.header h2 {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.header h2:hover {
+  opacity: 0.9;
+}
+
+.header h2 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-size: 1.75rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header h2::before {
+  content: "🛒";
+  font-size: 1.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.wallet-badge {
+  font-weight: 600;
+  color: var(--secondary-color);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wallet-badge::before {
+  content: "💰";
+  font-size: 1rem;
+}
+
+main {
+  padding: 0;
+  background: var(--bg-secondary);
+  min-height: calc(100vh - 80px);
+}
+
+.profile-panel {
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  padding: 32px;
+  margin: 32px;
+  border: 1px solid var(--border-color);
+}
+
+.profile-panel h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .app {
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .header {
+    padding: 16px 24px;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .product-search-page,
+  .cart-page,
+  .checkout-page {
+    padding: 24px 20px;
+  }
+
+  .product-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+}
+
