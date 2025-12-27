@@ -11,6 +11,14 @@ This documentation is organized into **5 main categories:**
 ### 1️⃣ **Project Documentation** (Start Here)
 Core documents explaining the project, technologies, and learning path
 
+#### 📖 Novel-style learning guide (end-to-end)
+**File:** [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md)
+
+**What it covers:**
+- PO-style story of the MVP features (what the system does)
+- Developer-oriented code walkthrough (what functions run)
+- Tradeoffs + alternatives (why this design)
+
 ### 2️⃣ **User Flow Documentation** (`Functionality/`)
 Step-by-step guides for each user journey
 
