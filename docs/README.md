@@ -6,7 +6,7 @@
 
 ## 📋 Documentation Structure
 
-This documentation is organized into **4 main categories:**
+This documentation is organized into **5 main categories:**
 
 ### 1️⃣ **Project Documentation** (Start Here)
 Core documents explaining the project, technologies, and learning path
@@ -19,6 +19,9 @@ Technical documentation for each microservice
 
 ### 4️⃣ **GitHub Import** (`github-import/`)
 Tools and guides for setting up project tracking
+
+### 5️⃣ **Product Documents** (`product-documents/`)
+Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, iteration narrative, and Definitions of Done.
 
 ---
 
