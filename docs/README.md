@@ -4,6 +4,14 @@
 
 ---
 
+## 🧭 Start Here (Role-Based “Fly-through”)
+
+If you want a single guided entry point (PO/PM/Dev/QA/Frontend/DevOps), start with:
+
+- [`START_HERE.md`](START_HERE.md)
+- Patterns + decisions (“HTTP vs service bus”, catalog patterns, idempotency, outbox): [`ENGINEERING_PLAYBOOK.md`](ENGINEERING_PLAYBOOK.md)
+- Terms in plain language: [`GLOSSARY.md`](GLOSSARY.md)
+
 ## 📋 Documentation Structure
 
 This documentation is organized into **5 main categories:**

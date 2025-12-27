@@ -4,6 +4,12 @@
 
 ---
 
+## New here?
+
+- Role-based guided tour: [`../START_HERE.md`](../START_HERE.md)
+- Patterns + decisions (HTTP vs service bus, catalog patterns): [`../ENGINEERING_PLAYBOOK.md`](../ENGINEERING_PLAYBOOK.md)
+- Terms in plain language: [`../GLOSSARY.md`](../GLOSSARY.md)
+
 ## 📚 Table of Contents
 
 - [Overview](#overview)
