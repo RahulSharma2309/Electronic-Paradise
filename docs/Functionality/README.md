@@ -2,6 +2,11 @@
 
 This directory contains comprehensive documentation for all user journeys in the MVP E-Commerce application.
 
+## New here?
+
+- Role-based guided tour: [`../START_HERE.md`](../START_HERE.md)
+- Terms in plain language: [`../GLOSSARY.md`](../GLOSSARY.md)
+
 ## 📚 Available Documentation
 
 ### 1. [SIGNUP_FLOW.md](./SIGNUP_FLOW.md)
