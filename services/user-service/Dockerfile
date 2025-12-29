@@ -9,6 +9,7 @@ WORKDIR /app
 COPY --from=build /app .
 RUN apt-get update && apt-get install -y curl netcat-openbsd && rm -rf /var/lib/apt/lists/*
 COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENV APP_DLL=UserService.dll
 ENV ASPNETCORE_URLS=http://+:80
