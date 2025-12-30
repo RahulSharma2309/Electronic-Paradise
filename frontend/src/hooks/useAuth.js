@@ -1,13 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
-import { STORAGE_KEYS } from '../config/constants';
-import { authApi } from '../api/authApi';
+import { useState, useCallback, useEffect } from "react";
+import { STORAGE_KEYS } from "../config/constants";
+import { authApi } from "../api/authApi";
 
 /**
  * Custom hook for authentication state management
  */
 export const useAuth = () => {
-  const [token, setToken] = useState(() => localStorage.getItem(STORAGE_KEYS.TOKEN));
-  const [userId, setUserId] = useState(() => localStorage.getItem(STORAGE_KEYS.USER_ID));
+  const [token, setToken] = useState(() =>
+    localStorage.getItem(STORAGE_KEYS.TOKEN)
+  );
+  const [userId, setUserId] = useState(() =>
+    localStorage.getItem(STORAGE_KEYS.USER_ID)
+  );
   const [isValidating, setIsValidating] = useState(true);
 
   // Validate token on mount
@@ -27,14 +31,17 @@ export const useAuth = () => {
         if (response.data?.id) {
           const currentUserId = localStorage.getItem(STORAGE_KEYS.USER_ID);
           if (!currentUserId || currentUserId !== response.data.id.toString()) {
-            localStorage.setItem(STORAGE_KEYS.USER_ID, response.data.id.toString());
+            localStorage.setItem(
+              STORAGE_KEYS.USER_ID,
+              response.data.id.toString()
+            );
             setUserId(response.data.id.toString());
           }
         }
         setIsValidating(false);
       } catch (error) {
         // Token is invalid or expired, clear auth
-        console.error('Token validation failed:', error);
+        console.error("Token validation failed:", error);
         localStorage.removeItem(STORAGE_KEYS.TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER_ID);
         setToken(null);
@@ -71,4 +78,3 @@ export const useAuth = () => {
     logout,
   };
 };
-
