@@ -65,3 +65,6 @@ out/
 .pnpm-store/
 yarn.lock
 package-lock.json  # Optional: Some teams prefer to commit this
+
+# NuGet artifacts
+.artifacts/
