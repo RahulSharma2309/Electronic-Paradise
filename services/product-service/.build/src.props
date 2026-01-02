@@ -1,0 +1,38 @@
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
+
+  <PropertyGroup Label="Build Configuration">
+    <TargetFramework>$(NetCoreVersion)</TargetFramework>
+    <LangVersion>$(LangVersion)</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Project Metadata">
+    <Copyright>© Electronic-Paradise. All rights reserved.</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/RahulSharma2309/Electronic-Paradise</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Code Analysis">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591;SA1516;SA1518</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Label="Additional Files">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup Label="Code Quality Packages">
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" PrivateAssets="all" />
+    <PackageReference Include="SerilogAnalyzer" Version="$(SerilogAnalyzerVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
+

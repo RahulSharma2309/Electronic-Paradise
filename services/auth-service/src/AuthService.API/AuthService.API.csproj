@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <!-- API references Platform NuGet package (not project) -->
-    <PackageReference Include="Ep.Platform" Version="1.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
+    <PackageReference Include="Ep.Platform" Version="$(EpPlatformVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="$(AspNetCoreVersion)" />
     
     <!-- EF Core Design tools - ONLY for migrations during development -->
     <!-- PrivateAssets=all means this is NOT deployed, only used for dotnet ef commands -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(EntityFrameworkVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

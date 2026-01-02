@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: auth-mssql
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - auth-mssqldata:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Your_password123" -Q "select 1" >/dev/null 2>&1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - auth-network
+
+  user-service:
+    image: user-service:latest
+    container_name: auth-user-service
+    depends_on:
+      - mssql
+    ports:
+      - "5005:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=userdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build:
+      context: ../src
+      dockerfile: Dockerfile
+    container_name: auth-service-standalone
+    depends_on:
+      - mssql
+      - user-service
+    ports:
+      - "5001:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=authdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://user-service:80
+      - JwtOptions__Key=your-super-secret-key-that-should-be-at-least-32-characters-long-for-security
+      - JwtOptions__Issuer=Electronic-Paradise
+      - JwtOptions__Audience=Electronic-Paradise-Users
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth-mssqldata:
+
+networks:
+  auth-network:
+    driver: bridge
+
+

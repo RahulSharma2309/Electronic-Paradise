@@ -1,160 +1,441 @@
-# Auth Service - N-Tier Architecture
+# Auth Service
 
-This service handles authentication and user management using a clean n-tier architecture.
+## Overview
 
-## Project Structure
+The Authentication Service is a core microservice in the Electronic-Paradise e-commerce platform, responsible for user authentication, registration, password management, and JWT token generation.
+
+### Responsibilities
+
+- **User Registration**: Create new user accounts with email/password
+- **User Authentication**: Validate credentials and issue JWT tokens
+- **Password Management**: Reset and update user passwords
+- **Token Generation**: Issue JWT tokens for authenticated sessions
+- **Integration**: Communicates with User Service for profile creation
+
+---
+
+## Architecture
+
+This service follows **N-Tier Architecture** with clear separation of concerns:
 
 ```
-auth-service/
+AuthService/
+├── .build/                     ← Build configuration
+├── docker/                     ← Standalone Docker setup
 ├── src/
-│   ├── AuthService.Abstraction/     # Models, DTOs, Constants
-│   │   ├── Models/                  # Domain entities (User)
-│   │   ├── DTOs/                    # Data Transfer Objects
-│   │   └── Constants/               # Application constants
-│   ├── AuthService.Core/            # Business Logic & Data Access
-│   │   ├── Business/                # Business logic layer
-│   │   │   ├── IJwtService.cs      # JWT token generation interface
-│   │   │   ├── JwtService.cs       # JWT token implementation
-│   │   │   ├── IAuthService.cs     # Auth business logic interface
-│   │   │   └── AuthService.cs      # Auth business logic implementation
-│   │   ├── Repository/              # Data access layer
-│   │   │   ├── IUserRepository.cs  # User repository interface
-│   │   │   └── UserRepository.cs   # User repository implementation
-│   │   └── Data/                    # Database context
-│   │       └── AppDbContext.cs     # EF Core DbContext
-│   └── AuthService.API/             # Web API Layer
-│       ├── Controllers/             # API controllers
-│       │   ├── AuthController.cs   # Authentication endpoints
-│       │   └── HealthController.cs # Health check endpoint
-│       ├── Program.cs              # Application entry point
-│       ├── Startup.cs              # Service & middleware configuration
-│       └── appsettings.json        # Configuration
-├── test/                            # Test projects (future)
-└── AuthService.sln                  # Solution file
-
+│   ├── AuthService.Abstraction/    ← Models & DTOs
+│   ├── AuthService.Core/           ← Business Logic & Repository
+│   └── AuthService.API/            ← Controllers & Startup
+└── test/                       ← Unit & Integration Tests
 ```
 
-## Dependencies
+### Layers
 
-### Ep.Platform NuGet Package
+1. **Abstraction Layer** (`AuthService.Abstraction`)
+   - Domain models (User)
+   - DTOs (RegisterDto, LoginDto, AuthResponseDto)
+   - No dependencies
 
-The service uses the `Ep.Platform` package (private NuGet package from GitHub Packages) which provides:
+2. **Core Layer** (`AuthService.Core`)
+   - Business logic (IAuthService)
+   - Repository pattern (IUserRepository)
+   - Data access (AppDbContext)
+   - Depends on: Abstraction + Ep.Platform
 
-- **DbContext Extensions**: Simplified SQL Server DbContext configuration
-- **JWT Authentication**: Standardized JWT authentication setup
-- **Swagger Extensions**: Pre-configured Swagger with JWT bearer support
-- **CORS Extensions**: Default CORS policy for local development
-- **HttpClient Extensions**: Resilient HttpClient configuration with retry policies
+3. **API Layer** (`AuthService.API`)
+   - Controllers (AuthController, HealthController)
+   - Startup configuration
+   - Program.cs entry point
+   - Depends on: Core + Abstraction + Ep.Platform
 
-### External Packages
+---
 
-- `Microsoft.EntityFrameworkCore.SqlServer` - SQL Server database provider
-- `BCrypt.Net-Next` - Password hashing
-- `System.IdentityModel.Tokens.Jwt` - JWT token generation
-- `Swashbuckle.AspNetCore` - API documentation
+## Build System
 
-## Architecture Layers
+### Build Files Structure
 
-### 1. Abstraction Layer
-Contains all models, DTOs, and constants that are shared across layers. No dependencies on other layers.
+The service uses **MSBuild property files** for centralized configuration:
 
-### 2. Core Layer
-Contains business logic and data access:
-- **Business**: Service classes implementing business rules and orchestration
-- **Repository**: Data access interfaces and implementations using EF Core
-- **Data**: DbContext and database configuration
-
-### 3. API Layer
-ASP.NET Core Web API exposing HTTP endpoints:
-- **Controllers**: Handle HTTP requests/responses
-- **Program.cs**: Minimal entry point that uses Startup class
-- **Startup.cs**: ConfigureServices and Configure methods for DI and middleware
-- Uses Ep.Platform extensions for common configurations
-
-## Dependency Injection
-
-Services are registered in `Startup.cs` using the traditional pattern:
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    // Database
-    services.AddEpSqlServerDbContext<AppDbContext>(Configuration);
-
-    // JWT Authentication
-    services.AddEpJwtAuth(Configuration);
-
-    // Business Services
-    services.AddSingleton<IJwtService>(new JwtService(...));
-    services.AddScoped<IUserRepository, UserRepository>();
-    services.AddScoped<IAuthService, AuthService>();
-}
-
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-{
-    // Middleware pipeline configuration
-    app.UseRouting();
-    app.UseCors("AllowLocalhost3000");
-    app.UseAuthentication();
-    app.UseAuthorization();
-    app.UseEndpoints(endpoints => endpoints.MapControllers());
-}
+```
+.build/
+├── dependencies.props      ← Package version management
+├── src.props              ← Source project settings
+├── test.props             ← Test project settings
+├── stylecop.json          ← StyleCop configuration
+└── stylecop.ruleset       ← Code analysis rules
 ```
 
-## Configuration
+### File Descriptions
 
-Configure the service in `appsettings.json`:
+#### 1. `dependencies.props`
 
+**Purpose**: Centralized package version management
+
+**What it does**:
+- Defines all NuGet package versions in one place
+- Eliminates version conflicts across projects
+- Makes version updates consistent
+
+**Key sections**:
+- Framework versions (net8.0, LangVersion 12)
+- Platform packages (Ep.Platform, ASP.NET Core, EF Core)
+- Testing packages (xUnit, Moq, FluentAssertions)
+- Code quality tools (StyleCop, JetBrains Annotations)
+
+**Example**:
+```xml
+<PropertyGroup Label="Platform and Core Packages">
+  <EpPlatformVersion>1.0.2</EpPlatformVersion>
+  <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
+</PropertyGroup>
+```
+
+---
+
+#### 2. `src.props`
+
+**Purpose**: Common build settings for all source projects
+
+**What it does**:
+- Imports `dependencies.props` for version management
+- Sets target framework and language version
+- Enables nullable reference types
+- Configures documentation generation
+- Sets up code analysis rules
+- Adds code quality analyzers
+
+**Key features**:
+- `TreatWarningsAsErrors`: true (enforces clean code)
+- `GenerateDocumentationFile`: true (XML docs)
+- `Nullable`: enable (null safety)
+- Automatic StyleCop and code analyzer inclusion
+
+**Usage**: Automatically applied to all projects in `src/` via `Directory.Build.props`
+
+---
+
+#### 3. `test.props`
+
+**Purpose**: Common build settings for test projects
+
+**What it does**:
+- Imports `dependencies.props` for version management
+- Configures testing frameworks (xUnit, Moq)
+- Sets up code coverage (Coverlet)
+- Relaxes code analysis rules for tests
+- Disables XML documentation for tests
+
+**Key features**:
+- All major testing frameworks included by default
+- Code coverage enabled automatically
+- Less strict warnings (TreatWarningsAsErrors: false)
+- Documentation headers not required
+
+**Usage**: Automatically applied to all projects in `test/` via `Directory.Build.props`
+
+---
+
+#### 4. `stylecop.json`
+
+**Purpose**: StyleCop analyzer configuration
+
+**What it does**:
+- Defines company name and copyright text
+- Configures code documentation rules
+- Sets header decoration style
+- Controls using directive placement
+
+**Customization**:
 ```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=AuthDb;..."
-  },
-  "Jwt": {
-    "Key": "YourSecretKey",
-    "Issuer": "auth-service",
-    "Audience": "auth-clients"
-  },
-  "ServiceUrls": {
-    "UserService": "http://localhost:5005"
+  "settings": {
+    "documentationRules": {
+      "companyName": "Electronic-Paradise",
+      "copyrightText": "© Electronic-Paradise. All rights reserved."
+    }
   }
 }
 ```
 
-## Running the Service
+---
+
+#### 5. `stylecop.ruleset`
+
+**Purpose**: Code analysis rule configuration
+
+**What it does**:
+- Defines which StyleCop rules are enforced
+- Sets rule severity (Error, Warning, None)
+- Relaxes rules for microservices development
+- Ensures consistent code style
+
+**Relaxed rules for microservices**:
+- SA1600: Element documentation (None)
+- SA1633: File header (None)
+- SA1118: Parameter spacing (None)
+
+---
+
+#### 6. `Directory.Build.props` (in src/)
+
+**Purpose**: Automatically apply build settings to all src projects
+
+**What it does**:
+- Imports `../.build/src.props`
+- Automatically applied by MSBuild to all child projects
+- Sets package tags for NuGet publishing
+
+**How it works**:
+MSBuild automatically discovers and imports this file for all `.csproj` files in the directory tree.
+
+---
+
+#### 7. `Directory.Build.props` (in test/)
+
+**Purpose**: Automatically apply test settings to all test projects
+
+**What it does**:
+- Imports `../.build/test.props`
+- Automatically applied to all test projects
+
+---
+
+## How the Build System Works
+
+### Inheritance Chain
+
+```
+Individual .csproj
+      ↓ (auto imports)
+Directory.Build.props (src/)
+      ↓ (imports)
+.build/src.props
+      ↓ (imports)
+.build/dependencies.props
+```
+
+### Benefits
+
+1. **Single Source of Truth**: All versions in one place
+2. **Consistency**: All projects use same settings
+3. **Easy Updates**: Change version once, applies everywhere
+4. **Clean Project Files**: No repeated configuration
+5. **Scalability**: Add new projects without configuration
+
+---
+
+## Configuration
+
+### Required Environment Variables
 
 ```bash
-# Restore packages (ensure GITHUB_TOKEN is set for Ep.Platform)
-dotnet restore
+# Database
+ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=authdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
 
-# Build
-dotnet build
+# JWT Settings
+JwtOptions__Key=your-super-secret-key-that-should-be-at-least-32-characters-long-for-security
+JwtOptions__Issuer=Electronic-Paradise
+JwtOptions__Audience=Electronic-Paradise-Users
 
-# Run
-dotnet run --project src/AuthService.API
+# Service URLs
+ServiceUrls__UserService=http://localhost:5005
 ```
+
+---
+
+## Running the Service
+
+### Local Development
+
+```bash
+# Navigate to API project
+cd services/auth-service/src/AuthService.API
+
+# Run the service
+dotnet run
+
+# Access Swagger UI
+http://localhost:5001/swagger
+```
+
+### Docker (Standalone)
+
+```bash
+# Navigate to docker folder
+cd services/auth-service/docker
+
+# Start service with dependencies
+docker-compose up -d
+
+# View logs
+docker-compose logs -f auth-service
+
+# Stop
+docker-compose down
+```
+
+### Docker (Full Stack)
+
+```bash
+# From repo root
+cd infra
+docker-compose up -d
+```
+
+---
+
+## Building
+
+### Build Locally
+
+```bash
+# Build all projects
+dotnet build services/auth-service/AuthService.sln
+
+# Build specific project
+dotnet build services/auth-service/src/AuthService.API/AuthService.API.csproj
+```
+
+### Build with Docker
+
+```bash
+# Build Docker image
+cd services/auth-service/src
+docker build -t auth-service:latest .
+```
+
+---
+
+## Testing
+
+```bash
+# Run all tests
+dotnet test services/auth-service/test/
+
+# Run with coverage
+dotnet test services/auth-service/test/ /p:CollectCoverage=true
+
+# Coverage report location
+services/auth-service/artifacts/test/coverage.opencover.xml
+```
+
+---
 
 ## API Endpoints
 
+### Health Check
+- `GET /api/health` - Service health status
+
+### Authentication
 - `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login and get JWT token
+- `POST /api/auth/login` - Authenticate and get JWT token
 - `POST /api/auth/reset-password` - Reset user password
-- `GET /api/auth/me` - Get current user info (requires auth)
-- `GET /api/health` - Health check
+- `GET /api/auth/me` - Get current user info (requires JWT)
 
-## Development Notes
+---
 
-- The service communicates with the User Service to create user profiles during registration
-- Phone number uniqueness is validated via User Service API
-- Passwords are hashed using BCrypt before storage
-- JWT tokens are valid for 6 hours by default
-- Database is created automatically in development mode using `EnsureDatabaseAsync`
+## Dependencies
 
-## Future Enhancements
+### External Services
+- **User Service** (http://localhost:5005) - For user profile creation
+- **SQL Server** - Database for user credentials
 
-- Add unit and integration tests in `test/` folder
-- Implement email verification
-- Add refresh token support
-- Add rate limiting for authentication endpoints
-- Implement password reset via email
+### NuGet Packages
+- **Ep.Platform** (1.0.2) - Platform infrastructure abstractions
+- **Microsoft.EntityFrameworkCore.Design** (8.0.0) - EF Core migrations
 
+All other dependencies are abstracted by the Platform library.
+
+---
+
+## Database
+
+### Migrations
+
+```bash
+# Add new migration
+cd services/auth-service/src/AuthService.API
+dotnet ef migrations add MigrationName --project ../AuthService.Core
+
+# Apply migrations
+dotnet ef database update --project ../AuthService.Core
+```
+
+### Schema
+
+**Users Table**:
+- Id (Guid, PK)
+- Email (string, unique)
+- PasswordHash (string)
+- FullName (string, nullable)
+- CreatedAt (DateTime)
+
+---
+
+## Modifying Build Configuration
+
+### To Update Package Versions
+
+1. Edit `.build/dependencies.props`
+2. Change version in appropriate `<PropertyGroup>`
+3. Rebuild solution
+
+```xml
+<PropertyGroup Label="Platform and Core Packages">
+  <EpPlatformVersion>1.0.3</EpPlatformVersion>  ← Update here
+</PropertyGroup>
+```
+
+### To Add New Code Analysis Rule
+
+1. Edit `.build/stylecop.ruleset`
+2. Add rule with desired action
+
+```xml
+<Rule Id="SA1234" Action="Warning" />
+```
+
+### To Change Company Name
+
+1. Edit `.build/stylecop.json`
+2. Update `companyName` and `copyrightText`
+
+---
+
+## Troubleshooting
+
+### Build Failures
+
+**Problem**: `MSBuild can't find .build/src.props`
+
+**Solution**: Ensure `Directory.Build.props` path is correct:
+```xml
+<Import Project="$(MSBuildThisFileDirectory)../.build/src.props" />
+```
+
+**Problem**: Package version conflicts
+
+**Solution**: Check all versions are defined in `dependencies.props`
+
+### Code Analysis Warnings
+
+**Problem**: Too many StyleCop warnings
+
+**Solution**: Adjust rules in `.build/stylecop.ruleset` or disable specific rules
+
+---
+
+## Contributing
+
+When adding new projects:
+1. Place in appropriate folder (src/ or test/)
+2. No need to add build configuration - auto-inherited
+3. Follow existing naming conventions
+
+---
+
+## Links
+
+- [Platform Library Documentation](../../platform/Ep.Platform/README.md)
+- [Full Stack docker-compose](../../infra/docker-compose.yml)
+- [Project Documentation](../../docs/)
