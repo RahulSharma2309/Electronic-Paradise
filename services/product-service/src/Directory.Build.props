@@ -1,0 +1,13 @@
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" />
+
+  <PropertyGroup>
+    <PackageTags>product;catalog;inventory;microservices;electronic-paradise;$(PackageTags)</PackageTags>
+  </PropertyGroup>
+
+</Project>
+
+
+
+
