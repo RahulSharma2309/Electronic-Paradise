@@ -4,49 +4,71 @@
 
 ---
 
-## 🧭 Start Here (Role-Based “Fly-through”)
+## 🧭 Start Here (Role-Based "Fly-through")
 
 If you want a single guided entry point (PO/PM/Dev/QA/Frontend/DevOps), start with:
 
-- [`START_HERE.md`](START_HERE.md)
-- Patterns + decisions (“HTTP vs service bus”, catalog patterns, idempotency, outbox): [`ENGINEERING_PLAYBOOK.md`](ENGINEERING_PLAYBOOK.md)
-- Terms in plain language: [`GLOSSARY.md`](GLOSSARY.md)
+- **[`START_HERE.md`](START_HERE.md)** - Choose your role-based path
+- **[`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md)** - Find any document quickly
+- Patterns + decisions: [`2-learning-guide/ENGINEERING_PLAYBOOK.md`](2-learning-guide/ENGINEERING_PLAYBOOK.md)
+- Terms in plain language: [`2-learning-guide/GLOSSARY.md`](2-learning-guide/GLOSSARY.md)
 
 ## 📋 Documentation Structure
 
-This documentation is organized into **5 main categories:**
+This documentation is organized into **10 numbered categories** for clear navigation:
 
-### 1️⃣ **Project Documentation** (Start Here)
-Core documents explaining the project, technologies, and learning path
+### 1️⃣ **[Getting Started](1-getting-started/)** - Quick Setup
+- Project overview and vision
+- Tech stack and rationale
 
-#### 📖 Novel-style learning guide (end-to-end)
-**File:** [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md)
+### 2️⃣ **[Learning Guide](2-learning-guide/)** - For Learners
+- Novel-style walkthrough
+- Design patterns and skills roadmap
+- Engineering playbook and glossary
 
-**What it covers:**
-- PO-style story of the MVP features (what the system does)
-- Developer-oriented code walkthrough (what functions run)
-- Tradeoffs + alternatives (why this design)
+### 3️⃣ **[Product Owner](3-product-owner/)** - For PMs/POs
+- Product vision and strategy
+- User personas and SWOT
+- Iteration view and Definition of Done
 
-### 2️⃣ **User Flow Documentation** (`Functionality/`)
-Step-by-step guides for each user journey
+### 4️⃣ **[Epics & PBIs](4-epics-and-pbis/)** - Product Backlog
+- Epic overviews and goals
+- Detailed PBI acceptance criteria
+- Design pattern implementation guides
 
-### 3️⃣ **Service Documentation** (`Services/`)
-Technical documentation for each microservice
+### 5️⃣ **[User Flows](5-user-flows/)** - End-to-End Journeys
+- Step-by-step user workflows
+- Service interactions
+- Frontend + backend implementation
 
-### 4️⃣ **GitHub Import** (`github-import/`)
-Tools and guides for setting up project tracking
+### 6️⃣ **[Architecture](6-architecture/)** - System Design
+- System architecture and diagrams
+- Platform architecture
+- Low-level design details
 
-### 5️⃣ **Product Documents** (`product-documents/`)
-Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, iteration narrative, and Definitions of Done.
+### 7️⃣ **[Services](7-services/)** - Microservice Docs
+- Individual service architecture
+- API contracts and endpoints
+- Database schemas
+
+### 8️⃣ **[Platform](8-platform/)** - Infrastructure Library
+- Ep.Platform NuGet package guide
+- Usage examples and patterns
+
+### 9️⃣ **[Roadmap & Tracking](9-roadmap-and-tracking/)** - Planning
+- Complete project roadmap
+- Sprint tracking checklist
+
+### 🔟 **[Tools & Automation](10-tools-and-automation/)** - Scripts
+- GitHub import tools
+- Automation scripts
 
 ---
 
-## 🎯 Project Documentation
+## 🎯 Essential Reading (Read in Order)
 
-### Essential Reading (Read in Order)
-
-#### 1. **Project Overview** 📊
-**File:** [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md)
+### 1. **Project Overview** 📊
+**File:** [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md)
 
 **What it covers:**
 - Project summary and goals
@@ -60,8 +82,8 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 
 ---
 
-#### 2. **Tech Stack** 🛠️
-**File:** [`TECH_STACK.md`](TECH_STACK.md)
+### 2. **Tech Stack** 🛠️
+**File:** [`1-getting-started/TECH_STACK.md`](1-getting-started/TECH_STACK.md)
 
 **What it covers:**
 - Current tech stack (MVP)
@@ -84,8 +106,8 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 
 ---
 
-#### 3. **Learning Roadmap** 🎓
-**File:** [`LEARNING_ROADMAP.md`](LEARNING_ROADMAP.md)
+### 3. **Learning Roadmap** 🎓
+**File:** [`2-learning-guide/LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md)
 
 **What it covers:**
 - Learning objectives (backend, frontend, DevOps, security)
@@ -118,8 +140,8 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 
 ---
 
-#### 4. **Product Strategy** 📱
-**File:** [`PRODUCT_STRATEGY.md`](PRODUCT_STRATEGY.md)
+### 4. **Product Strategy** 📱
+**File:** [`3-product-owner/PRODUCT_STRATEGY.md`](3-product-owner/PRODUCT_STRATEGY.md)
 
 **What it covers:**
 - Why Electronics was chosen as product category
@@ -151,7 +173,7 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 ## 🗺️ Roadmap & Planning
 
 ### Full Roadmap
-**File:** [`PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) *(You'll create this from the text I provided earlier)*
+**File:** [`9-roadmap-and-tracking/PROJECT_ROADMAP.md`](9-roadmap-and-tracking/PROJECT_ROADMAP.md)
 
 **Contents:**
 - Complete roadmap (10 epics, 70+ PBIs)
@@ -164,7 +186,7 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 ---
 
 ### Interactive Checklist
-**File:** [`ITERATION_CHECKLIST.md`](ITERATION_CHECKLIST.md) *(You'll create this from the text I provided earlier)*
+**File:** [`9-roadmap-and-tracking/ITERATION_CHECKLIST.md`](9-roadmap-and-tracking/ITERATION_CHECKLIST.md)
 
 **Contents:**
 - Checkbox-based tracking
@@ -176,19 +198,19 @@ Product Manager / Product Owner docs: vision, SWOT, personas, PM/PO roadmap, ite
 
 ## 📖 User Flow Documentation
 
-**Location:** [`Functionality/`](Functionality/)
+**Location:** [`5-user-flows/`](5-user-flows/)
 
 Step-by-step guides for each user journey:
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [`README.md`](Functionality/README.md) | Index of all flows | ✅ Complete |
-| [`SIGNUP_FLOW.md`](Functionality/SIGNUP_FLOW.md) | User registration | ✅ Complete |
-| [`LOGIN_FLOW.md`](Functionality/LOGIN_FLOW.md) | Authentication | ✅ Complete |
-| [`ADD_TO_CART_FLOW.md`](Functionality/ADD_TO_CART_FLOW.md) | Shopping cart | ✅ Complete |
-| [`CHECKOUT_ORDER_FLOW.md`](Functionality/CHECKOUT_ORDER_FLOW.md) | Order creation | ✅ Complete |
-| [`ORDER_HISTORY_FLOW.md`](Functionality/ORDER_HISTORY_FLOW.md) | View orders | ✅ Complete |
-| [`ADD_BALANCE_FLOW.md`](Functionality/ADD_BALANCE_FLOW.md) | Wallet top-up | ✅ Complete |
+| [`README.md`](5-user-flows/README.md) | Index of all flows | ✅ Complete |
+| [`SIGNUP_FLOW.md`](5-user-flows/SIGNUP_FLOW.md) | User registration | ✅ Complete |
+| [`LOGIN_FLOW.md`](5-user-flows/LOGIN_FLOW.md) | Authentication | ✅ Complete |
+| [`ADD_TO_CART_FLOW.md`](5-user-flows/ADD_TO_CART_FLOW.md) | Shopping cart | ✅ Complete |
+| [`CHECKOUT_ORDER_FLOW.md`](5-user-flows/CHECKOUT_ORDER_FLOW.md) | Order creation | ✅ Complete |
+| [`ORDER_HISTORY_FLOW.md`](5-user-flows/ORDER_HISTORY_FLOW.md) | View orders | ✅ Complete |
+| [`ADD_BALANCE_FLOW.md`](5-user-flows/ADD_BALANCE_FLOW.md) | Wallet top-up | ✅ Complete |
 
 **Each document includes:**
 - Flow diagram
@@ -204,19 +226,19 @@ Step-by-step guides for each user journey:
 
 ## 🔧 Service Documentation
 
-**Location:** [`Services/`](Services/)
+**Location:** [`7-services/`](7-services/)
 
 Technical documentation for each microservice:
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [`README.md`](Services/README.md) | Index of all services | ✅ Complete |
-| [`API_GATEWAY.md`](Services/API_GATEWAY.md) | YARP reverse proxy | ✅ Complete |
-| [`AUTH_SERVICE.md`](Services/AUTH_SERVICE.md) | Authentication & JWT | ✅ Complete |
-| [`USER_SERVICE.md`](Services/USER_SERVICE.md) | User profiles & wallet | ✅ Complete |
-| [`PRODUCT_SERVICE.md`](Services/PRODUCT_SERVICE.md) | Product catalog | ✅ Complete |
-| [`ORDER_SERVICE.md`](Services/ORDER_SERVICE.md) | Order orchestration | ✅ Complete |
-| [`PAYMENT_SERVICE.md`](Services/PAYMENT_SERVICE.md) | Payment processing | ✅ Complete |
+| [`README.md`](7-services/README.md) | Index of all services | ✅ Complete |
+| [`API_GATEWAY.md`](7-services/API_GATEWAY.md) | YARP reverse proxy | ✅ Complete |
+| [`AUTH_SERVICE.md`](7-services/AUTH_SERVICE.md) | Authentication & JWT | ✅ Complete |
+| [`USER_SERVICE.md`](7-services/USER_SERVICE.md) | User profiles & wallet | ✅ Complete |
+| [`PRODUCT_SERVICE.md`](7-services/PRODUCT_SERVICE.md) | Product catalog | ✅ Complete |
+| [`ORDER_SERVICE.md`](7-services/ORDER_SERVICE.md) | Order orchestration | ✅ Complete |
+| [`PAYMENT_SERVICE.md`](7-services/PAYMENT_SERVICE.md) | Payment processing | ✅ Complete |
 
 **Each document includes:**
 - Service overview
@@ -233,15 +255,15 @@ Technical documentation for each microservice:
 
 ## 📥 GitHub Import
 
-**Location:** [`github-import/`](github-import/)
+**Location:** [`10-tools-and-automation/github-import/`](10-tools-and-automation/github-import/)
 
 Tools and guides for setting up GitHub project tracking:
 
 | File | Description |
 |------|-------------|
-| [`GITHUB_IMPORT_GUIDE.md`](github-import/GITHUB_IMPORT_GUIDE.md) | Complete guide (4 methods) |
-| [`epics_and_pbis.csv`](github-import/epics_and_pbis.csv) | All PBIs in CSV format |
-| [`github_import.py`](github-import/github_import.py) | Python automation script |
+| [`GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md) | Complete guide (4 methods) |
+| [`epics_and_pbis.csv`](10-tools-and-automation/github-import/epics_and_pbis.csv) | All PBIs in CSV format |
+| [`github_import.py`](10-tools-and-automation/github-import/github_import.py) | Python automation script |
 
 **Import Methods:**
 1. **Manual Creation (UI)** - Good for learning
@@ -263,10 +285,10 @@ Tools and guides for setting up GitHub project tracking:
 ### New to the Project?
 
 **Step 1: Read Core Docs (1-2 hours)**
-1. [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md) - 15 min
-2. [`TECH_STACK.md`](TECH_STACK.md) - 30 min
-3. [`LEARNING_ROADMAP.md`](LEARNING_ROADMAP.md) - 30 min
-4. [`PRODUCT_STRATEGY.md`](PRODUCT_STRATEGY.md) - 20 min
+1. [`PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md) - 15 min
+2. [`TECH_STACK.md`](1-getting-started/TECH_STACK.md) - 30 min
+3. [`LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md) - 30 min
+4. [`PRODUCT_STRATEGY.md`](3-product-owner/PRODUCT_STRATEGY.md) - 20 min
 
 **Step 2: Run the MVP (30 min)**
 ```bash
@@ -276,12 +298,12 @@ docker-compose up --build -d
 Visit: http://localhost:3000
 
 **Step 3: Explore Code (1-2 hours)**
-- Read service documentation in `Services/`
-- Read user flow documentation in `Functionality/`
+- Read service documentation in `7-services/`
+- Read user flow documentation in `5-user-flows/`
 - Browse code in each microservice
 
 **Step 4: Set Up GitHub (1 hour)**
-- Follow `github-import/GITHUB_IMPORT_GUIDE.md`
+- Follow `10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md`
 - Import all epics and PBIs
 - Set up project board
 
@@ -348,33 +370,33 @@ Visit: http://localhost:3000
 
 **Want to know about...**
 
-- **Technologies used?** → [`TECH_STACK.md`](TECH_STACK.md)
-- **What you'll learn?** → [`LEARNING_ROADMAP.md`](LEARNING_ROADMAP.md)
-- **Product decisions?** → [`PRODUCT_STRATEGY.md`](PRODUCT_STRATEGY.md)
-- **How a feature works?** → [`Functionality/`](Functionality/)
-- **Service architecture?** → [`Services/`](Services/)
-- **Setting up GitHub?** → [`github-import/`](github-import/)
-- **Project overview?** → [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md)
+- **Technologies used?** → [`TECH_STACK.md`](1-getting-started/TECH_STACK.md)
+- **What you'll learn?** → [`LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md)
+- **Product decisions?** → [`PRODUCT_STRATEGY.md`](3-product-owner/PRODUCT_STRATEGY.md)
+- **How a feature works?** → [`5-user-flows/`](5-user-flows/)
+- **Service architecture?** → [`7-services/`](7-services/)
+- **Setting up GitHub?** → [`10-tools-and-automation/github-import/`](10-tools-and-automation/github-import/)
+- **Project overview?** → [`PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md)
 
 ### By Question
 
 **Question:** "What design patterns will I learn?"
-**Answer:** [`LEARNING_ROADMAP.md`](LEARNING_ROADMAP.md) - Section: "Design Patterns You'll Master"
+**Answer:** [`LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md) - Section: "Design Patterns You'll Master"
 
 **Question:** "How much will this cost?"
-**Answer:** [`TECH_STACK.md`](TECH_STACK.md) - Section: "Cost Analysis"
+**Answer:** [`TECH_STACK.md`](1-getting-started/TECH_STACK.md) - Section: "Cost Analysis"
 
 **Question:** "How long will this take?"
-**Answer:** [`LEARNING_ROADMAP.md`](LEARNING_ROADMAP.md) - Section: "Time Investment"
+**Answer:** [`LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md) - Section: "Time Investment"
 
 **Question:** "How does user registration work?"
-**Answer:** [`Functionality/SIGNUP_FLOW.md`](Functionality/SIGNUP_FLOW.md)
+**Answer:** [`SIGNUP_FLOW.md`](5-user-flows/SIGNUP_FLOW.md)
 
 **Question:** "How do I import PBIs to GitHub?"
-**Answer:** [`github-import/GITHUB_IMPORT_GUIDE.md`](github-import/GITHUB_IMPORT_GUIDE.md)
+**Answer:** [`GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md)
 
 **Question:** "What's the Auth Service architecture?"
-**Answer:** [`Services/AUTH_SERVICE.md`](Services/AUTH_SERVICE.md)
+**Answer:** [`AUTH_SERVICE.md`](7-services/AUTH_SERVICE.md)
 
 ---
 

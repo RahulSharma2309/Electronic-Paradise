@@ -1,28 +1,37 @@
-using BCrypt.Net;
-using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
+using AuthService.Abstraction.DTOs;
+using AuthService.Core.Business;
+using AuthService.Core.Data;
+using Ep.Platform.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Net.Http.Json;
 
-namespace AuthService.Controllers;
+namespace AuthService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AppDbContext _db;
-    private readonly IJwtService _jwt;
+    private readonly IAuthService _authService;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ILogger<AuthController> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly AppDbContext _db;
 
-    public AuthController(AppDbContext db, IJwtService jwt, ILogger<AuthController> logger, IHttpClientFactory httpClientFactory)
+    public AuthController(
+        IAuthService authService,
+        IJwtTokenGenerator jwtTokenGenerator,
+        ILogger<AuthController> logger,
+        IHttpClientFactory httpClientFactory,
+        AppDbContext db)
     {
-        _db = db;
-        _jwt = jwt;
+        _authService = authService;
+        _jwtTokenGenerator = jwtTokenGenerator;
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        _db = db;
     }
 
     [HttpPost("register")]
@@ -33,7 +42,7 @@ public class AuthController : ControllerBase
             return BadRequest(new { error = "Full name is required" });
         if (string.IsNullOrWhiteSpace(dto.Email))
             return BadRequest(new { error = "Email is required" });
-        if (!System.Text.RegularExpressions.Regex.IsMatch(dto.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!Regex.IsMatch(dto.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             return BadRequest(new { error = "Invalid email format" });
         if (string.IsNullOrWhiteSpace(dto.Password))
             return BadRequest(new { error = "Password is required" });
@@ -41,13 +50,13 @@ public class AuthController : ControllerBase
             return BadRequest(new { error = "Confirm password is required" });
         if (dto.Password != dto.ConfirmPassword)
             return BadRequest(new { error = "Passwords do not match" });
-        if (!System.Text.RegularExpressions.Regex.IsMatch(dto.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$"))
+        if (!Regex.IsMatch(dto.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$"))
             return BadRequest(new { error = "Password must be 8+ chars, include upper, lower, number, special" });
 
         // Validate phone number
         if (string.IsNullOrWhiteSpace(dto.PhoneNumber))
             return BadRequest(new { error = "Phone number is required" });
-        if (!System.Text.RegularExpressions.Regex.IsMatch(dto.PhoneNumber, @"^\+?\d{10,15}$"))
+        if (!Regex.IsMatch(dto.PhoneNumber, @"^\+?\d{10,15}$"))
             return BadRequest(new { error = "Invalid phone number format (10-15 digits, optional + prefix)" });
 
         try
@@ -56,7 +65,7 @@ public class AuthController : ControllerBase
             var emailExists = await _db.Users.AnyAsync(u => u.Email == dto.Email);
             if (emailExists) return Conflict(new { error = "Email already registered" });
 
-            // Check for duplicate phone number via User Service - MANDATORY check
+            // Check for duplicate phone number via User Service
             try
             {
                 var httpClient = _httpClientFactory.CreateClient("user");
@@ -79,20 +88,9 @@ public class AuthController : ControllerBase
                 return StatusCode(503, new { error = "Unable to validate phone number. Please try again later." });
             }
 
-            // Password is validated, hash it before storing
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            var user = await _authService.RegisterAsync(dto);
 
-            var user = new User
-            {
-                Email = dto.Email,
-                PasswordHash = passwordHash,
-                FullName = dto.FullName
-            };
-
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
-            // Now create user profile in User Service - if this fails, we need to rollback
+            // Now create user profile in User Service
             try
             {
                 var names = dto.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -166,14 +164,26 @@ public class AuthController : ControllerBase
         if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
             return BadRequest(new { error = "Email and password required" });
 
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-        if (user == null) return Unauthorized(new { error = "Invalid credentials" });
+        var (user, error) = await _authService.LoginAsync(dto);
+        if (user == null || error != null)
+            return Unauthorized(new { error });
 
-        var valid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-        if (!valid) return Unauthorized(new { error = "Invalid credentials" });
-
-        var token = _jwt.GenerateToken(user);
-        return Ok(new AuthResponseDto { Token = token, ExpiresIn = 6 * 60 * 60, UserId = user.Id, Email = user.Email });
+        // Use Platform's JWT token generator
+        var claims = new Dictionary<string, string>
+        {
+            [ClaimTypes.NameIdentifier] = user.Id.ToString(),
+            [ClaimTypes.Email] = user.Email,
+            ["fullName"] = user.FullName ?? string.Empty
+        };
+        var token = _jwtTokenGenerator.GenerateToken(claims);
+        
+        return Ok(new AuthResponseDto 
+        { 
+            Token = token, 
+            ExpiresIn = 6 * 60 * 60, 
+            UserId = user.Id, 
+            Email = user.Email 
+        });
     }
 
     [HttpPost("reset-password")]
@@ -182,11 +192,9 @@ public class AuthController : ControllerBase
         if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.NewPassword))
             return BadRequest(new { error = "Email and new password required" });
 
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-        if (user == null) return NotFound(new { error = "User not found" });
-
-        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-        await _db.SaveChangesAsync();
+        var success = await _authService.ResetPasswordAsync(dto);
+        if (!success)
+            return NotFound(new { error = "User not found" });
 
         return Ok(new { status = "password reset" });
     }
@@ -195,31 +203,14 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> Me()
     {
-        var id = User.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var id = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (id == null) return Unauthorized();
         if (!Guid.TryParse(id, out var guid)) return Unauthorized();
 
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == guid);
+        var user = await _authService.GetUserByIdAsync(guid);
         if (user == null) return NotFound();
 
         return Ok(new { user.Id, user.Email, user.FullName, user.CreatedAt });
     }
 }
 
-public record RegisterDto(
-    string Email,
-    string Password,
-    string ConfirmPassword,
-    string? FullName,
-    string? PhoneNumber,
-    string? Address
-);
-public record LoginDto(string Email, string Password);
-public record ResetPasswordDto(string Email, string NewPassword);
-public class AuthResponseDto
-{
-    public string Token { get; set; } = null!;
-    public int ExpiresIn { get; set; }
-    public Guid UserId { get; set; }
-    public string Email { get; set; } = null!;
-}
