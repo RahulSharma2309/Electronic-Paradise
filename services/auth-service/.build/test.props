@@ -1,0 +1,53 @@
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
+
+  <PropertyGroup Label="Build Configuration">
+    <TargetFramework>$(NetCoreVersion)</TargetFramework>
+    <LangVersion>$(LangVersion)</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Code Analysis - Relaxed for Tests">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>1591;SA0001</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Label="Additional Files">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup Label="Testing Frameworks">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MSTestSDKVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
+    <PackageReference Include="coverlet.msbuild" Version="$(CoverletVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Label="Code Quality Packages">
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" PrivateAssets="all" />
+    <PackageReference Include="SerilogAnalyzer" Version="$(SerilogAnalyzerVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Code Coverage">
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>json,opencover</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/test/</CoverletOutput>
+    <MergeWith Condition=" Exists('$(CoverletOutput)coverage.json') ">$(CoverletOutput)coverage.json</MergeWith>
+  </PropertyGroup>
+
+</Project>
+
+
+
+

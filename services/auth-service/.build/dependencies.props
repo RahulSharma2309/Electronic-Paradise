@@ -1,0 +1,35 @@
+<Project>
+  <!-- Package Version Management -->
+  <PropertyGroup Label="Framework Versions">
+    <NetCoreVersion>net8.0</NetCoreVersion>
+    <LangVersion>12</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Platform and Core Packages">
+    <EpPlatformVersion>1.0.2</EpPlatformVersion>
+    <AspNetCoreVersion>8.0.22</AspNetCoreVersion>
+    <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Testing Packages">
+    <XunitVersion>2.9.3</XunitVersion>
+    <MoqVersion>4.20.72</MoqVersion>
+    <FluentAssertionsVersion>7.2.0</FluentAssertionsVersion>
+    <CoverletVersion>6.0.4</CoverletVersion>
+    <MSTestSDKVersion>17.14.1</MSTestSDKVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Code Quality and Analysis">
+    <StyleCopVersion>1.1.118</StyleCopVersion>
+    <JetBrainsVersion>2025.2.0</JetBrainsVersion>
+    <SerilogAnalyzerVersion>0.15.0</SerilogAnalyzerVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build Settings">
+    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+</Project>
+
+
+
+
