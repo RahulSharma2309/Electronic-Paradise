@@ -1,6 +1,25 @@
-# Start Here — “Fly-through” Guide (PO / PM / Dev / QA / Frontend / DevOps)
+# Start Here — "Fly-through" Guide
 
-If you want to understand this system **like a fly on the wall** (what it does, why it was built this way, and how the code behaves), start here.
+> **Your role-based navigation hub for Electronic Paradise**
+
+---
+
+## 🎯 Quick Navigation by Role
+
+| Role | Start Here | Then Go To | Time |
+|------|-----------|-----------|------|
+| **🎓 Learning Developer** | [`2-learning-guide/LEARNING_GUIDE.md`](2-learning-guide/LEARNING_GUIDE.md) | [`5-user-flows/`](5-user-flows/) → [`7-services/`](7-services/) | 4-6 hrs |
+| **📊 Product Owner/PM** | [`3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`](3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) | [`4-epics-and-pbis/`](4-epics-and-pbis/) → [`9-roadmap-and-tracking/`](9-roadmap-and-tracking/) | 2-3 hrs |
+| **🔍 QA/Tester** | [`5-user-flows/`](5-user-flows/) | [`7-services/`](7-services/) → Swagger UIs | 1-2 hrs |
+| **💻 Frontend Developer** | [`5-user-flows/`](5-user-flows/) | [`7-services/API_GATEWAY.md`](7-services/API_GATEWAY.md) → API endpoints | 1-2 hrs |
+| **🚀 DevOps Engineer** | [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md#getting-started) | [`6-architecture/SYSTEM_ARCHITECTURE.md`](6-architecture/SYSTEM_ARCHITECTURE.md) | 1 hr |
+| **🏗️ Architect** | [`6-architecture/SYSTEM_ARCHITECTURE.md`](6-architecture/SYSTEM_ARCHITECTURE.md) | [`6-architecture/LOW_LEVEL_DESIGN.md`](6-architecture/LOW_LEVEL_DESIGN.md) → [`8-platform/`](8-platform/) | 3-4 hrs |
+
+**Can't find what you need?** → [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - Complete catalog of all 53 docs
+
+---
+
+## 📚 About This Documentation
 
 This repo is intentionally documented from multiple viewpoints:
 
@@ -22,7 +41,7 @@ This repo is intentionally documented from multiple viewpoints:
   - Services: `services/*-service/`
   - Infra (docker-compose): `infra/`
 
-If some terms feel “too enterprise”, open: [`GLOSSARY.md`](GLOSSARY.md)
+If some terms feel "too enterprise", open: [`2-learning-guide/GLOSSARY.md`](2-learning-guide/GLOSSARY.md)
 
 ---
 
@@ -32,14 +51,14 @@ If some terms feel “too enterprise”, open: [`GLOSSARY.md`](GLOSSARY.md)
 
 Read in this order:
 
-1. **Project overview**: [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md)
-2. **User journeys (MVP flows)**: [`Functionality/README.md`](Functionality/README.md)
-3. **Product thinking** (vision/strategy/roadmap): [`PRODUCT_STRATEGY.md`](PRODUCT_STRATEGY.md) and `docs/product-documents/`
+1. **Project overview**: [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md)
+2. **User journeys (MVP flows)**: [`5-user-flows/README.md`](5-user-flows/README.md)
+3. **Product thinking** (vision/strategy/roadmap): [`3-product-owner/`](3-product-owner/)
 
 What you should get at the end:
 
 - What the MVP includes and excludes
-- Why this product category and what’s next
+- Why this product category and what's next
 - How the user journeys map to services
 
 ---
@@ -48,10 +67,10 @@ What you should get at the end:
 
 Read in this order:
 
-1. “Novel style” walkthrough (best single document): [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md)
-2. Architecture: `docs/diagram/architecture.md` and `docs/diagram/low-level-design.md`
-3. Services index: [`Services/README.md`](Services/README.md)
-4. Decisions + patterns (how to extend it correctly): [`ENGINEERING_PLAYBOOK.md`](ENGINEERING_PLAYBOOK.md)
+1. "Novel style" walkthrough (best single document): [`2-learning-guide/LEARNING_GUIDE.md`](2-learning-guide/LEARNING_GUIDE.md)
+2. Architecture: [`6-architecture/SYSTEM_ARCHITECTURE.md`](6-architecture/SYSTEM_ARCHITECTURE.md) and [`6-architecture/LOW_LEVEL_DESIGN.md`](6-architecture/LOW_LEVEL_DESIGN.md)
+3. Services index: [`7-services/README.md`](7-services/README.md)
+4. Decisions + patterns (how to extend it correctly): [`2-learning-guide/ENGINEERING_PLAYBOOK.md`](2-learning-guide/ENGINEERING_PLAYBOOK.md)
 
 What you should get at the end:
 
@@ -65,8 +84,8 @@ What you should get at the end:
 
 Start here:
 
-1. User flows: [`Functionality/README.md`](Functionality/README.md)
-2. Services index (endpoints + error codes): [`Services/README.md`](Services/README.md)
+1. User flows: [`5-user-flows/README.md`](5-user-flows/README.md)
+2. Services index (endpoints + error codes): [`7-services/README.md`](7-services/README.md)
 
 How to test quickly:
 
@@ -92,9 +111,9 @@ High-value test scenarios (MVP):
   - Insufficient stock → `409`
   - Stock reservation failure after payment → refund should happen (compensation)
 
-Where to learn “expected failures”:
+Where to learn "expected failures":
 
-- [`ENGINEERING_PLAYBOOK.md`](ENGINEERING_PLAYBOOK.md) (failure modes and why they happen)
+- [`2-learning-guide/ENGINEERING_PLAYBOOK.md`](2-learning-guide/ENGINEERING_PLAYBOOK.md) (failure modes and why they happen)
 
 ---
 
@@ -102,9 +121,9 @@ Where to learn “expected failures”:
 
 Start here:
 
-1. User journeys: [`Functionality/README.md`](Functionality/README.md)
-2. Gateway routing concept: [`Services/API_GATEWAY.md`](Services/API_GATEWAY.md)
-3. Endpoint contracts: service docs in [`Services/`](Services/)
+1. User journeys: [`5-user-flows/README.md`](5-user-flows/README.md)
+2. Gateway routing concept: [`7-services/API_GATEWAY.md`](7-services/API_GATEWAY.md)
+3. Endpoint contracts: service docs in [`7-services/`](7-services/)
 
 Important reality in MVP:
 
@@ -116,18 +135,18 @@ Important reality in MVP:
 
 Start here:
 
-- **Run everything**: `infra/docker-compose.yml` (referenced from [`docs/README.md`](README.md))
-- **Service ports**: [`Services/README.md`](Services/README.md#quick-reference)
+- **Run everything**: `infra/docker-compose.yml` (referenced from [`README.md`](README.md))
+- **Service ports**: [`7-services/README.md`](7-services/README.md#quick-reference)
 - **Health endpoints**: each service exposes `/health` (see service docs / compose config)
 
 ---
 
-## “I only have 30 minutes”
+## "I only have 30 minutes"
 
-- Read [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md) sections 1–4 (product + architecture + request lifecycle)
+- Read [`2-learning-guide/LEARNING_GUIDE.md`](2-learning-guide/LEARNING_GUIDE.md) sections 1–4 (product + architecture + request lifecycle)
 - Then read the two most important service docs:
-  - [`Services/ORDER_SERVICE.md`](Services/ORDER_SERVICE.md) (the orchestrator)
-  - [`Services/PAYMENT_SERVICE.md`](Services/PAYMENT_SERVICE.md) (wallet debit/refund + audit trail)
+  - [`7-services/ORDER_SERVICE.md`](7-services/ORDER_SERVICE.md) (the orchestrator)
+  - [`7-services/PAYMENT_SERVICE.md`](7-services/PAYMENT_SERVICE.md) (wallet debit/refund + audit trail)
 
 ---
 
@@ -135,6 +154,6 @@ Start here:
 
 When you add new features (catalog, search, messaging, etc.), use:
 
-- [`ENGINEERING_PLAYBOOK.md`](ENGINEERING_PLAYBOOK.md) — the “why this pattern” guide
-- [`GLOSSARY.md`](GLOSSARY.md) — shared vocabulary so docs stay consistent
+- [`2-learning-guide/ENGINEERING_PLAYBOOK.md`](2-learning-guide/ENGINEERING_PLAYBOOK.md) — the "why this pattern" guide
+- [`2-learning-guide/GLOSSARY.md`](2-learning-guide/GLOSSARY.md) — shared vocabulary so docs stay consistent
 

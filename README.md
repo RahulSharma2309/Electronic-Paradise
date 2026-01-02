@@ -206,27 +206,32 @@ Use VS Code tasks for common operations:
 
 ## 📚 Documentation
 
-### User Flow Documentation
-Comprehensive guides for each user journey:
+### 🧭 Start Here
+- **[START_HERE.md](docs/START_HERE.md)** - Choose your role-based learning path
+- **[DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete file catalog (53 files)
 
-- **[SIGNUP_FLOW.md](docs/Functionality/SIGNUP_FLOW.md)** - User registration with atomic operations
-- **[LOGIN_FLOW.md](docs/Functionality/LOGIN_FLOW.md)** - Authentication and JWT tokens
-- **[ADD_TO_CART_FLOW.md](docs/Functionality/ADD_TO_CART_FLOW.md)** - Shopping cart management
-- **[CHECKOUT_ORDER_FLOW.md](docs/Functionality/CHECKOUT_ORDER_FLOW.md)** - Order creation with payment
-- **[ORDER_HISTORY_FLOW.md](docs/Functionality/ORDER_HISTORY_FLOW.md)** - View orders with filters
-- **[ADD_BALANCE_FLOW.md](docs/Functionality/ADD_BALANCE_FLOW.md)** - Wallet top-up
+### 📖 Key Documentation Categories
 
-**📖 [Read the complete documentation index](docs/Functionality/README.md)**
+#### 🚀 Getting Started
+- **[Project Overview](docs/1-getting-started/PROJECT_OVERVIEW.md)** - Vision, goals, and quickstart
+- **[Tech Stack](docs/1-getting-started/TECH_STACK.md)** - Technologies and rationale
 
-### Service Documentation
-Deep-dive into each microservice:
+#### 🎓 Learning Resources
+- **[Learning Guide](docs/2-learning-guide/LEARNING_GUIDE.md)** - Novel-style end-to-end walkthrough
+- **[Learning Roadmap](docs/2-learning-guide/LEARNING_ROADMAP.md)** - Skills & patterns you'll master
+- **[Engineering Playbook](docs/2-learning-guide/ENGINEERING_PLAYBOOK.md)** - Design decisions
 
-- **[API Gateway](docs/Services/API_GATEWAY.md)** - YARP reverse proxy architecture
-- **[Auth Service](docs/Services/AUTH_SERVICE.md)** - Authentication & JWT
-- **[User Service](docs/Services/USER_SERVICE.md)** - Profile & wallet management
-- **[Product Service](docs/Services/PRODUCT_SERVICE.md)** - Catalog & inventory
-- **[Order Service](docs/Services/ORDER_SERVICE.md)** - Order orchestration
-- **[Payment Service](docs/Services/PAYMENT_SERVICE.md)** - Payment processing
+#### 👤 User Flows
+- **[Signup](docs/5-user-flows/SIGNUP_FLOW.md)**, **[Login](docs/5-user-flows/LOGIN_FLOW.md)**, **[Checkout](docs/5-user-flows/CHECKOUT_ORDER_FLOW.md)**, and more
+- **[All Flows Index](docs/5-user-flows/README.md)**
+
+#### 🔧 Service Documentation
+- **[API Gateway](docs/7-services/API_GATEWAY.md)**, **[Auth](docs/7-services/AUTH_SERVICE.md)**, **[User](docs/7-services/USER_SERVICE.md)**, **[Product](docs/7-services/PRODUCT_SERVICE.md)**, **[Order](docs/7-services/ORDER_SERVICE.md)**, **[Payment](docs/7-services/PAYMENT_SERVICE.md)**
+- **[All Services Index](docs/7-services/README.md)**
+
+#### 🏛️ Architecture
+- **[System Architecture](docs/6-architecture/SYSTEM_ARCHITECTURE.md)** - High-level design
+- **[Platform Architecture](docs/6-architecture/PLATFORM_ARCHITECTURE.md)** - Ep.Platform NuGet design
 
 ---
 
@@ -261,10 +266,19 @@ MY_Practice/
 ├── infra/                       # Infrastructure
 │   └── docker-compose.yml      # All services orchestration
 │
-├── docs/                        # Documentation
-│   ├── Functionality/          # User flow docs
-│   ├── Services/               # Service architecture docs
-│   └── diagram/                # Architecture diagrams
+├── docs/                        # Documentation (53 files)
+│   ├── START_HERE.md           # Role-based entry point
+│   ├── DOCUMENTATION_INDEX.md  # Complete catalog
+│   ├── 1-getting-started/      # Project overview & tech stack
+│   ├── 2-learning-guide/       # Learning resources
+│   ├── 3-product-owner/        # PM/PO docs
+│   ├── 4-epics-and-pbis/       # Product backlog
+│   ├── 5-user-flows/           # End-to-end workflows
+│   ├── 6-architecture/         # System design & diagrams
+│   ├── 7-services/             # Service documentation
+│   ├── 8-platform/             # Ep.Platform NuGet guide
+│   ├── 9-roadmap-and-tracking/ # Project planning
+│   └── 10-tools-and-automation/ # Scripts & tools
 │
 └── .vscode/                     # VS Code configuration
     └── tasks.json              # Docker tasks
@@ -374,8 +388,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For questions or issues:
-- Check the [documentation](docs/Functionality/README.md)
-- Review [service architecture docs](docs/Services/)
+- Check the [documentation index](docs/DOCUMENTATION_INDEX.md)
+- Start with [START_HERE.md](docs/START_HERE.md)
+- Review [service architecture docs](docs/7-services/)
 - Open an issue on GitHub
 
 ---
