@@ -7,22 +7,26 @@
 ## 📋 Available Tools
 
 ### 1. GitHub Import Tools
+
 **Location:** [`github-import/`](github-import/)
 
 **Purpose:** Automate importing epics and PBIs into GitHub Issues/Projects
 
 **Files:**
+
 - [`GITHUB_IMPORT_GUIDE.md`](github-import/GITHUB_IMPORT_GUIDE.md) - Complete guide (4 methods)
 - [`epics_and_pbis.csv`](github-import/epics_and_pbis.csv) - All PBIs in CSV format
 - [`github_import.py`](github-import/github_import.py) - Python automation script
 
 **Methods Available:**
+
 1. **Manual UI** - Good for learning
 2. **GitHub CLI** - Semi-automated (recommended)
 3. **Python Script** - Fully automated
 4. **GitHub API** - For API learning
 
 **Quick Start:**
+
 ```bash
 cd github-import
 
@@ -35,19 +39,43 @@ python github_import.py --token YOUR_PAT --repo owner/repo
 
 ---
 
+### 2. Docker Build Optimization
+
+**File:** [`DOCKERFILE_EXPLAINED.md`](DOCKERFILE_EXPLAINED.md)
+
+**Purpose:** Understand why Dockerfiles copy files separately for optimal build performance
+
+**Content:**
+
+- Docker layer caching explained
+- Build optimization patterns
+- Real-world examples
+- Performance comparisons
+
+**When to Read:**
+
+- Understanding Docker build performance
+- Optimizing Docker builds
+- Learning Docker best practices
+
+---
+
 ## 🔧 Future Tools (Planned)
 
 ### Development Tools
+
 - [ ] Database migration helper scripts
 - [ ] Service scaffolding templates
 - [ ] API testing collection (Postman/Insomnia)
 
 ### DevOps Tools
+
 - [ ] Health check aggregator script
 - [ ] Log collection helper
 - [ ] Deployment automation scripts
 
 ### Testing Tools
+
 - [ ] Test data generation scripts
 - [ ] Load testing scenarios
 - [ ] Integration test helpers
@@ -57,11 +85,13 @@ python github_import.py --token YOUR_PAT --repo owner/repo
 ## 🎯 Tool Usage Guidelines
 
 ### When to Use Automation:
+
 - ✅ Repetitive tasks (issue creation)
 - ✅ Bulk operations (importing 70+ PBIs)
 - ✅ Consistent formatting (CSV → GitHub)
 
 ### When to Do Manually:
+
 - ✅ First-time setup (learning)
 - ✅ One-off tasks
 - ✅ Customized scenarios
@@ -77,7 +107,3 @@ python github_import.py --token YOUR_PAT --repo owner/repo
 ---
 
 **Back to:** [Documentation Index](../DOCUMENTATION_INDEX.md) | [START HERE](../START_HERE.md)
-
-
-
-

@@ -27,6 +27,8 @@ services:
     build:
       context: ../src
       dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: user-service-standalone
     depends_on:
       - mssql
