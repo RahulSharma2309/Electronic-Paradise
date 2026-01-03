@@ -291,6 +291,21 @@
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "Docker: Start SQL Only",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["up", "-d", "mssql"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }

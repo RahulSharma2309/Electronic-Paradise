@@ -6,23 +6,34 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Platform and Core Packages">
-    <EpPlatformVersion>1.0.3</EpPlatformVersion>
+    <EpPlatformVersion>1.0.2</EpPlatformVersion>
     <AspNetCoreVersion>8.0.22</AspNetCoreVersion>
     <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Testing Packages">
     <XunitVersion>2.9.3</XunitVersion>
+    <XunitRunnerVersion>3.0.0</XunitRunnerVersion>
     <MoqVersion>4.20.72</MoqVersion>
     <FluentAssertionsVersion>7.2.0</FluentAssertionsVersion>
     <CoverletVersion>6.0.4</CoverletVersion>
     <MSTestSDKVersion>17.14.1</MSTestSDKVersion>
+    <AutoFixtureVersion>4.18.1</AutoFixtureVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Code Quality and Analysis">
     <StyleCopVersion>1.1.118</StyleCopVersion>
     <JetBrainsVersion>2025.2.0</JetBrainsVersion>
     <SerilogAnalyzerVersion>0.15.0</SerilogAnalyzerVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Logging Packages">
+    <SerilogVersion>3.1.1</SerilogVersion>
+    <SerilogSinksConsoleVersion>5.0.1</SerilogSinksConsoleVersion>
+    <SerilogSinksFileVersion>5.0.0</SerilogSinksFileVersion>
+    <SerilogAspNetCoreVersion>8.0.1</SerilogAspNetCoreVersion>
+    <SerilogEnrichersEnvironmentVersion>2.3.0</SerilogEnrichersEnvironmentVersion>
+    <SerilogEnrichersThreadVersion>3.1.0</SerilogEnrichersThreadVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Build Settings">

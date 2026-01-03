@@ -13,6 +13,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Serilog" Version="$(SerilogVersion)" />
+    <PackageReference Include="Serilog.AspNetCore" Version="$(SerilogAspNetCoreVersion)" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="$(SerilogSinksConsoleVersion)" />
+    <PackageReference Include="Serilog.Sinks.File" Version="$(SerilogSinksFileVersion)" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="$(SerilogEnrichersEnvironmentVersion)" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="$(SerilogEnrichersThreadVersion)" />
   </ItemGroup>
 
   <ItemGroup>

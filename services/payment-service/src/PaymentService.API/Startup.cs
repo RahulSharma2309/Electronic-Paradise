@@ -44,8 +44,3 @@ public class Startup
         app.MapControllers();
     }
 }
-
-
-
-
-
