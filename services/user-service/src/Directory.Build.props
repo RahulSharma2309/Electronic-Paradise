@@ -1,9 +1,14 @@
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" />
+  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" Condition="Exists('$(MSBuildThisFileDirectory)../.build/src.props')" />
 
   <PropertyGroup>
     <PackageTags>user;profile;wallet;microservices;electronic-paradise;$(PackageTags)</PackageTags>
+    
+    <!-- Package versions (used when .build/src.props doesn't exist) -->
+    <EpPlatformVersion Condition="'$(EpPlatformVersion)' == ''">1.0.3</EpPlatformVersion>
+    <AspNetCoreVersion Condition="'$(AspNetCoreVersion)' == ''">8.0.0</AspNetCoreVersion>
+    <EntityFrameworkVersion Condition="'$(EntityFrameworkVersion)' == ''">8.0.0</EntityFrameworkVersion>
   </PropertyGroup>
 
 </Project>

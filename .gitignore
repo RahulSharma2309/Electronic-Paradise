@@ -1,70 +1,75 @@
-# Visual Studio / dotnet
-bin/
-obj/
-.vs/
-*.user
-*.suo
+# Environment files (contain secrets)
+.env
+*.env.local
+infra/.env
+**/.env
 
-# Node
-node_modules/
-build/
-
-# Logs
-*.log
-
-# OS
-Thumbs.db
-.DS_Store
-
-# ===== RECOMMENDED ADDITIONS =====
-
-# .NET additional
-*.cache
-*.dll
-*.exe
-*.pdb
+# Build results
 [Bb]in/
 [Oo]bj/
-.vscode/
-*.swp
-*.swo
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
 
-# React / Frontend
+# Visual Studio cache/options directory
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code - but keep tasks.json and launch.json
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# User-specific files
+*.rsuser
+*.csproj.user
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.artifacts/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Rider
+.idea/
+*.sln.iml
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node (for frontend)
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-/frontend/.env
-
-# Docker (if you have local overrides)
-docker-compose.override.yml
-*.env
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# IDE
-.idea/
-*.iml
-
-# Temporary files
-*~
-.temp/
-temp/
-
-# Build outputs
-dist/
-out/
-
-# Package manager
-.pnpm-store/
-yarn.lock
-package-lock.json  # Optional: Some teams prefer to commit this
-
-# NuGet artifacts
-.artifacts/

@@ -74,11 +74,13 @@ export default function App() {
       await api.post(API_ENDPOINTS.ORDERS.CREATE, orderData);
       setCheckoutSuccess("Order placed successfully!");
       clearCart();
-      fetchProducts();
-      fetchWallet();
     } catch (error) {
       setCheckoutError(formatErrorMessage(error, "Order failed"));
     } finally {
+      // Always refresh wallet and products, even if checkout fails
+      // This ensures UI reflects any backend changes (e.g., wallet debits)
+      fetchProducts();
+      fetchWallet();
       setLoading(false);
     }
   };

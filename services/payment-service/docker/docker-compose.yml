@@ -45,6 +45,8 @@ services:
     build:
       context: ../src
       dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: payment-service-standalone
     depends_on:
       - mssql
