@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreVersion)</TargetFramework>
+    <LangVersion>$(LangVersion)</LangVersion>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture.AutoMoq" Version="$(AutoFixtureVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/UserService.Core/UserService.Core.csproj" />
+  </ItemGroup>
+
+</Project>
+
+
+
+
+
+

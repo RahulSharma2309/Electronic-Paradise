@@ -8,7 +8,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DebugType>portable</DebugType>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
@@ -19,9 +19,13 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Code Analysis">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>1591;SA1516;SA1518</NoWarn>
+    <WarningsAsErrors />
+    <!-- CS1591: Missing XML comment for publicly visible type or member -->
+    <!-- SA1516: Elements should be separated by blank line -->
+    <!-- SA1518: Use line endings correctly at end of file -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Label="Additional Files">

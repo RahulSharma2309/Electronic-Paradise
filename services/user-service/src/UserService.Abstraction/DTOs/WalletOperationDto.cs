@@ -1,8 +1,18 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="WalletOperationDto.cs" company="Electronic-Paradise">
+//   © Electronic-Paradise. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace UserService.Abstraction.DTOs;
 
-public record WalletOperationDto(decimal Amount);
-
-
-
-
-
+/// <summary>
+/// Data transfer object for wallet operations (debit/credit).
+/// </summary>
+public sealed record WalletOperationDto
+{
+    /// <summary>
+    /// Gets the amount to debit or credit from the wallet.
+    /// </summary>
+    required public decimal Amount { get; init; }
+}

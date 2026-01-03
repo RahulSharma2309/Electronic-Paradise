@@ -6,18 +6,29 @@ using Ep.Platform.Hosting;
 
 namespace AuthService.API;
 
+/// <summary>
+/// Application startup configuration for the Auth service.
+/// </summary>
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Startup"/> class.
+    /// </summary>
+    /// <param name="configuration">The application configuration.</param>
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
     }
 
     /// <summary>
-    /// Configure services for dependency injection
+    /// Gets the application configuration.
     /// </summary>
+    public IConfiguration Configuration { get; }
+
+    /// <summary>
+    /// Configure services for dependency injection.
+    /// </summary>
+    /// <param name="services">The services collection used for dependency injection.</param>
     public void ConfigureServices(IServiceCollection services)
     {
         // Add controllers
@@ -46,8 +57,10 @@ public class Startup
     }
 
     /// <summary>
-    /// Configure the HTTP request pipeline
+    /// Configure the HTTP request pipeline.
     /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <param name="env">The web hosting environment.</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
@@ -67,4 +80,3 @@ public class Startup
         });
     }
 }
-
