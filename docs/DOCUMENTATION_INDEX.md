@@ -233,10 +233,13 @@
 | [`github-import/GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md) | 4 methods to import PBIs | Guide |
 | [`github-import/epics_and_pbis.csv`](10-tools-and-automation/github-import/epics_and_pbis.csv) | All PBIs in CSV format | Data |
 | [`github-import/github_import.py`](10-tools-and-automation/github-import/github_import.py) | Python automation script | Script |
+| [`DOCKERFILE_EXPLAINED.md`](10-tools-and-automation/DOCKERFILE_EXPLAINED.md) | Docker build optimization explained | Technical Guide |
 
 **When to Read:**
 - Setting up GitHub project tracking
 - Automating issue creation
+- Understanding Docker build performance
+- Optimizing Docker builds
 
 ---
 

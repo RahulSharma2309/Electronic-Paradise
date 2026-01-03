@@ -32,37 +32,17 @@ var app = builder.Build();
 await app.EnsureDatabaseAsync<AppDbContext>();
 ```
 
-## Packing & publishing (GitHub Packages)
-1) Create (or reuse) `nuget.config` at repo root:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <add key="github" value="https://nuget.pkg.github.com/<github-org-or-user>/index.json" />
-  </packageSources>
-  <packageSourceCredentials>
-    <github>
-      <add key="Username" value="<github-username>" />
-      <add key="ClearTextPassword" value="<PAT_with_read_write_packages>" />
-    </github>
-  </packageSourceCredentials>
-</configuration>
-```
+## 📦 Publishing New Versions
 
-2) Pack:
-```
-dotnet pack platform/Ep.Platform/Ep.Platform.csproj -c Release -o ./.artifacts
-```
+For detailed instructions on packing and publishing Ep.Platform to GitHub Packages, see:
 
-3) Push to GitHub Packages:
-```
-dotnet nuget push ./.artifacts/Ep.Platform.<version>.nupkg --source github --api-key <PAT>
-```
+**[Release Guide](../../../platform/Ep.Platform/RELEASE_GUIDE.md)** - Complete step-by-step guide for releasing new versions
 
-4) Consume from a service:
-```xml
-<PackageReference Include="Ep.Platform" Version="<version>" />
-```
-Ensure the same `nuget.config` (or a GitHub PAT env var) is available to restore.
+The release guide covers:
+- Version numbering
+- Automated publishing scripts
+- Manual publishing steps
+- Updating services to use new versions
+- Troubleshooting
 
 

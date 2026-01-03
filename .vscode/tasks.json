@@ -1,0 +1,296 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker: Build All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Rebuild All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "--no-cache"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Start All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["up", "-d"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Stop All Services",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["down"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View All Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Auth Service",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "auth-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build User Service",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "user-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Product Service",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "product-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Payment Service",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "payment-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Order Service",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "order-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Gateway",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "gateway"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Auth Service Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "auth-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View User Service Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "user-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Product Service Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "product-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Payment Service Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "payment-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Order Service Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "order-service"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Gateway Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "gateway"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Restart All Services",
+      "type": "shell",
+      "command": "docker-compose restart; docker-compose up -d",
+      "options": {
+        "cwd": "${workspaceFolder}/infra",
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-Command"]
+        }
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Stop and Remove All (Clean)",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["down", "-v"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
