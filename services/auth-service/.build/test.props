@@ -6,49 +6,53 @@
     <TargetFramework>$(NetCoreVersion)</TargetFramework>
     <LangVersion>$(LangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <NullableReferences>enable</NullableReferences>
     <ImplicitUsings>enable</ImplicitUsings>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup Label="Code Analysis - Relaxed for Tests">
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+  <PropertyGroup Label="Code Analysis">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Disable XML documentation warnings for tests -->
     <NoWarn>1591;SA0001</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup Label="Testing Packages">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MSTestSDKVersion)" />
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="$(MoqVersion)" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EntityFrameworkVersion)" />
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Code Quality Packages">
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" PrivateAssets="all" />
+    <PackageReference Include="SerilogAnalyzer" Version="$(SerilogAnalyzerVersion)" PrivateAssets="all" />
+  </ItemGroup>
 
   <ItemGroup Label="Additional Files">
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
   </ItemGroup>
 
-  <ItemGroup Label="Testing Frameworks">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MSTestSDKVersion)" />
-    <PackageReference Include="xunit" Version="$(XunitVersion)" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />
-    <PackageReference Include="Moq" Version="$(MoqVersion)" />
-    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
-    <PackageReference Include="coverlet.msbuild" Version="$(CoverletVersion)" />
-  </ItemGroup>
-
-  <ItemGroup Label="Code Quality Packages">
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="all" />
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" PrivateAssets="all" />
-    <PackageReference Include="SerilogAnalyzer" Version="$(SerilogAnalyzerVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
   <PropertyGroup Label="Code Coverage">
     <CollectCoverage>true</CollectCoverage>
-    <CoverletOutputFormat>json,opencover</CoverletOutputFormat>
-    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/test/</CoverletOutput>
-    <MergeWith Condition=" Exists('$(CoverletOutput)coverage.json') ">$(CoverletOutput)coverage.json</MergeWith>
+    <CoverletOutputFormat>json,opencover,cobertura</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)../artifacts/coverage/</CoverletOutput>
+    <Include>[AuthService.*]*</Include>
+    <Exclude>[AuthService.*.Test]*</Exclude>
+    <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
   </PropertyGroup>
 
 </Project>
-
-
-
-
-

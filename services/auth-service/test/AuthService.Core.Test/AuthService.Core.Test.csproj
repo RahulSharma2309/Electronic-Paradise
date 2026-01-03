@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreVersion)</TargetFramework>
+    <LangVersion>$(LangVersion)</LangVersion>
+    <Nullable>$(NullableReferences)</Nullable>
+    <RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture.AutoMoq" Version="$(AutoFixtureVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/AuthService.Core/AuthService.Core.csproj" />
+  </ItemGroup>
+
+</Project>
+
+
+
+
+
+

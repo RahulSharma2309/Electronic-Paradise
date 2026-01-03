@@ -18,11 +18,14 @@
     <Rule Id="SA1124" Action="None" />
     
     <!-- Readability Rules - Relaxed -->
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1413" Action="None" />
     
     <!-- Layout Rules - Relaxed -->
     <Rule Id="SA1513" Action="None" />
     <Rule Id="SA1514" Action="None" />
+    <Rule Id="SA1516" Action="None" />
     
     <!-- Documentation Rules - Relaxed for microservices -->
     <Rule Id="SA1600" Action="None" />
