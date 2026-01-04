@@ -13,9 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.API", "src\P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0C88DD14-F956-CE84-757C-A364CCF449FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.API.Test", "test\PaymentService.API.Test\PaymentService.API.Test.csproj", "{2141A95E-50BB-4684-9B74-BF72AD4381B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.API.Test", "test\unit-test\PaymentService.API.Test\PaymentService.API.Test.csproj", "{2141A95E-50BB-4684-9B74-BF72AD4381B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.Core.Test", "test\PaymentService.Core.Test\PaymentService.Core.Test.csproj", "{E37447FD-A716-4089-BF8D-F8D7CDBE55B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.Core.Test", "test\unit-test\PaymentService.Core.Test\PaymentService.Core.Test.csproj", "{E37447FD-A716-4089-BF8D-F8D7CDBE55B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.Integration.Test", "test\integration-test\PaymentService.Integration.Test\PaymentService.Integration.Test.csproj", "{2A2A2A2A-3333-3333-3333-333333333333}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

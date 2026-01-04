@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: product-it-mssql
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14322:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '>/dev/tcp/localhost/1433'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - product-it
+
+  product-service:
+    container_name: product-it-product-service
+    image: product-service:it
+    depends_on:
+      mssql:
+        condition: service_healthy
+    ports:
+      - "5202:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=mssql
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=productdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - product-it
+
+networks:
+  product-it:
+    driver: bridge
+
+
+

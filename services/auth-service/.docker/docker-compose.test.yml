@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  auth-service.integration.test:
+    container_name: auth-it-test
+    image: auth-service.integration.test:it
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    environment:
+      - AUTH_BASE_URL=http://auth-service
+    networks:
+      - auth-it
+
+networks:
+  auth-it:
+    driver: bridge
+
+
+

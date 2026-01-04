@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+WORKDIR /app
+
+# Copy the gateway directory contents (since build context is set to the gateway folder)
+COPY . .
+
+# Run dotnet test on the integration test project
+# Paths are now relative to the gateway folder root
+RUN dotnet build test/integration-test/Gateway.Integration.Test/Gateway.Integration.Test.csproj -c Release
+
+ENTRYPOINT ["dotnet", "test", "test/integration-test/Gateway.Integration.Test/Gateway.Integration.Test.csproj", "-c", "Release", "--no-build"]

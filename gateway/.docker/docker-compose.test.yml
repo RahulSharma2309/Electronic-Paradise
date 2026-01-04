@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  gateway.integration.test:
+    container_name: gateway-it-test
+    image: gateway.integration.test:it
+    depends_on:
+      gateway:
+        condition: service_healthy
+    environment:
+      - GATEWAY_BASE_URL=http://gateway
+    networks:
+      - gateway-it
+
+networks:
+  gateway-it:
+    driver: bridge
+
+
+

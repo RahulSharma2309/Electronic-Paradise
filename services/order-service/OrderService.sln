@@ -13,9 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.API", "src\Ord
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.API.Test", "test\OrderService.API.Test\OrderService.API.Test.csproj", "{123C4960-E479-3633-4B39-C5D2753721C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.API.Test", "test\unit-test\OrderService.API.Test\OrderService.API.Test.csproj", "{123C4960-E479-3633-4B39-C5D2753721C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Core.Test", "test\OrderService.Core.Test\OrderService.Core.Test.csproj", "{B334944D-5765-9F58-3D46-091D3673B5F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Core.Test", "test\unit-test\OrderService.Core.Test\OrderService.Core.Test.csproj", "{B334944D-5765-9F58-3D46-091D3673B5F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Integration.Test", "test\integration-test\OrderService.Integration.Test\OrderService.Integration.Test.csproj", "{3A3A3A3A-4444-4444-4444-444444444444}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  dependency-mock:
+    container_name: gateway-it-dependency-mock
+    image: gateway-dependency-mock:it
+    ports:
+      - "3001:3001"
+    networks:
+      - gateway-it
+
+  gateway:
+    container_name: gateway-it-gateway
+    image: gateway:it
+    depends_on:
+      - dependency-mock
+    ports:
+      - "5200:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - USE_DOCKER_NETWORK=true
+      - SKIP_HEALTH_CHECKS=true
+      - ReverseProxy__Clusters__authCluster__Destinations__auth1__Address=http://dependency-mock:3001
+      - ReverseProxy__Clusters__userCluster__Destinations__user1__Address=http://dependency-mock:3001
+      - ReverseProxy__Clusters__productCluster__Destinations__product1__Address=http://dependency-mock:3001
+      - ReverseProxy__Clusters__orderCluster__Destinations__order1__Address=http://dependency-mock:3001
+      - ReverseProxy__Clusters__paymentCluster__Destinations__payment1__Address=http://dependency-mock:3001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - gateway-it
+
+networks:
+  gateway-it:
+    driver: bridge
+

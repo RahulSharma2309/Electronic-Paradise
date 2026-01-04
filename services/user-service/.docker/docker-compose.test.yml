@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  user-service.integration.test:
+    container_name: user-it-test
+    image: user-service.integration.test:it
+    depends_on:
+      user-service:
+        condition: service_healthy
+    environment:
+      - USER_BASE_URL=http://user-service
+    networks:
+      - user-it
+
+networks:
+  user-it:
+    driver: bridge
+
+
+

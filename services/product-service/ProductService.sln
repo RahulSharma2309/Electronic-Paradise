@@ -13,9 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.API", "src\P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0C88DD14-F956-CE84-757C-A364CCF449FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.API.Test", "test\ProductService.API.Test\ProductService.API.Test.csproj", "{04E38C42-6BD9-4DCD-AED6-E26FDD6B322D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.API.Test", "test\unit-test\ProductService.API.Test\ProductService.API.Test.csproj", "{04E38C42-6BD9-4DCD-AED6-E26FDD6B322D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Core.Test", "test\ProductService.Core.Test\ProductService.Core.Test.csproj", "{C049DBD5-1113-4EAA-9D6E-4C1591CB36A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Core.Test", "test\unit-test\ProductService.Core.Test\ProductService.Core.Test.csproj", "{C049DBD5-1113-4EAA-9D6E-4C1591CB36A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Integration.Test", "test\integration-test\ProductService.Integration.Test\ProductService.Integration.Test.csproj", "{A5F8E4B3-60F5-4B61-8A84-6E2C57F6B8D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
