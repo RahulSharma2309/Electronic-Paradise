@@ -56,6 +56,7 @@ public class ProductServiceImpl : IProductService
             {
                 _logger.LogDebug("Product {ProductId} found: {ProductName}, Stock: {Stock}", id, product.Name, product.Stock);
             }
+
             return product;
         }
         catch (Exception ex)
@@ -157,10 +158,12 @@ public class ProductServiceImpl : IProductService
         {
             throw new ArgumentException("Name is required", nameof(p.Name));
         }
+
         if (p.Price < 0)
         {
             throw new ArgumentException("Price must be >= 0", nameof(p.Price));
         }
+
         if (p.Stock < 0)
         {
             throw new ArgumentException("Stock must be >= 0", nameof(p.Stock));

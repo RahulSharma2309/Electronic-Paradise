@@ -73,6 +73,6 @@ public class UserProfileDto
         PhoneNumber = m.PhoneNumber,
         CreatedAt = m.CreatedAt,
         UpdatedAt = m.UpdatedAt,
-        WalletBalance = m.WalletBalance
+        WalletBalance = m.WalletBalance,
     };
 }

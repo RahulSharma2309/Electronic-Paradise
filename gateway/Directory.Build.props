@@ -1,0 +1,9 @@
+<Project>
+  <!-- Import from .build folder (for local development) -->
+  <Import Project="$(MSBuildThisFileDirectory).build/src.props" Condition="Exists('$(MSBuildThisFileDirectory).build/src.props')" />
+</Project>
+
+
+
+
+

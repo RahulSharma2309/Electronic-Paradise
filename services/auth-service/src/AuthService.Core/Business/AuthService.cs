@@ -57,7 +57,7 @@ public class AuthService : IAuthService
             {
                 Email = dto.Email,
                 PasswordHash = passwordHash,
-                FullName = dto.FullName
+                FullName = dto.FullName,
             };
 
             await _userRepository.AddAsync(user);
@@ -73,7 +73,7 @@ public class AuthService : IAuthService
     }
 
     /// <inheritdoc/>
-    public async Task<(User? user, string? error)> LoginAsync(LoginDto dto)
+    public async Task<(User? User, string? Error)> LoginAsync(LoginDto dto)
     {
         if (dto == null)
         {

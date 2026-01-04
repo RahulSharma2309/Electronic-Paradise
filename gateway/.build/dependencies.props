@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <YarpVersion>2.1.0</YarpVersion>
+    <SwashbuckleVersion>7.0.0</SwashbuckleVersion>
+  </PropertyGroup>
+</Project>
+
+
+
+
+

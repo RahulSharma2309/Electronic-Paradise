@@ -1,43 +1,22 @@
 <Project>
-  <!-- Package Version Management -->
-  <PropertyGroup Label="Framework Versions">
-    <NetCoreVersion>net8.0</NetCoreVersion>
-    <LangVersion>12</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Platform and Core Packages">
+  <PropertyGroup>
     <EpPlatformVersion>1.0.3</EpPlatformVersion>
-    <AspNetCoreVersion>8.0.22</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.0</AspNetCoreVersion>
     <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Testing Packages">
-    <XunitVersion>2.9.3</XunitVersion>
-    <XunitRunnerVersion>3.0.0</XunitRunnerVersion>
-    <MoqVersion>4.20.72</MoqVersion>
-    <FluentAssertionsVersion>7.2.0</FluentAssertionsVersion>
-    <CoverletVersion>6.0.4</CoverletVersion>
-    <MSTestSDKVersion>17.14.1</MSTestSDKVersion>
-    <AutoFixtureVersion>4.18.1</AutoFixtureVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Code Quality and Analysis">
-    <StyleCopVersion>1.1.118</StyleCopVersion>
-    <JetBrainsVersion>2025.2.0</JetBrainsVersion>
-    <SerilogAnalyzerVersion>0.15.0</SerilogAnalyzerVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Logging Packages">
-    <SerilogVersion>4.2.0</SerilogVersion>
+    <SerilogVersion>4.1.0</SerilogVersion>
+    <SerilogAspNetCoreVersion>8.0.3</SerilogAspNetCoreVersion>
     <SerilogSinksConsoleVersion>6.0.0</SerilogSinksConsoleVersion>
     <SerilogSinksFileVersion>6.0.0</SerilogSinksFileVersion>
-    <SerilogAspNetCoreVersion>8.0.3</SerilogAspNetCoreVersion>
     <SerilogEnrichersEnvironmentVersion>3.0.1</SerilogEnrichersEnvironmentVersion>
     <SerilogEnrichersThreadVersion>4.0.0</SerilogEnrichersThreadVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Build Settings">
-    <RuntimeIdentifiers>linux-x64;win-x64</RuntimeIdentifiers>
+    <SwashbuckleVersion>6.5.0</SwashbuckleVersion>
+    <AutoMapperVersion>12.0.1</AutoMapperVersion>
+    <FluentValidationVersion>11.9.0</FluentValidationVersion>
+    <MediatRVersion>12.2.0</MediatRVersion>
   </PropertyGroup>
 </Project>
+
+
+
+
 

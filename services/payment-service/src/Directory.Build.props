@@ -1,18 +1,11 @@
 <Project>
-
-  <Import Project="$(MSBuildThisFileDirectory)..\.build/src.props" Condition="Exists('$(MSBuildThisFileDirectory)..\.build/src.props')" />
-
+  <!-- Import from parent .build folder (for local development) -->
+  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" Condition="Exists('$(MSBuildThisFileDirectory)../.build/src.props')" />
+  
+  <!-- Import from sibling .build folder (for Docker) -->
+  <Import Project="$(MSBuildThisFileDirectory).build/src.props" Condition="Exists('$(MSBuildThisFileDirectory).build/src.props')" />
+  
   <PropertyGroup>
-    <PackageTags>payment;transactions;microservices;electronic-paradise;$(PackageTags)</PackageTags>
-    
-    <!-- Package versions (used when .build/src.props doesn't exist) -->
-    <EpPlatformVersion Condition="'$(EpPlatformVersion)' == ''">1.0.3</EpPlatformVersion>
-    <AspNetCoreVersion Condition="'$(AspNetCoreVersion)' == ''">8.0.0</AspNetCoreVersion>
-    <EntityFrameworkVersion Condition="'$(EntityFrameworkVersion)' == ''">8.0.0</EntityFrameworkVersion>
+    <PackageTags>payment;transaction;gateway;$(PackageTags)</PackageTags>
   </PropertyGroup>
-
 </Project>
-
-
-
-

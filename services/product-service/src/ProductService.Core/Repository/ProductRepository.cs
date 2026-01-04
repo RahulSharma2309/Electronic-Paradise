@@ -57,6 +57,7 @@ public class ProductRepository : IProductRepository
             {
                 _logger.LogDebug("Product {ProductId} found in database: {ProductName}", id, product.Name);
             }
+
             return product;
         }
         catch (Exception ex)
@@ -103,6 +104,7 @@ public class ProductRepository : IProductRepository
                 _logger.LogWarning("Stock reservation failed: Product {ProductId} not found", id);
                 throw new KeyNotFoundException("Product not found");
             }
+
             if (product.Stock < quantity)
             {
                 _logger.LogWarning("Stock reservation failed for product {ProductId}: Insufficient stock. Available: {Stock}, Requested: {Quantity}", id, product.Stock, quantity);

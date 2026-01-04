@@ -170,7 +170,7 @@ public class UserServiceImpl : IUserService
                 Address = dto.Address,
                 PhoneNumber = dto.PhoneNumber,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
             };
 
             var created = await _repo.CreateAsync(model);

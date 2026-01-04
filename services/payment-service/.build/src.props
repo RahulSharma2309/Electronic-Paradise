@@ -1,42 +1,25 @@
 <Project>
-
   <Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
-
-  <PropertyGroup Label="Build Configuration">
-    <TargetFramework>$(NetCoreVersion)</TargetFramework>
-    <LangVersion>$(LangVersion)</LangVersion>
+  
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DebugType>portable</DebugType>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Project Metadata">
-    <Copyright>© Electronic-Paradise. All rights reserved.</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/RahulSharma2309/Electronic-Paradise</RepositoryUrl>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Code Analysis">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
-    <WarningsAsErrors />
-    <!-- CS1591: Missing XML comment for publicly visible type or member -->
-    <!-- SA1516: Elements should be separated by blank line -->
-    <!-- SA1518: Use line endings correctly at end of file -->
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup Label="Additional Files">
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup Label="Code Quality Packages">
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsVersion)" PrivateAssets="all" />
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopVersion)" PrivateAssets="all" />
-    <PackageReference Include="SerilogAnalyzer" Version="$(SerilogAnalyzerVersion)" PrivateAssets="all" />
-  </ItemGroup>
-
+  <PropertyGroup>
+    <Authors>Electronic Paradise</Authors>
+    <Company>Electronic Paradise</Company>
+    <Product>Electronic Paradise - Payment Service</Product>
+    <Copyright>Copyright © Electronic Paradise</Copyright>
+    <PackageTags>payment;transaction;gateway;microservices;electronic-paradise</PackageTags>
+  </PropertyGroup>
 </Project>
+
+
+
+
 

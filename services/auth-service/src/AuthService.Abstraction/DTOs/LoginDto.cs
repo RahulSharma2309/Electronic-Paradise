@@ -14,10 +14,10 @@ public sealed record LoginDto
     /// <summary>
     /// Gets the user's email address.
     /// </summary>
-    required public string Email { get; init; }
+    public required string Email { get; init; }
 
     /// <summary>
     /// Gets the user's password.
     /// </summary>
-    required public string Password { get; init; }
+    public required string Password { get; init; }
 }

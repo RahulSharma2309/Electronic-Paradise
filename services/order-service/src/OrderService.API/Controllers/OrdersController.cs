@@ -55,7 +55,7 @@ public class OrdersController : ControllerBase
                 order.Id,
                 order.UserId,
                 order.TotalAmount,
-                order.CreatedAt
+                order.CreatedAt,
             });
         }
         catch (ArgumentException ex)
@@ -109,6 +109,7 @@ public class OrdersController : ControllerBase
                 _logger.LogWarning("Order {OrderId} not found", id);
                 return NotFound();
             }
+
             _logger.LogInformation("Order {OrderId} retrieved successfully", id);
             return Ok(order);
         }

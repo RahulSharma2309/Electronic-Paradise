@@ -1,0 +1,22 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Electronic Paradise</Authors>
+    <Company>Electronic Paradise</Company>
+    <Product>Electronic Paradise - API Gateway</Product>
+    <Copyright>Copyright © Electronic Paradise</Copyright>
+    <PackageTags>gateway;api-gateway;yarp;reverse-proxy;electronic-paradise</PackageTags>
+  </PropertyGroup>
+</Project>
+
+
+
+
+

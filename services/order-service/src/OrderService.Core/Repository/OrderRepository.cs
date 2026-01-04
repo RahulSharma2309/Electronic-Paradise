@@ -58,6 +58,7 @@ public class OrderRepository : IOrderRepository
             {
                 _logger.LogDebug("Order {OrderId} found with {ItemCount} items", id, order.Items?.Count ?? 0);
             }
+
             return order;
         }
         catch (Exception ex)

@@ -262,13 +262,10 @@
     {
       "label": "Docker: Restart All Services",
       "type": "shell",
-      "command": "docker-compose restart; docker-compose up -d",
+      "command": "docker-compose",
+      "args": ["restart"],
       "options": {
-        "cwd": "${workspaceFolder}/infra",
-        "shell": {
-          "executable": "powershell.exe",
-          "args": ["-Command"]
-        }
+        "cwd": "${workspaceFolder}/infra"
       },
       "problemMatcher": [],
       "group": "none",
@@ -297,6 +294,66 @@
       "type": "shell",
       "command": "docker-compose",
       "args": ["up", "-d", "mssql"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build Frontend",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["build", "frontend"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Frontend Logs",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["logs", "-f", "frontend"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: Build and Start All",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["up", "-d", "--build"],
+      "options": {
+        "cwd": "${workspaceFolder}/infra"
+      },
+      "problemMatcher": [],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Docker: View Service Status",
+      "type": "shell",
+      "command": "docker-compose",
+      "args": ["ps"],
       "options": {
         "cwd": "${workspaceFolder}/infra"
       },
