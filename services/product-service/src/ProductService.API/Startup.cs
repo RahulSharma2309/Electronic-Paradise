@@ -6,12 +6,23 @@ using ProductService.Core.Repository;
 
 namespace ProductService.API;
 
+/// <summary>
+/// Application startup configuration for the Product service.
+/// </summary>
 public class Startup
 {
     private readonly IConfiguration _config;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Startup"/> class.
+    /// </summary>
+    /// <param name="config">The application configuration.</param>
     public Startup(IConfiguration config) => _config = config;
 
+    /// <summary>
+    /// Configures dependency injection services for the Product service.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
@@ -27,6 +38,11 @@ public class Startup
         services.AddScoped<IProductService, ProductServiceImpl>();
     }
 
+    /// <summary>
+    /// Configures the HTTP request pipeline for the Product service.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <param name="env">The host environment.</param>
     public void Configure(WebApplication app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())

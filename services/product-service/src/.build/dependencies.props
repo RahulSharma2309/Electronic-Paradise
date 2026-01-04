@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Platform and Core Packages">
-    <EpPlatformVersion>1.0.2</EpPlatformVersion>
+    <EpPlatformVersion>1.0.3</EpPlatformVersion>
     <AspNetCoreVersion>8.0.0</AspNetCoreVersion>
     <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
   </PropertyGroup>
