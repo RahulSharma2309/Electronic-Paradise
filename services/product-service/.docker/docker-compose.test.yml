@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  product-service.integration.test:
+    container_name: product-it-test
+    image: product-service.integration.test:it
+    depends_on:
+      product-service:
+        condition: service_healthy
+    environment:
+      - PRODUCT_BASE_URL=http://product-service
+    networks:
+      - product-it
+    # Build context will be handled by the runner script to ensure consistency
+    build:
+      context: ..
+      dockerfile: test/integration-test/ProductService.Integration.Test/Dockerfile.test
+
+networks:
+  product-it:
+    driver: bridge
+

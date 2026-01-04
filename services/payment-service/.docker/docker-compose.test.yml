@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  payment-service.integration.test:
+    container_name: payment-it-test
+    image: payment-service.integration.test:it
+    depends_on:
+      payment-service:
+        condition: service_healthy
+    environment:
+      - PAYMENT_BASE_URL=http://payment-service
+    networks:
+      - payment-it
+
+networks:
+  payment-it:
+    driver: bridge
+

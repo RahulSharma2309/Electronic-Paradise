@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: order-it-mssql
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "14324:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '>/dev/tcp/localhost/1433'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - order-it
+
+  dependency-mock:
+    container_name: order-it-dependency-mock
+    image: order-dependency-mock:it
+    ports:
+      - "3001:3001"
+    networks:
+      - order-it
+
+  order-service:
+    container_name: order-it-order-service
+    image: order-service:it
+    depends_on:
+      mssql:
+        condition: service_healthy
+      dependency-mock:
+        condition: service_started
+    ports:
+      - "5204:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=mssql
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=orderdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://dependency-mock:3001
+      - ServiceUrls__ProductService=http://dependency-mock:3001
+      - ServiceUrls__PaymentService=http://dependency-mock:3001
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - order-it
+
+networks:
+  order-it:
+    driver: bridge
+

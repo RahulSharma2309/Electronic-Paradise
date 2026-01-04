@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  order-service.integration.test:
+    container_name: order-it-test
+    image: order-service.integration.test:it
+    depends_on:
+      order-service:
+        condition: service_healthy
+    environment:
+      - ORDER_BASE_URL=http://order-service
+    networks:
+      - order-it
+
+networks:
+  order-it:
+    driver: bridge
+
