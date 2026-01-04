@@ -8,5 +8,5 @@ public sealed record ReleaseDto
     /// <summary>
     /// Gets the quantity of stock to release.
     /// </summary>
-    required public int Quantity { get; init; }
+    public required int Quantity { get; init; }
 }

@@ -26,7 +26,7 @@ public interface IAuthService
     /// </summary>
     /// <param name="dto">The login data transfer object containing email and password.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the authenticated user or an error message.</returns>
-    Task<(User? user, string? error)> LoginAsync(LoginDto dto);
+    Task<(User? User, string? Error)> LoginAsync(LoginDto dto);
 
     /// <summary>
     /// Resets a user's password.

@@ -1,11 +1,4 @@
 <Project>
-
-  <Import Project="$(MSBuildThisFileDirectory)../.build/test.props" />
-
+  <!-- Import from src/.build folder -->
+  <Import Project="$(MSBuildThisFileDirectory)../src/.build/test.props" Condition="Exists('$(MSBuildThisFileDirectory)../src/.build/test.props')" />
 </Project>
-
-
-
-
-
-

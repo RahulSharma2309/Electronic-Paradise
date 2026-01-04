@@ -51,8 +51,7 @@ public class PaymentServiceImpl : IPaymentService
             // 1) Attempt to debit wallet via User Service
             var debitResponse = await userClient.PostAsJsonAsync(
                 $"/api/users/{dto.UserProfileId}/wallet/debit",
-                new { Amount = dto.Amount }
-            );
+                new { Amount = dto.Amount });
 
             if (debitResponse.StatusCode == HttpStatusCode.NotFound)
             {
@@ -79,7 +78,7 @@ public class PaymentServiceImpl : IPaymentService
                 UserId = dto.UserId,
                 Amount = dto.Amount,
                 Status = "Paid",
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
             };
 
             await _repo.AddAsync(payment);
@@ -113,8 +112,7 @@ public class PaymentServiceImpl : IPaymentService
             // Credit the wallet back
             var creditResponse = await userClient.PostAsJsonAsync(
                 $"/api/users/{dto.UserProfileId}/wallet/credit",
-                new { Amount = dto.Amount }
-            );
+                new { Amount = dto.Amount });
 
             if (!creditResponse.IsSuccessStatusCode)
             {
@@ -129,7 +127,7 @@ public class PaymentServiceImpl : IPaymentService
                 UserId = dto.UserId,
                 Amount = -dto.Amount, // Negative to indicate refund
                 Status = "Refunded",
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
             };
 
             await _repo.AddAsync(refundPayment);
@@ -159,7 +157,7 @@ public class PaymentServiceImpl : IPaymentService
                 UserId = dto.UserId,
                 Amount = dto.Amount,
                 Status = dto.Status,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
             };
 
             var result = await _repo.AddAsync(payment);
@@ -189,6 +187,7 @@ public class PaymentServiceImpl : IPaymentService
             {
                 _logger.LogDebug("Payment record found for Order {OrderId}: Status {Status}", orderId, payment.Status);
             }
+
             return payment;
         }
         catch (Exception ex)

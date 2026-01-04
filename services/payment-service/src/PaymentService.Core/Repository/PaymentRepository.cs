@@ -60,6 +60,7 @@ public class PaymentRepository : IPaymentRepository
             {
                 _logger.LogDebug("Payment record found for Order {OrderId}: Payment ID {PaymentId}, Status {Status}", orderId, payment.Id, payment.Status);
             }
+
             return payment;
         }
         catch (Exception ex)

@@ -14,5 +14,5 @@ public sealed record WalletOperationDto
     /// <summary>
     /// Gets the amount to debit or credit from the wallet.
     /// </summary>
-    required public decimal Amount { get; init; }
+    public required decimal Amount { get; init; }
 }

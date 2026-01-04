@@ -76,6 +76,7 @@ public class ProductsController : ControllerBase
                 _logger.LogWarning("Product {ProductId} not found", id);
                 return NotFound();
             }
+
             _logger.LogInformation("Successfully retrieved product {ProductId}", id);
             return Ok(product);
         }
@@ -107,7 +108,7 @@ public class ProductsController : ControllerBase
             Name = dto.Name,
             Description = dto.Description,
             Price = dto.Price,
-            Stock = dto.Stock
+            Stock = dto.Stock,
         };
 
         try

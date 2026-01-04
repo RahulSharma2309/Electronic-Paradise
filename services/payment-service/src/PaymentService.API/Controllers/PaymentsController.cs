@@ -57,7 +57,7 @@ public class PaymentsController : ControllerBase
                 userId = payment.UserId,
                 amount = payment.Amount,
                 status = payment.Status,
-                timestamp = payment.Timestamp
+                timestamp = payment.Timestamp,
             });
         }
         catch (ArgumentException ex)
@@ -115,7 +115,7 @@ public class PaymentsController : ControllerBase
                 userId = payment.UserId,
                 amount = payment.Amount,
                 status = payment.Status,
-                timestamp = payment.Timestamp
+                timestamp = payment.Timestamp,
             });
         }
         catch (ArgumentException ex)
@@ -187,6 +187,7 @@ public class PaymentsController : ControllerBase
                 _logger.LogWarning("Payment status not found for Order {OrderId}", orderId);
                 return NotFound();
             }
+
             _logger.LogInformation("Payment status retrieved successfully for Order {OrderId}: {Status}", orderId, payment.Status);
             return Ok(new { payment.OrderId, payment.Status, payment.Timestamp });
         }

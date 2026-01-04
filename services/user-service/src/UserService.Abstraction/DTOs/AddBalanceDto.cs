@@ -14,10 +14,10 @@ public sealed record AddBalanceDto
     /// <summary>
     /// Gets the unique identifier of the user.
     /// </summary>
-    required public Guid UserId { get; init; }
+    public required Guid UserId { get; init; }
 
     /// <summary>
     /// Gets the amount to add to the wallet balance.
     /// </summary>
-    required public decimal Amount { get; init; }
+    public required decimal Amount { get; init; }
 }

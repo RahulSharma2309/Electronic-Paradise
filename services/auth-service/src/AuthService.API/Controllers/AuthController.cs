@@ -166,7 +166,7 @@ public class AuthController : ControllerBase
                     FirstName = firstName,
                     LastName = lastName,
                     PhoneNumber = dto.PhoneNumber,
-                    Address = dto.Address
+                    Address = dto.Address,
                 };
 
                 var profileResponse = await httpClient.PostAsJsonAsync("/api/users", profileDto);
@@ -249,7 +249,7 @@ public class AuthController : ControllerBase
         {
             [ClaimTypes.NameIdentifier] = user.Id.ToString(),
             [ClaimTypes.Email] = user.Email,
-            ["fullName"] = user.FullName ?? string.Empty
+            ["fullName"] = user.FullName ?? string.Empty,
         };
         var token = _jwtTokenGenerator.GenerateToken(claims);
 
@@ -258,7 +258,7 @@ public class AuthController : ControllerBase
             Token = token,
             ExpiresIn = 6 * 60 * 60,
             UserId = user.Id,
-            Email = user.Email
+            Email = user.Email,
         });
     }
 

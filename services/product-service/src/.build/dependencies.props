@@ -1,0 +1,57 @@
+<Project>
+  
+  <!-- ================================================================ -->
+  <!-- Package Version Management                                       -->
+  <!-- All package versions are defined here for consistency            -->
+  <!-- ================================================================ -->
+  
+  <PropertyGroup Label="Framework Settings">
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Platform and Core Packages">
+    <EpPlatformVersion>1.0.3</EpPlatformVersion>
+    <AspNetCoreVersion>8.0.0</AspNetCoreVersion>
+    <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Database">
+    <NpgsqlVersion>8.0.0</NpgsqlVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Logging">
+    <SerilogVersion>4.2.0</SerilogVersion>
+    <SerilogAspNetCoreVersion>8.0.0</SerilogAspNetCoreVersion>
+    <SerilogSinksConsoleVersion>6.0.0</SerilogSinksConsoleVersion>
+    <SerilogSinksFileVersion>6.0.0</SerilogSinksFileVersion>
+    <SerilogEnrichersEnvironmentVersion>3.0.0</SerilogEnrichersEnvironmentVersion>
+    <SerilogEnrichersThreadVersion>4.0.0</SerilogEnrichersThreadVersion>
+    <SerilogSettingsConfigurationVersion>8.0.4</SerilogSettingsConfigurationVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Testing Packages">
+    <XunitVersion>2.6.2</XunitVersion>
+    <XunitRunnerVersion>2.8.0</XunitRunnerVersion>
+    <MoqVersion>4.20.70</MoqVersion>
+    <FluentAssertionsVersion>6.12.0</FluentAssertionsVersion>
+    <CoverletVersion>6.0.0</CoverletVersion>
+    <MicrosoftTestSdkVersion>17.8.0</MicrosoftTestSdkVersion>
+    <AutoFixtureVersion>4.18.1</AutoFixtureVersion>
+    <EFCoreInMemoryVersion>8.0.0</EFCoreInMemoryVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Additional Test Variables">
+    <NetCoreVersion>net8.0</NetCoreVersion>
+    <NullableReferences>enable</NullableReferences>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Code Quality and Analysis">
+    <StyleCopAnalyzersVersion>1.2.0-beta.556</StyleCopAnalyzersVersion>
+    <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
+  </PropertyGroup>
+
+</Project>
+

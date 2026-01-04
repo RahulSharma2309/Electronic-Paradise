@@ -58,6 +58,7 @@ public class OrderServiceImpl : IOrderService
                 _logger.LogWarning("Order creation failed for user {UserId}: User profile not found", dto.UserId);
                 throw new KeyNotFoundException("User profile not found");
             }
+
             if (!userProfileResp.IsSuccessStatusCode)
             {
                 _logger.LogError("User service returned {StatusCode} for user {UserId}", userProfileResp.StatusCode, dto.UserId);
@@ -70,12 +71,13 @@ public class OrderServiceImpl : IOrderService
                 _logger.LogError("Failed to read user profile for user {UserId}", dto.UserId);
                 throw new InvalidOperationException("Failed to read user profile");
             }
+
             _logger.LogDebug("User profile retrieved successfully: Profile ID {ProfileId}, Wallet Balance: {Balance}", userProfile.Id, userProfile.WalletBalance);
 
             // 1) Validate stock and collect prices
             _logger.LogDebug("Validating product stock and collecting prices for {ItemCount} items", dto.Items.Count);
             int total = 0;
-            var productInfos = new List<(Guid productId, int quantity, int unitPrice)>();
+            var productInfos = new List<(Guid ProductId, int Quantity, int UnitPrice)>();
             foreach (var it in dto.Items)
             {
                 var res = await productClient.GetAsync($"/api/products/{it.ProductId}");
@@ -84,6 +86,7 @@ public class OrderServiceImpl : IOrderService
                     _logger.LogWarning("Order creation failed for user {UserId}: Product {ProductId} not found", dto.UserId, it.ProductId);
                     throw new KeyNotFoundException($"Product not found: {it.ProductId}");
                 }
+
                 if (!res.IsSuccessStatusCode)
                 {
                     _logger.LogError("Product service returned {StatusCode} for product {ProductId}", res.StatusCode, it.ProductId);
@@ -96,6 +99,7 @@ public class OrderServiceImpl : IOrderService
                     _logger.LogError("Failed to read product info for product {ProductId}", it.ProductId);
                     throw new InvalidOperationException("Failed to read product info");
                 }
+
                 if (prod.Stock < it.Quantity)
                 {
                     _logger.LogWarning("Order creation failed for user {UserId}: Insufficient stock for product {ProductId}. Available: {Stock}, Requested: {Quantity}", dto.UserId, it.ProductId, prod.Stock, it.Quantity);
@@ -106,6 +110,7 @@ public class OrderServiceImpl : IOrderService
                 productInfos.Add((it.ProductId, it.Quantity, prod.Price));
                 _logger.LogDebug("Product {ProductId} validated: Price {Price}, Quantity {Quantity}, Stock {Stock}", it.ProductId, prod.Price, it.Quantity, prod.Stock);
             }
+
             _logger.LogInformation("Stock validation completed. Total order amount: {TotalAmount}", total);
 
             // 2) Process payment via Payment Service
@@ -116,7 +121,7 @@ public class OrderServiceImpl : IOrderService
                 OrderId = tempOrderId,
                 UserId = dto.UserId,
                 UserProfileId = userProfile.Id,
-                Amount = total
+                Amount = total,
             });
 
             if (paymentResp.StatusCode == HttpStatusCode.NotFound)
@@ -136,34 +141,38 @@ public class OrderServiceImpl : IOrderService
                 _logger.LogError("Payment service returned {StatusCode} for temp order {TempOrderId}", paymentResp.StatusCode, tempOrderId);
                 throw new HttpRequestException($"Payment processing failed with status {paymentResp.StatusCode}");
             }
+
             _logger.LogInformation("Payment processed successfully for temp order {TempOrderId}", tempOrderId);
 
             // 3) Reserve stock for each product
             _logger.LogDebug("Reserving stock for {ProductCount} products", productInfos.Count);
-            var reserved = new List<(Guid productId, int quantity)>();
+            var reserved = new List<(Guid ProductId, int Quantity)>();
             try
             {
                 foreach (var p in productInfos)
                 {
-                    _logger.LogDebug("Reserving {Quantity} units of product {ProductId}", p.quantity, p.productId);
-                    var res = await productClient.PostAsJsonAsync($"/api/products/{p.productId}/reserve", new { Quantity = p.quantity });
+                    _logger.LogDebug("Reserving {Quantity} units of product {ProductId}", p.Quantity, p.ProductId);
+                    var res = await productClient.PostAsJsonAsync($"/api/products/{p.ProductId}/reserve", new { Quantity = p.Quantity });
                     if (res.StatusCode == HttpStatusCode.Conflict || res.StatusCode == HttpStatusCode.NotFound)
                     {
                         // Reservation failed -> refund payment
-                        _logger.LogWarning("Stock reservation failed for product {ProductId}. Initiating payment refund for temp order {TempOrderId}", p.productId, tempOrderId);
+                        _logger.LogWarning("Stock reservation failed for product {ProductId}. Initiating payment refund for temp order {TempOrderId}", p.ProductId, tempOrderId);
                         await RefundPaymentAsync(paymentClient, tempOrderId, dto.UserId, userProfile.Id, total);
-                        throw new InvalidOperationException($"Stock reservation failed for product {p.productId}");
+                        throw new InvalidOperationException($"Stock reservation failed for product {p.ProductId}");
                     }
+
                     if (!res.IsSuccessStatusCode)
                     {
                         // Refund payment
-                        _logger.LogError("Product service returned {StatusCode} for product {ProductId}. Initiating payment refund for temp order {TempOrderId}", res.StatusCode, p.productId, tempOrderId);
+                        _logger.LogError("Product service returned {StatusCode} for product {ProductId}. Initiating payment refund for temp order {TempOrderId}", res.StatusCode, p.ProductId, tempOrderId);
                         await RefundPaymentAsync(paymentClient, tempOrderId, dto.UserId, userProfile.Id, total);
                         throw new HttpRequestException($"Product service returned {res.StatusCode}");
                     }
-                    reserved.Add((p.productId, p.quantity));
-                    _logger.LogDebug("Stock reserved successfully for product {ProductId}", p.productId);
+
+                    reserved.Add((p.ProductId, p.Quantity));
+                    _logger.LogDebug("Stock reserved successfully for product {ProductId}", p.ProductId);
                 }
+
                 _logger.LogInformation("Stock reservation completed for all products");
 
                 // 4) Create order record
@@ -173,9 +182,9 @@ public class OrderServiceImpl : IOrderService
                 {
                     order.Items.Add(new OrderItem
                     {
-                        ProductId = r.productId,
-                        Quantity = r.quantity,
-                        UnitPrice = r.unitPrice
+                        ProductId = r.ProductId,
+                        Quantity = r.Quantity,
+                        UnitPrice = r.UnitPrice,
                     });
                 }
 
@@ -200,6 +209,7 @@ public class OrderServiceImpl : IOrderService
                         _logger.LogError(ex, "Failed to release stock for product {ProductId}. Manual intervention may be required.", productId);
                     }
                 }
+
                 throw;
             }
         }
@@ -225,6 +235,7 @@ public class OrderServiceImpl : IOrderService
             {
                 _logger.LogDebug("Order {OrderId} found with {ItemCount} items", id, order.Items?.Count ?? 0);
             }
+
             return order;
         }
         catch (Exception ex)
@@ -270,7 +281,7 @@ public class OrderServiceImpl : IOrderService
                 OrderId = orderId,
                 UserId = userId,
                 UserProfileId = userProfileId,
-                Amount = amount
+                Amount = amount,
             });
 
             if (refundResp.IsSuccessStatusCode)

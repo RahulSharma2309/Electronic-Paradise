@@ -8,12 +8,12 @@ public sealed record UserProfileDto
     /// <summary>
     /// Gets the unique identifier of the user profile.
     /// </summary>
-    required public Guid Id { get; init; }
+    public required Guid Id { get; init; }
 
     /// <summary>
     /// Gets the unique identifier of the user from the Auth service.
     /// </summary>
-    required public Guid UserId { get; init; }
+    public required Guid UserId { get; init; }
 
     /// <summary>
     /// Gets the first name of the user.
@@ -33,5 +33,5 @@ public sealed record UserProfileDto
     /// <summary>
     /// Gets the wallet balance of the user.
     /// </summary>
-    required public decimal WalletBalance { get; init; }
+    public required decimal WalletBalance { get; init; }
 }

@@ -198,7 +198,7 @@ public class UsersController : ControllerBase
             {
                 userId = dto.UserId,
                 balance,
-                message = $"Successfully added ₹{dto.Amount} to wallet. New balance: ₹{balance}"
+                message = $"Successfully added ₹{dto.Amount} to wallet. New balance: ₹{balance}",
             });
         }
         catch (KeyNotFoundException)
