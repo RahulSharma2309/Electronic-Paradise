@@ -9,3 +9,5 @@ public class IntegrationCollection : ICollectionFixture<ProductServiceFixture>
     // ICollectionFixture interfaces to our test classes.
 }
 
+
+

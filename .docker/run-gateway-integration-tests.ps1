@@ -14,3 +14,5 @@ if (-not (Test-Path $serviceRunner)) {
 
 & $serviceRunner -Configuration $Configuration -KeepEnvironment:$KeepEnvironment
 
+
+

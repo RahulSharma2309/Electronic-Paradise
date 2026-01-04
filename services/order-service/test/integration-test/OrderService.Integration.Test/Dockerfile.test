@@ -6,3 +6,5 @@ COPY obj/docker/publish .
 
 ENTRYPOINT ["dotnet", "vstest", "OrderService.Integration.Test.dll"]
 
+
+

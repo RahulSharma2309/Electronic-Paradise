@@ -6,3 +6,5 @@ COPY obj/docker/publish .
 
 ENTRYPOINT ["dotnet", "vstest", "PaymentService.Integration.Test.dll"]
 
+
+
