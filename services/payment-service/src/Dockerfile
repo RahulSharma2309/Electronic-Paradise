@@ -2,25 +2,27 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy project files
-COPY ["PaymentService.API/PaymentService.API.csproj", "PaymentService.API/"]
-COPY ["PaymentService.Core/PaymentService.Core.csproj", "PaymentService.Core/"]
-COPY ["PaymentService.Abstraction/PaymentService.Abstraction.csproj", "PaymentService.Abstraction/"]
-COPY ["Directory.Build.props", "./"]
+COPY ["src/PaymentService.API/PaymentService.API.csproj", "PaymentService.API/"]
+COPY ["src/PaymentService.Core/PaymentService.Core.csproj", "PaymentService.Core/"]
+COPY ["src/PaymentService.Abstraction/PaymentService.Abstraction.csproj", "PaymentService.Abstraction/"]
+COPY ["src/Directory.Build.props", "./"]
+COPY [".build/", ".build/"]
 
 # Copy nuget.config for Platform package
 COPY ["nuget.config", "./"]
 
 # Accept GitHub token as build argument
 ARG GITHUB_TOKEN
-# Handle GitHub token: replace if provided, remove GitHub source and credentials if not
-RUN if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
+# Handle GitHub token and remove local source (not available in Docker)
+RUN sed -i '/<add key="local"/d' nuget.config && \
+    if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
       sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" nuget.config; \
       echo "GitHub token provided, using GitHub Packages source."; \
     else \
       echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
       sed -i '/<add key="github"/d' nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\/packageSourceCredentials>/d' nuget.config; \
-      echo "GitHub source removed. Ep.Platform package must be available from nuget.org or local source."; \
+      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' nuget.config; \
+      echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
     fi
 
 # Restore dependencies (this layer will be cached if dependencies don't change)
@@ -28,7 +30,7 @@ RUN if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
 RUN dotnet restore "PaymentService.API/PaymentService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true
 
 # Copy everything else
-COPY . .
+COPY src/ .
 
 # Build and publish (removed --no-restore to avoid using cached Windows paths)
 WORKDIR "/src/PaymentService.API"
@@ -46,7 +48,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy and setup entrypoint
-COPY entrypoint.sh /entrypoint.sh
+COPY src/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 ENV APP_DLL=PaymentService.API.dll

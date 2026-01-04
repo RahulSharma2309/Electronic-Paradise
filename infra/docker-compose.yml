@@ -42,8 +42,8 @@ services:
 
   auth-service:
     build:
-      context: ../services/auth-service/src
-      dockerfile: Dockerfile
+      context: ../services/auth-service
+      dockerfile: src/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: auth-service
@@ -64,8 +64,8 @@ services:
 
   product-service:
     build:
-      context: ../services/product-service/src
-      dockerfile: Dockerfile
+      context: ../services/product-service
+      dockerfile: src/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: product-service
@@ -84,8 +84,8 @@ services:
 
   payment-service:
     build:
-      context: ../services/payment-service/src
-      dockerfile: Dockerfile
+      context: ../services/payment-service
+      dockerfile: src/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: payment-service
@@ -106,8 +106,8 @@ services:
 
   order-service:
     build:
-      context: ../services/order-service/src
-      dockerfile: Dockerfile
+      context: ../services/order-service
+      dockerfile: src/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: order-service
@@ -132,8 +132,8 @@ services:
 
   user-service:
     build:
-      context: ../services/user-service/src
-      dockerfile: Dockerfile
+      context: ../services/user-service
+      dockerfile: src/Dockerfile
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     container_name: user-service
