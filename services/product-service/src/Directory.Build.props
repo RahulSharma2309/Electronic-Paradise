@@ -1,6 +1,6 @@
 <Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)../.build/src.props" Condition="Exists('$(MSBuildThisFileDirectory)../.build/src.props')" />
+  <Import Project="$(MSBuildThisFileDirectory)..\.build/src.props" Condition="Exists('$(MSBuildThisFileDirectory)..\.build/src.props')" />
 
   <PropertyGroup>
     <PackageTags>product;catalog;inventory;microservices;electronic-paradise;$(PackageTags)</PackageTags>
