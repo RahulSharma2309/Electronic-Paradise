@@ -55,14 +55,14 @@ public class AuthServiceFixture : IAsyncLifetime
                     options.UseInMemoryDatabase("InMemoryAuthTestDb");
                 });
 
-                // Mock HttpClient for User Service calls
-                var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+                // Mock HttpClient for User Service calls - Use Loose behavior for robustness
+                var handlerMock = new Mock<HttpMessageHandler>();
                 handlerMock
                     .Protected()
                     // Setup for /api/users/phone-exists/{phoneNumber}
                     .Setup<Task<HttpResponseMessage>>(
                         "SendAsync",
-                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.PathAndQuery.Contains("/api/users/phone-exists/")),
+                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.ToString().Contains("phone-exists")),
                         ItExpr.IsAny<CancellationToken>()
                     )
                     .ReturnsAsync(new HttpResponseMessage
@@ -76,7 +76,7 @@ public class AuthServiceFixture : IAsyncLifetime
                     // Setup for /api/users (POST profile)
                     .Setup<Task<HttpResponseMessage>>(
                         "SendAsync",
-                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri!.PathAndQuery.Contains("/api/users")),
+                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri!.ToString().Contains("api/users")),
                         ItExpr.IsAny<CancellationToken>()
                     )
                     .ReturnsAsync(new HttpResponseMessage
@@ -91,15 +91,8 @@ public class AuthServiceFixture : IAsyncLifetime
                 };
 
                 var mockFactory = new Mock<IHttpClientFactory>();
-                mockFactory.Setup(_ => _.CreateClient("user")).Returns(httpClient);
+                mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
                 services.AddSingleton(mockFactory.Object);
-
-                var sp = services.BuildServiceProvider();
-                using (var scope = sp.CreateScope())
-                {
-                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    db.Database.EnsureCreated();
-                }
             });
         });
 

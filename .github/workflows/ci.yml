@@ -56,12 +56,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dotnet test gateway/Gateway.sln -c Release --logger "trx;LogFileName=gateway.trx" --results-directory ./TestResults/gateway /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/auth-service/AuthService.sln -c Release --logger "trx;LogFileName=auth.trx" --results-directory ./TestResults/auth /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/order-service/OrderService.sln -c Release --logger "trx;LogFileName=order.trx" --results-directory ./TestResults/order /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/payment-service/PaymentService.sln -c Release --logger "trx;LogFileName=payment.trx" --results-directory ./TestResults/payment /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/product-service/ProductService.sln -c Release --logger "trx;LogFileName=product.trx" --results-directory ./TestResults/product /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/user-service/UserService.sln -c Release --logger "trx;LogFileName=user.trx" --results-directory ./TestResults/user /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test gateway/Gateway.sln -c Release --logger trx --results-directory ./TestResults/gateway /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/auth-service/AuthService.sln -c Release --logger trx --results-directory ./TestResults/auth /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/order-service/OrderService.sln -c Release --logger trx --results-directory ./TestResults/order /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/payment-service/PaymentService.sln -c Release --logger trx --results-directory ./TestResults/payment /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/product-service/ProductService.sln -c Release --logger trx --results-directory ./TestResults/product /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/user-service/UserService.sln -c Release --logger trx --results-directory ./TestResults/user /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
       - name: End Sonar Analysis
         env:
