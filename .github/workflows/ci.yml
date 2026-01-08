@@ -69,7 +69,7 @@ jobs:
         run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
       - name: Publish Test Report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@31d8463bd87de1ba7325fe6d7b5e1d86f5c6b960 # v1.9.1
         if: always()
         with:
           name: .NET Integration Tests
