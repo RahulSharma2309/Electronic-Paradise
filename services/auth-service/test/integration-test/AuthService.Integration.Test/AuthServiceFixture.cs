@@ -12,6 +12,10 @@ using Xunit;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using AuthService.Abstraction.DTOs;
+using Moq;
+using Moq.Protected;
+using System.Threading;
+using System.Net;
 
 namespace AuthService.Integration.Test;
 
@@ -50,6 +54,45 @@ public class AuthServiceFixture : IAsyncLifetime
                 {
                     options.UseInMemoryDatabase("InMemoryAuthTestDb");
                 });
+
+                // Mock HttpClient for User Service calls
+                var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+                handlerMock
+                    .Protected()
+                    // Setup for /api/users/phone-exists/{phoneNumber}
+                    .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.PathAndQuery.Contains("/api/users/phone-exists/")),
+                        ItExpr.IsAny<CancellationToken>()
+                    )
+                    .ReturnsAsync(new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Content = JsonContent.Create(new { exists = false }),
+                    });
+
+                handlerMock
+                    .Protected()
+                    // Setup for /api/users (POST profile)
+                    .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri!.PathAndQuery.Contains("/api/users")),
+                        ItExpr.IsAny<CancellationToken>()
+                    )
+                    .ReturnsAsync(new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.Created,
+                        Content = JsonContent.Create(new { success = true }),
+                    });
+
+                var httpClient = new HttpClient(handlerMock.Object)
+                {
+                    BaseAddress = new Uri("http://user-service-mock:3001")
+                };
+
+                var mockFactory = new Mock<IHttpClientFactory>();
+                mockFactory.Setup(_ => _.CreateClient("user")).Returns(httpClient);
+                services.AddSingleton(mockFactory.Object);
 
                 var sp = services.BuildServiceProvider();
                 using (var scope = sp.CreateScope())
