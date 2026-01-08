@@ -804,25 +804,25 @@
 **Dependencies:** Epic 5 (tests must exist)  
 **Learning Focus:** GitHub Actions, automation, versioning
 
-### PBI 6.1: GitHub Actions CI Pipeline
+### PBI 6.1: GitHub Actions CI Pipeline (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Automated build and test on every commit
 
 **Acceptance Criteria:**
-- [ ] Build all .NET services
-- [ ] Run all unit tests
-- [ ] Run all integration tests
-- [ ] Build frontend
-- [ ] Run frontend tests
-- [ ] Upload coverage reports
-- [ ] Fail on test failures
-- [ ] Run on PR and main branch
+- [x] Build all .NET services
+- [x] Run all unit tests
+- [x] Run all integration tests
+- [x] Build frontend
+- [x] Run frontend tests
+- [x] Upload coverage reports
+- [x] Fail on test failures
+- [x] Run on PR and main branch
 
 **Technical Tasks:**
-- [ ] Create .github/workflows/ci.yml
-- [ ] Configure matrix builds
-- [ ] Set up test reporting
-- [ ] Add coverage upload (Codecov)
+- [x] Create .github/workflows/ci.yml
+- [x] Configure matrix builds (parallel jobs for .NET and Frontend)
+- [x] Set up test reporting (dorny/test-reporter)
+- [x] Add coverage upload (SonarCloud integration)
 - [ ] Configure branch protection
 - [ ] Add status badges to README
 
@@ -868,24 +868,24 @@
 
 ---
 
-### PBI 6.4: Code Quality Gates (SonarQube)
+### PBI 6.4: Code Quality Gates (SonarCloud) (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Automated code quality checks
 
 **Acceptance Criteria:**
-- [ ] Run SonarQube analysis
-- [ ] Check code smells
-- [ ] Check duplications
-- [ ] Check security vulnerabilities
-- [ ] Fail build on quality gate failure
+- [x] Run SonarCloud analysis
+- [x] Check code smells
+- [x] Check duplications
+- [x] Check security vulnerabilities
+- [x] Fail build on quality gate failure
 - [ ] Display quality badge
 
 **Technical Tasks:**
-- [ ] Set up SonarQube (self-hosted or cloud)
-- [ ] Configure analysis in CI
-- [ ] Set quality gate thresholds
-- [ ] Fix initial issues
-- [ ] Add quality badge
+- [x] Set up SonarCloud (cloud-based)
+- [x] Configure analysis in CI (dotnet-sonarscanner)
+- [x] Set quality gate thresholds
+- [x] Fix initial code coverage and security issues
+- [ ] Add quality badge to README
 
 ---
 
@@ -1491,7 +1491,7 @@
 | Epic 3: Advanced Payment & Checkout | 55 | 2-3 sprints | Epic 2 | Pending |
 | Epic 4: Frontend Architecture | 89 | 3-4 sprints | Epics 1-3 | Pending |
 | **Epic 5: Testing Strategy** | **55** | **2-3 sprints** | **Epics 1-4** | **DONE ✅** |
-| Epic 6: CI/CD Pipeline | 55 | 2 sprints | Epic 5 | In Progress |
+| Epic 6: CI/CD Pipeline | 55 | 2 sprints | Epic 5 | In Progress (PBI 6.1 ✅, PBI 6.4 ✅) |
 | Epic 7: Kubernetes Deployment | 89 | 3-4 sprints | Epic 6 | Pending |
 | Epic 8: Observability & Monitoring | 55 | 2-3 sprints | Epic 7 | Pending |
 | Epic 9: Advanced Features | 89 | 4-5 sprints | Epics 1-8 | Pending |
@@ -1506,6 +1506,6 @@
 
 **This roadmap transforms your MVP into a production-grade, enterprise-level e-commerce platform while maximizing your learning!** 🚀
 
-**Last Updated:** January 4, 2026  
-**Status:** Phase 1 Implementation Ready ✅
+**Last Updated:** January 8, 2026  
+**Status:** Epic 6 In Progress - CI/CD Pipeline with SonarCloud Integration Complete ✅
 
