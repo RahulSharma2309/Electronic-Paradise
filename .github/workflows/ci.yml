@@ -2,35 +2,31 @@ name: Unified CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
-
-permissions:
-  contents: read
-  checks: write
-  pull-requests: write
+    branches: [main, develop]
 
 jobs:
   # JOB 1: Code Quality, Build and Test (.NET)
   dotnet-analysis:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
-          fetch-depth: 0 # Important for SonarCloud
+          fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@6bd8ad36ad7469a8c237c2234f96425f17d07945 # v4.0.1
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
-      - name: Install Sonar Scanner & Coverlet
-        run: |
-          dotnet tool install --global dotnet-sonarscanner
-          # Coverlet is used to calculate code coverage
-          dotnet tool install --global coverlet.console 
+      - name: Install Sonar Scanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin Sonar Analysis
         env:
@@ -40,7 +36,7 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"RahulSharma2309_Electronic-Paradise" \
             /o:"rahulsharma2309" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
             /d:sonar.exclusions="**/bin/**,**/obj/**,**/test/**"
@@ -56,38 +52,44 @@ jobs:
 
       - name: Test & Collect Coverage
         run: |
-          # We run tests for each solution and generate coverage files
           dotnet test services/auth-service/AuthService.sln -c Release --logger "trx;LogFileName=auth.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
           dotnet test services/order-service/OrderService.sln -c Release --logger "trx;LogFileName=order.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          # (Add other services here as you build their tests)
 
       - name: End Sonar Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
       - name: Publish Test Report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@eadf37e3d5171005a5a1f0a055375c3531773ec0 # v1.9.1
         if: always()
         with:
           name: .NET Integration Tests
-          path: "**/test-results/*.trx"
+          path: "**/TestResults/*.trx"
           reporter: dotnet-trx
 
   # JOB 2: Frontend Build
   frontend-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@60edb5dd545a775178f525247833781746734c5b # v4.0.2
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
-      - name: Install & Build
+
+      - name: Install dependencies
         run: |
           cd frontend
-          npm ci
+          npm ci --ignore-scripts
+
+      - name: Build Frontend
+        run: |
+          cd frontend
           npm run build --if-present
