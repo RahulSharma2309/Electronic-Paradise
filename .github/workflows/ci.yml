@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@6bd8ad36ad7469a8c237c2234f96425f17d07945 # v4.0.1
+        uses: actions/setup-dotnet@3447fd6a9f9e57ad2388167d758fd763359670d0 # v4.3.0
         with:
           dotnet-version: "8.0.x"
 
@@ -78,7 +78,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Node.js
-        uses: actions/setup-node@60edb5dd545a775178f525247833781746734c5b # v4.0.2
+        uses: actions/setup-node@1d11216273b77a40c1495c81498197f0f983631d # v4.1.0
         with:
           node-version: "20"
           cache: "npm"
