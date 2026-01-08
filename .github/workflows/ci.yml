@@ -52,8 +52,12 @@ jobs:
 
       - name: Test & Collect Coverage
         run: |
-          dotnet test services/auth-service/AuthService.sln -c Release --logger "trx;LogFileName=auth.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/order-service/OrderService.sln -c Release --logger "trx;LogFileName=order.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test gateway/Gateway.sln -c Release --logger "trx;LogFileName=gateway.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/auth-service/AuthService.sln -c Release --logger "trx;LogFileName=auth.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/order-service/OrderService.sln -c Release --logger "trx;LogFileName=order.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/payment-service/PaymentService.sln -c Release --logger "trx;LogFileName=payment.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/product-service/ProductService.sln -c Release --logger "trx;LogFileName=product.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test services/user-service/UserService.sln -c Release --logger "trx;LogFileName=user.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
       - name: End Sonar Analysis
         env:
