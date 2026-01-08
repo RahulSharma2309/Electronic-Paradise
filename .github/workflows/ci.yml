@@ -42,6 +42,8 @@ jobs:
             /d:sonar.exclusions="**/bin/**,**/obj/**,**/test/**"
 
       - name: Build All Services
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet build gateway/Gateway.sln -c Release
           dotnet build services/auth-service/AuthService.sln -c Release
@@ -51,6 +53,8 @@ jobs:
           dotnet build services/user-service/UserService.sln -c Release
 
       - name: Test & Collect Coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet test gateway/Gateway.sln -c Release --logger "trx;LogFileName=gateway.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
           dotnet test services/auth-service/AuthService.sln -c Release --logger "trx;LogFileName=auth.trx" --results-directory ./TestResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover

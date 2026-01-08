@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- API references Platform NuGet package (not project) -->
-    <PackageReference Include="Ep.Platform" Version="$(EpPlatformVersion)" />
+    <!-- API references Platform as Project Reference for Monorepo efficiency -->
+    <ProjectReference Include="../../../../platform/Ep.Platform/Ep.Platform.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="$(AspNetCoreVersion)" />
     
     <!-- Serilog Packages -->
