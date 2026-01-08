@@ -2,10 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UserService.Abstraction\UserService.Abstraction.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Ep.Platform" Version="$(EpPlatformVersion)" />
+    <ProjectReference Include="../../../../platform/Ep.Platform/Ep.Platform.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

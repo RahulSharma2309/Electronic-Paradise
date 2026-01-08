@@ -12,6 +12,10 @@ using Xunit;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using AuthService.Abstraction.DTOs;
+using Moq;
+using Moq.Protected;
+using System.Threading;
+using System.Net;
 
 namespace AuthService.Integration.Test;
 
@@ -51,12 +55,55 @@ public class AuthServiceFixture : IAsyncLifetime
                     options.UseInMemoryDatabase("InMemoryAuthTestDb");
                 });
 
-                var sp = services.BuildServiceProvider();
-                using (var scope = sp.CreateScope())
+                // Mock HttpClient for User Service calls
+                var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
+                handlerMock
+                    .Protected()
+                    .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>()
+                    )
+                    .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+                    {
+                        var uri = request.RequestUri?.ToString() ?? string.Empty;
+
+                        // Mock phone-exists check - always return false (phone doesn't exist)
+                        if (request.Method == HttpMethod.Get && uri.Contains("phone-exists"))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.OK,
+                                Content = JsonContent.Create(new { exists = false })
+                            };
+                        }
+
+                        // Mock user profile creation - always return success
+                        if (request.Method == HttpMethod.Post && uri.Contains("api/users"))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.Created,
+                                Content = JsonContent.Create(new { success = true })
+                            };
+                        }
+
+                        // Default response for any other User Service calls
+                        return new HttpResponseMessage
+                        {
+                            StatusCode = HttpStatusCode.OK,
+                            Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json")
+                        };
+                    });
+
+                var httpClient = new HttpClient(handlerMock.Object)
                 {
-                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    db.Database.EnsureCreated();
-                }
+                    BaseAddress = new Uri("http://user-service-mock:3001")
+                };
+
+                var mockFactory = new Mock<IHttpClientFactory>();
+                mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+                services.AddSingleton(mockFactory.Object);
             });
         });
 
