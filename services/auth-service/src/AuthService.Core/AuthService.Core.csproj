@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Core references Abstraction and Platform NuGet package -->
+    <!-- Core references Abstraction and Platform as Project Reference -->
     <ProjectReference Include="..\AuthService.Abstraction\AuthService.Abstraction.csproj" />
-    <PackageReference Include="Ep.Platform" Version="$(EpPlatformVersion)" />
+    <ProjectReference Include="../../../../platform/Ep.Platform/Ep.Platform.csproj" />
   </ItemGroup>
 
 </Project>
