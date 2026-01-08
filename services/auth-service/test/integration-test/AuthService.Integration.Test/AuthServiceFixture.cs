@@ -55,34 +55,45 @@ public class AuthServiceFixture : IAsyncLifetime
                     options.UseInMemoryDatabase("InMemoryAuthTestDb");
                 });
 
-                // Mock HttpClient for User Service calls - Use Loose behavior for robustness
-                var handlerMock = new Mock<HttpMessageHandler>();
+                // Mock HttpClient for User Service calls
+                var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
                 handlerMock
                     .Protected()
-                    // Setup for /api/users/phone-exists/{phoneNumber}
                     .Setup<Task<HttpResponseMessage>>(
                         "SendAsync",
-                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.ToString().Contains("phone-exists")),
+                        ItExpr.IsAny<HttpRequestMessage>(),
                         ItExpr.IsAny<CancellationToken>()
                     )
-                    .ReturnsAsync(new HttpResponseMessage
+                    .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
                     {
-                        StatusCode = HttpStatusCode.OK,
-                        Content = JsonContent.Create(new { exists = false }),
-                    });
+                        var uri = request.RequestUri?.ToString() ?? string.Empty;
 
-                handlerMock
-                    .Protected()
-                    // Setup for /api/users (POST profile)
-                    .Setup<Task<HttpResponseMessage>>(
-                        "SendAsync",
-                        ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri!.ToString().Contains("api/users")),
-                        ItExpr.IsAny<CancellationToken>()
-                    )
-                    .ReturnsAsync(new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.Created,
-                        Content = JsonContent.Create(new { success = true }),
+                        // Mock phone-exists check - always return false (phone doesn't exist)
+                        if (request.Method == HttpMethod.Get && uri.Contains("phone-exists"))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.OK,
+                                Content = JsonContent.Create(new { exists = false })
+                            };
+                        }
+
+                        // Mock user profile creation - always return success
+                        if (request.Method == HttpMethod.Post && uri.Contains("api/users"))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.Created,
+                                Content = JsonContent.Create(new { success = true })
+                            };
+                        }
+
+                        // Default response for any other User Service calls
+                        return new HttpResponseMessage
+                        {
+                            StatusCode = HttpStatusCode.OK,
+                            Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json")
+                        };
                     });
 
                 var httpClient = new HttpClient(handlerMock.Object)
