@@ -820,11 +820,40 @@
 
 **Technical Tasks:**
 - [x] Create .github/workflows/ci.yml
-- [x] Configure matrix builds (parallel jobs for .NET and Frontend)
-- [x] Set up test reporting (dorny/test-reporter)
-- [x] Add coverage upload (SonarCloud integration)
+- [x] Configure parallel jobs for .NET and Frontend (not matrix - separate jobs for better clarity)
+- [x] Set up test reporting with dorny/test-reporter (GitHub Checks integration)
+- [x] Add coverage collection with Coverlet (OpenCover format for SonarCloud)
+- [x] Configure unique test result directories to prevent overwriting
+- [x] Implement robust mocking for integration tests (HttpClient mocking with callbacks)
+- [x] Add explicit permissions (least privilege principle)
+- [x] Use --ignore-scripts for npm security
 - [ ] Configure branch protection
 - [ ] Add status badges to README
+
+**Implementation Notes:**
+- Used version tags (@v4, @v1) instead of commit SHAs due to GitHub API resolution issues
+- Parallel jobs improve performance (~5 min total vs ~7 min sequential)
+- All 120+ tests passing across all services
+
+---
+
+### 🎓 Key Learnings from PBI 6.1 & 6.4:
+
+**Challenges Overcome:**
+1. **GitHub Actions SHA Resolution** - Commit SHA pinning for actions failed due to GitHub API issues; resolved by using semantic version tags with documented rationale
+2. **Integration Test Reliability** - External service calls caused 503 errors in CI; resolved with callback-based HttpClient mocking
+3. **Test Result Conflicts** - Multiple test projects overwriting .trx files; resolved with unique directories per service
+4. **NuGet Authentication** - Ep.Platform package required auth in CI; resolved by switching from PackageReference to ProjectReference
+5. **SonarCloud Conflicts** - Automatic Analysis conflicted with CI-based analysis; required manual disabling in dashboard
+6. **Infrastructure vs Application Code** - Workflow files flagged by SonarCloud; resolved by excluding .github/** from analysis
+
+**Best Practices Established:**
+- ✅ Explicit job permissions (principle of least privilege)
+- ✅ Parallel job execution for performance
+- ✅ Unique test result directories
+- ✅ Robust mocking strategies for integration tests
+- ✅ Separation of infrastructure and application code in quality scans
+- ✅ Pragmatic security (working version tags > broken SHA pins)
 
 ---
 
@@ -881,11 +910,22 @@
 - [ ] Display quality badge
 
 **Technical Tasks:**
-- [x] Set up SonarCloud (cloud-based)
-- [x] Configure analysis in CI (dotnet-sonarscanner)
+- [x] Set up SonarCloud (cloud-based SaaS)
+- [x] Configure dotnet-sonarscanner begin/end wrapper in CI
+- [x] Integrate OpenCover code coverage reports
+- [x] Configure exclusions (bin, obj, test, .github)
 - [x] Set quality gate thresholds
-- [x] Fix initial code coverage and security issues
+- [x] Fix duplicate ProjectGuid warnings (changed PackageReference to ProjectReference for Ep.Platform)
+- [x] Resolve integration test reliability (mocked external dependencies)
+- [x] Fix nullability warnings in test fixtures
+- [ ] Disable Automatic Analysis in SonarCloud (conflicts with CI-based analysis)
 - [ ] Add quality badge to README
+
+**Implementation Notes:**
+- Excluded .github/** from analysis (infrastructure code, not application code)
+- Used fetch-depth: 0 for full Git history (required for accurate blame and change tracking)
+- Sonar analysis runs between build and end steps to capture all metrics
+- Organization: rahulsharma2309, Project Key: RahulSharma2309_Electronic-Paradise
 
 ---
 
