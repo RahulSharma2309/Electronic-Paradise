@@ -1,0 +1,62 @@
+# Git and GitHub
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# IDE and Editor files
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
+.cursor/
+
+# Build outputs
+**/bin/
+**/obj/
+**/artifacts/
+**/out/
+
+# Test results
+**/TestResults/
+**/*.trx
+
+# NuGet
+**/*.nuget.props
+**/*.nuget.targets
+**/project.assets.json
+**/project.nuget.cache
+
+# Node modules
+**/node_modules/
+**/npm-debug.log*
+
+# Environment files
+**/.env
+**/*.env.local
+
+# Logs
+**/*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (not needed in Docker)
+docs/
+*.md
+!README.md
+
+# Scripts
+**/*.ps1
+**/*.sh
+!**/entrypoint.sh
+!**/wait-for.sh
+
+# Temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.cache

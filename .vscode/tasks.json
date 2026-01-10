@@ -4,364 +4,152 @@
     {
       "label": "Docker: Build All Services",
       "type": "shell",
-      "command": "docker-compose",
-      "args": ["build"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
+      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose build",
       "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
       "group": {
         "kind": "build",
         "isDefault": false
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Rebuild All Services",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "--no-cache"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
       }
     },
     {
       "label": "Docker: Start All Services",
       "type": "shell",
-      "command": "docker-compose",
-      "args": ["up", "-d"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
+      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose up -d",
       "problemMatcher": [],
-      "group": "none",
       "presentation": {
+        "echo": true,
         "reveal": "always",
-        "panel": "new"
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Docker: Build & Start All Services",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/docker-build-start.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
       }
     },
     {
       "label": "Docker: Stop All Services",
       "type": "shell",
-      "command": "docker-compose",
-      "args": ["down"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
+      "command": "cd infra; docker-compose down",
       "problemMatcher": [],
-      "group": "none",
       "presentation": {
+        "echo": true,
         "reveal": "always",
-        "panel": "new"
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
       }
     },
     {
-      "label": "Docker: View All Logs",
+      "label": "Docker: Stop & Remove Volumes",
       "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
+      "command": "cd infra; docker-compose down -v",
       "problemMatcher": [],
-      "group": "none",
       "presentation": {
+        "echo": true,
         "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Auth Service",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "auth-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build User Service",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "user-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Product Service",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "product-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Payment Service",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "payment-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Order Service",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "order-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Gateway",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "gateway"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Auth Service Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "auth-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View User Service Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "user-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Product Service Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "product-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Payment Service Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "payment-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Order Service Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "order-service"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Gateway Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "gateway"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Restart All Services",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["restart"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Stop and Remove All (Clean)",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["down", "-v"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Start SQL Only",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["up", "-d", "mssql"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build Frontend",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["build", "frontend"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: View Frontend Logs",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["logs", "-f", "frontend"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
-    {
-      "label": "Docker: Build and Start All",
-      "type": "shell",
-      "command": "docker-compose",
-      "args": ["up", "-d", "--build"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
-      "problemMatcher": [],
-      "group": "none",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
       }
     },
     {
       "label": "Docker: View Service Status",
       "type": "shell",
-      "command": "docker-compose",
-      "args": ["ps"],
-      "options": {
-        "cwd": "${workspaceFolder}/infra"
-      },
+      "command": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'",
       "problemMatcher": [],
-      "group": "none",
       "presentation": {
+        "echo": true,
         "reveal": "always",
-        "panel": "new"
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Docker: View Logs (All Services)",
+      "type": "shell",
+      "command": "cd infra; docker-compose logs -f --tail=100",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "Docker: Clean All (Restart Fresh)",
+      "type": "shell",
+      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose down -v; docker-compose build; docker-compose up -d",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "dotnet: Build All Services",
+      "type": "shell",
+      "command": "dotnet build ${workspaceFolder}/Electronic-Paradise.sln",
+      "problemMatcher": "$msCompile",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "dotnet: Run All Tests",
+      "type": "shell",
+      "command": "dotnet test ${workspaceFolder}/Electronic-Paradise.sln --logger 'console;verbosity=detailed'",
+      "problemMatcher": "$msCompile",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
       }
     }
   ]
