@@ -2,14 +2,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy project file first for better layer caching
-COPY ["src/Gateway.csproj", "Gateway/"]
-COPY ["src/Directory.Build.props", "./"]
+COPY ["gateway/src/Gateway.csproj", "Gateway/"]
+COPY ["gateway/src/Directory.Build.props", "./"]
 
 # Restore dependencies
 RUN dotnet restore "Gateway/Gateway.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true
 
 # Copy everything else
-COPY src/ Gateway/
+COPY gateway/src/ Gateway/
 
 # Build and publish
 WORKDIR "/src/Gateway"
@@ -27,7 +27,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy and setup entrypoint
-COPY src/entrypoint.sh /entrypoint.sh
+COPY gateway/src/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 # Environment

@@ -1,39 +1,45 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution/project files
-COPY ["src/UserService.API/UserService.API.csproj", "UserService.API/"]
-COPY ["src/UserService.Core/UserService.Core.csproj", "UserService.Core/"]
-COPY ["src/UserService.Abstraction/UserService.Abstraction.csproj", "UserService.Abstraction/"]
-COPY ["src/Directory.Build.props", "./"]
-COPY [".build/", ".build/"]
+# Copy Platform project (now accessible with repo-root context)
+COPY ["platform/Ep.Platform/Ep.Platform.csproj", "platform/Ep.Platform/"]
+COPY ["platform/Ep.Platform/", "platform/Ep.Platform/"]
 
-# Copy nuget.config for Platform package
-COPY ["nuget.config", "./"]
+# Copy service .build folder with version definitions
+COPY ["services/user-service/.build/", "services/user-service/.build/"]
+
+# Copy service project files
+COPY ["services/user-service/src/UserService.API/UserService.API.csproj", "services/user-service/src/UserService.API/"]
+COPY ["services/user-service/src/UserService.Core/UserService.Core.csproj", "services/user-service/src/UserService.Core/"]
+COPY ["services/user-service/src/UserService.Abstraction/UserService.Abstraction.csproj", "services/user-service/src/UserService.Abstraction/"]
+COPY ["services/user-service/src/Directory.Build.props", "services/user-service/src/"]
+
+# Copy nuget.config
+COPY ["services/user-service/nuget.config", "services/user-service/"]
 
 # Accept GitHub token as build argument
 ARG GITHUB_TOKEN
 # Handle GitHub token and remove local source (not available in Docker)
-RUN sed -i '/<add key="local"/d' nuget.config && \
+RUN sed -i '/<add key="local"/d' services/user-service/nuget.config && \
     if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
-      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" nuget.config; \
+      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" services/user-service/nuget.config; \
       echo "GitHub token provided, using GitHub Packages source."; \
     else \
       echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
-      sed -i '/<add key="github"/d' nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' nuget.config; \
+      sed -i '/<add key="github"/d' services/user-service/nuget.config; \
+      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' services/user-service/nuget.config; \
       echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
     fi
 
-# Restore dependencies (this layer will be cached if dependencies don't change)
-# Disable NuGet fallback folders to prevent Windows path issues in Linux containers
+# Restore dependencies
+WORKDIR /src/services/user-service/src
 RUN dotnet restore "UserService.API/UserService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true
 
 # Copy everything else
-COPY src/ .
+COPY ["services/user-service/src/", "/src/services/user-service/src/"]
 
-# Build and publish (removed --no-restore to avoid using cached Windows paths)
-WORKDIR "/src/UserService.API"
+# Build and publish
+WORKDIR "/src/services/user-service/src/UserService.API"
 RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true
 
 # Runtime image
@@ -41,14 +47,14 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
 
-# Install curl and netcat for healthchecks (optimized to reduce layer size)
+# Install curl and netcat for healthchecks
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl netcat-openbsd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy and setup entrypoint
-COPY src/entrypoint.sh /entrypoint.sh
+COPY ["services/user-service/src/entrypoint.sh", "/entrypoint.sh"]
 RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 # Environment
@@ -58,6 +64,3 @@ ENV ConnectionStrings__DefaultConnection="Server=mssql,1433;Database=userdb;User
 
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]
-
-
-
