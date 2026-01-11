@@ -1,0 +1,12 @@
+{
+  "name": "electronic-paradise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "E-commerce microservices platform with React frontend and .NET backend",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RahulSharma2309/Electronic-Paradise.git"
+  },
+  "author": "Rahul Sharma",
+  "license": "MIT"
+}
