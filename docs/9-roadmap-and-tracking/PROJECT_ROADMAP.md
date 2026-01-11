@@ -801,17 +801,17 @@
 ## Epic 6: CI/CD Pipeline
 **Duration:** 2 sprints  
 **Story Points:** 55  
-**Progress:** 34/55 (62% complete)  
+**Progress:** 42/55 (76% complete)  
 **Dependencies:** Epic 5 (tests must exist)  
 **Learning Focus:** GitHub Actions, automation, versioning
 
 **Completed PBIs:**
 - ✅ PBI 6.1: GitHub Actions CI Pipeline (13 pts)
 - ✅ PBI 6.2: Docker Build Automation (8 pts)
+- ✅ PBI 6.3: Automated Versioning - Semantic Release (8 pts)
 - ✅ PBI 6.4: Code Quality Gates (SonarCloud) (13 pts)
 
 **Remaining PBIs:**
-- PBI 6.3: Automated Versioning (8 pts) - Optional/Future
 - PBI 6.5: Dependency Scanning (8 pts)
 - PBI 6.6: CD Pipeline - Deploy to Staging (5 pts)
 
@@ -907,23 +907,50 @@
 
 ---
 
-### PBI 6.3: Automated Versioning (Semantic Release)
+### PBI 6.3: Automated Versioning (Semantic Release) (COMPLETED ✅)
 **Story Points:** 8  
 **Description:** Automatic version bumping and changelog
 
 **Acceptance Criteria:**
-- [ ] Follow conventional commits
-- [ ] Auto-generate version numbers
-- [ ] Create GitHub releases
-- [ ] Generate CHANGELOG.md
-- [ ] Tag commits with versions
+- [x] Follow conventional commits format
+- [x] Auto-generate version numbers
+- [x] Create GitHub releases
+- [x] Generate CHANGELOG.md
+- [x] Tag commits with versions
 
 **Technical Tasks:**
-- [ ] Set up semantic-release
-- [ ] Configure commit conventions
-- [ ] Add release workflow
-- [ ] Configure changelog generation
-- [ ] Test release process
+- [x] Set up semantic-release with plugins
+- [x] Configure conventional commits preset
+- [x] Add release workflow (.github/workflows/release.yml)
+- [x] Configure changelog generation with emojis
+- [x] Test release process
+
+**Implementation Notes:**
+- Configuration file: `.releaserc.json`
+- Workflow triggers on push to main branch
+- Automatically skips if commit contains `[skip ci]`
+- Supports conventional commit types: feat, fix, docs, chore, etc.
+- Generates changelog with emoji sections (🚀 Features, 🐛 Bug Fixes, etc.)
+- Creates GitHub releases with automated release notes
+- Updates CHANGELOG.md and commits back to repository
+- NPM publish disabled (not a Node.js library)
+
+**Commit Message Format:**
+```
+<type>[optional scope]: <description>
+
+Examples:
+- feat: add feature (minor bump)
+- fix: bug fix (patch bump)
+- feat!: breaking change (major bump)
+```
+
+**Key Learnings:**
+- Semantic Release is purely for documentation (doesn't affect Docker/K8s)
+- Requires team discipline to use conventional commit format
+- Tool automatically generates changelogs - no manual writing needed
+- Integrates seamlessly with existing CI/CD (creates tags that Docker build uses)
+- GitHub Releases provide professional project appearance
 
 ---
 

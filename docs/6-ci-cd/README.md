@@ -13,6 +13,14 @@ This folder contains all documentation related to Continuous Integration and Con
 | [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | ✅ Complete |
 | [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md) | Quick command reference | ✅ Complete |
 | [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
+| [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md) | Automated releases & changelog | ✅ Complete |
+| [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
+
+**💡 Start Here:**
+- **New to CI/CD?** → [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) (explains what each PBI does)
+- **Setting up Docker builds?** → [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)
+- **Setting up releases?** → [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)
+- **Quick reference?** → [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)
 
 ### **🔧 Scripts** (in `/scripts` folder)
 
