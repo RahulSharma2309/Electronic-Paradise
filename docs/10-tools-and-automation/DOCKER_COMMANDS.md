@@ -1,18 +1,22 @@
-# Electronic Paradise - Quick Commands
+# Docker Quick Reference
 
-## 🚀 Build and Start Everything (RECOMMENDED)
+> **Quick commands for local development with Docker Compose**
+
+---
+
+## 🚀 Recommended: Automated Script
 
 ```powershell
-# Run the automated script
+# Run from repository root
 .\scripts\docker-build-start.ps1
 ```
 
-This script will:
-1. Disable BuildKit (fixes ordering issues)
-2. Clean existing containers
-3. Build all services
-4. Start all services
-5. Show service status and URLs
+**What it does:**
+1. Disables BuildKit (fixes ordering issues)
+2. Cleans existing containers
+3. Builds all services
+4. Starts all services
+5. Shows service status and access URLs
 
 ---
 
@@ -41,7 +45,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 docker-compose logs -f
 
 # Specific service
-docker-compose logs -f user-service
+docker-compose logs -f auth-service
 ```
 
 ### Stop All Services
@@ -82,10 +86,11 @@ curl http://localhost:5004/api/health
 curl http://localhost:5005/api/health
 ```
 
-### Register a User (via Swagger)
+### Test Authentication Flow
 1. Go to http://localhost:5001/swagger
-2. Use POST `/api/auth/register`
-3. Try the login endpoint
+2. Use POST `/api/auth/register` to create account
+3. Use POST `/api/auth/login` to get JWT token
+4. Copy token and use "Authorize" button at top
 
 ---
 
@@ -106,16 +111,16 @@ taskkill /PID <process_id> /F
 ### Service Unhealthy
 ```powershell
 # Check logs
-docker logs <service-name>
+docker logs auth-service
 
 # Restart service
-docker-compose restart <service-name>
+docker-compose restart auth-service
 ```
 
 ### Database Issues
 ```powershell
 # Check SQL Server
-docker logs infra_mssql_1
+docker logs infra-mssql-1
 
 # Restart SQL Server
 docker-compose restart mssql
@@ -123,10 +128,22 @@ docker-compose restart mssql
 
 ---
 
-## 📝 Notes
+## 📝 Important Notes
 
 - **BuildKit must be disabled** for builds to work correctly
 - Wait 30-60 seconds after `docker-compose up -d` for services to be fully healthy
-- First build takes 5-10 minutes, subsequent builds are faster with caching
+- First build takes 5-10 minutes, subsequent builds are faster (cached layers)
 - All services use SQL Server running in Docker
-- Platform library is referenced directly (no NuGet needed)
+- Platform library (`Ep.Platform`) is referenced directly via `ProjectReference`
+
+---
+
+## 🔗 Related Documentation
+
+- [Dockerfile Explained](./DOCKERFILE_EXPLAINED.md) - Understanding Docker build process
+- [Setup Guide](../../SETUP_GUIDE.md) - Complete setup instructions
+- [CI/CD Documentation](../6-ci-cd/) - Automated builds and deployments
+
+---
+
+**For automated CI/CD builds, see:** [`docs/6-ci-cd/`](../6-ci-cd/)

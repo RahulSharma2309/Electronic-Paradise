@@ -2,7 +2,7 @@
 
 > **Your complete guide to finding any document in this repository**
 >
-> **Last Updated:** January 2, 2026
+> **Last Updated:** January 10, 2026
 
 ---
 
@@ -16,7 +16,9 @@
 - **Architecture Deep Dive?** → [`6-architecture/`](6-architecture/)
 
 ### By Task
-- **Setup & Run** → [`1-getting-started/`](1-getting-started/)
+- **Setup & Run** → [`1-getting-started/`](1-getting-started/) or [`../scripts/`](../scripts/)
+- **Docker Commands** → [`10-tools-and-automation/DOCKER_COMMANDS.md`](10-tools-and-automation/DOCKER_COMMANDS.md)
+- **CI/CD & Versioning** → [`6-ci-cd/`](6-ci-cd/)
 - **Understand a Flow** → [`5-user-flows/`](5-user-flows/)
 - **Work on Epic/PBI** → [`4-epics-and-pbis/`](4-epics-and-pbis/)
 - **Use Platform Library** → [`8-platform/`](8-platform/)
@@ -223,23 +225,48 @@
 
 ---
 
+### 6️⃣-B CI/CD Pipeline
+
+**Location:** [`6-ci-cd/`](6-ci-cd/)
+
+|| File | Purpose | Read Time |
+||------|---------|-----------|
+|| [`README.md`](6-ci-cd/README.md) | CI/CD index & quick start | 10 min |
+|| [`IMAGE_TAGGING_STRATEGY.md`](6-ci-cd/IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | 30 min |
+|| [`TAGGING_QUICK_REFERENCE.md`](6-ci-cd/TAGGING_QUICK_REFERENCE.md) | Quick command cheat sheet | 5 min |
+|| [`TESTING_IMAGE_TAGGING.md`](6-ci-cd/TESTING_IMAGE_TAGGING.md) | Local testing guide | 15 min |
+
+**Related Scripts:** [`../scripts/`](../scripts/) - Automation scripts for CI/CD
+
+**When to Read:**
+- Setting up CI/CD pipelines
+- Understanding image versioning
+- Configuring GitHub Actions
+- Deploying to Kubernetes
+
+---
+
 ### 🔟 Tools & Automation
 
 **Location:** [`10-tools-and-automation/`](10-tools-and-automation/)
 
 | Folder/File | Content | Purpose |
 |-------------|---------|---------|
+| [`README.md`](10-tools-and-automation/README.md) | Tools index | Overview |
+| [`DOCKER_COMMANDS.md`](10-tools-and-automation/DOCKER_COMMANDS.md) | Docker quick reference | Daily development |
+| [`DOCKERFILE_EXPLAINED.md`](10-tools-and-automation/DOCKERFILE_EXPLAINED.md) | Docker build optimization | Technical guide |
 | [`github-import/`](10-tools-and-automation/github-import/) | GitHub project setup | Automation |
 | [`github-import/GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md) | 4 methods to import PBIs | Guide |
 | [`github-import/epics_and_pbis.csv`](10-tools-and-automation/github-import/epics_and_pbis.csv) | All PBIs in CSV format | Data |
 | [`github-import/github_import.py`](10-tools-and-automation/github-import/github_import.py) | Python automation script | Script |
-| [`DOCKERFILE_EXPLAINED.md`](10-tools-and-automation/DOCKERFILE_EXPLAINED.md) | Docker build optimization explained | Technical Guide |
+
+**Related:** [`../scripts/`](../scripts/) - PowerShell automation scripts
 
 **When to Read:**
-- Setting up GitHub project tracking
-- Automating issue creation
-- Understanding Docker build performance
-- Optimizing Docker builds
+- Setting up local development
+- Docker build issues
+- GitHub project tracking
+- Automating workflows
 
 ---
 
@@ -277,11 +304,13 @@
 | Epics & PBIs | 6 (EPIC 1) | ✅ Complete (1/10 epics) |
 | User Flows | 7 | ✅ Complete (MVP) |
 | Architecture | 8 | ✅ Complete |
+| CI/CD Pipeline | 4 | ✅ Complete |
 | Services | 7 | ✅ Complete |
 | Platform | 2 | ✅ Complete |
 | Roadmap & Tracking | 2 | ✅ Complete |
-| Tools | 3 | ✅ Complete |
-| **Total** | **53** | **✅ 100% MVP** |
+| Tools & Automation | 7 | ✅ Complete |
+| **Automation Scripts** | **5** | **✅ Complete** |
+| **Total Documentation** | **60** | **✅ 100% MVP** |
 
 ---
 
@@ -318,7 +347,9 @@ Follow the numbered folders in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 
 
 | Question | Answer Location |
 |----------|-----------------|
-| Setup and run the project? | [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md#getting-started) |
+| Setup and run the project? | [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md#getting-started) or [`../scripts/README.md`](../scripts/README.md) |
+| Run Docker locally? | [`10-tools-and-automation/DOCKER_COMMANDS.md`](10-tools-and-automation/DOCKER_COMMANDS.md) or run `.\scripts\docker-build-start.ps1` |
+| Understand image tagging? | [`6-ci-cd/IMAGE_TAGGING_STRATEGY.md`](6-ci-cd/IMAGE_TAGGING_STRATEGY.md) |
 | Understand the tech stack? | [`1-getting-started/TECH_STACK.md`](1-getting-started/TECH_STACK.md) |
 | Learn design patterns? | [`2-learning-guide/LEARNING_ROADMAP.md`](2-learning-guide/LEARNING_ROADMAP.md#design-patterns-youll-master) |
 | Understand a user flow? | [`5-user-flows/`](5-user-flows/) (choose specific flow) |
@@ -327,6 +358,25 @@ Follow the numbered folders in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 
 | Import PBIs to GitHub? | [`10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md) |
 | Understand product vision? | [`3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`](3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) |
 | See the complete roadmap? | [`9-roadmap-and-tracking/PROJECT_ROADMAP.md`](9-roadmap-and-tracking/PROJECT_ROADMAP.md) |
+
+---
+
+## 🔧 Automation Scripts
+
+**Location:** [`../scripts/`](../scripts/)
+
+All automation scripts are organized in the `/scripts` folder. See [`../scripts/README.md`](../scripts/README.md) for complete details.
+
+### Quick Script Reference
+
+| Script | Purpose | Daily Use? |
+|--------|---------|------------|
+| `docker-build-start.ps1` | Build and start all Docker services | ✅ Yes |
+| `get-next-version.ps1` | Calculate semantic version (CI/CD) | ❌ CI only |
+| `tag-images.ps1` | Tag Docker images (CI/CD) | ❌ CI only |
+| `utilities/collect-md-files.ps1` | List all markdown files | ❌ Audits only |
+
+**For local development:** Use `.\scripts\docker-build-start.ps1` from repository root.
 
 ---
 
@@ -350,9 +400,9 @@ Follow the numbered folders in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 
 
 **Happy Documenting! 📚**
 
-**Last Review:** January 2, 2026  
-**Total Files:** 53  
-**Coverage:** 100% for MVP
+**Last Review:** January 10, 2026  
+**Total Files:** 60 (docs) + 5 (scripts) = 65  
+**Coverage:** 100% for MVP + CI/CD
 
 
 
