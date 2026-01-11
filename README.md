@@ -6,13 +6,25 @@ A comprehensive microservices-based e-commerce platform built with .NET 8, demon
 
 > **📖 For detailed step-by-step instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
-### Prerequisites
+### Fastest Start (Automated)
+
+**Windows PowerShell:**
+```powershell
+# From repository root
+.\scripts\docker-build-start.ps1
+```
+
+This script automatically handles BuildKit, builds all services, and starts them.
+
+### Manual Setup
+
+#### Prerequisites
 
 - **Docker Desktop** (or Docker Engine + Docker Compose)
 - **Git** (for cloning)
-- **GitHub Account** (for Personal Access Token)
+- **GitHub Account** (for Personal Access Token - optional for now)
 
-### Quick Setup (5 Steps)
+#### Steps
 
 1. **Clone the repository**
 
@@ -21,37 +33,20 @@ A comprehensive microservices-based e-commerce platform built with .NET 8, demon
    cd Electronic-Paradise
    ```
 
-2. **Set up GitHub Token** (one-time setup)
-
-   **Windows:**
-
-   ```powershell
-   cd infra
-   .\setup-env.ps1
-   ```
-
-   **Linux/Mac:**
-
-   ```bash
-   cd infra
-   chmod +x setup-env.sh
-   ./setup-env.sh
-   ```
-
-3. **Build Docker images**
+2. **Build Docker images**
 
    ```bash
    cd infra
    docker-compose build
    ```
 
-4. **Start all services**
+3. **Start all services**
 
    ```bash
    docker-compose up -d
    ```
 
-5. **Access the application**
+4. **Access the application**
    - **Frontend**: http://localhost:3000
    - **API Gateway**: http://localhost:5000
    - **Swagger Docs**: http://localhost:5001/swagger (Auth), http://localhost:5005/swagger (User), etc.
@@ -71,10 +66,18 @@ Electronic-Paradise/
 ├── gateway/               # API Gateway (YARP)
 ├── frontend/              # React frontend application
 ├── platform/              # Ep.Platform shared library
-└── infra/                 # Infrastructure & Docker setup
-    ├── docker-compose.yml # All services orchestration
-    ├── setup-env.ps1      # Windows setup script
-    └── setup-env.sh       # Linux/Mac setup script
+├── scripts/               # Automation scripts (NEW)
+│   ├── docker-build-start.ps1  # Build & start all services
+│   ├── get-next-version.ps1    # Semantic versioning (CI/CD)
+│   └── tag-images.ps1          # Image tagging (CI/CD)
+├── infra/                 # Infrastructure & Docker setup
+│   ├── docker-compose.yml # All services orchestration
+│   └── setup-env.ps1      # Environment setup script
+└── docs/                  # Complete documentation
+    ├── 1-getting-started/ # Setup guides
+    ├── 6-ci-cd/          # CI/CD & image tagging
+    ├── 7-services/       # Service documentation
+    └── 10-tools-and-automation/ # Docker commands & tools
 ```
 
 ## 🛠️ Development

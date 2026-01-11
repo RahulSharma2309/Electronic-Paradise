@@ -1,108 +1,100 @@
 # 🛠️ Tools & Automation
 
-> **Scripts, tools, and automation for project management**
+> **Scripts, tools, and automation for development and project management**
 
 ---
 
-## 📋 Available Tools
+## 📋 Quick Links
 
-### 1. GitHub Import Tools
+| Resource | Purpose | Location |
+|----------|---------|----------|
+| **Automation Scripts** | Build, version, tag images | [`../../scripts/`](../../scripts/) |
+| **Docker Commands** | Quick reference for Docker | [`DOCKER_COMMANDS.md`](DOCKER_COMMANDS.md) |
+| **Dockerfile Guide** | Build optimization explained | [`DOCKERFILE_EXPLAINED.md`](DOCKERFILE_EXPLAINED.md) |
+| **GitHub Import** | Import PBIs to GitHub | [`github-import/`](github-import/) |
+| **CI/CD Documentation** | Pipeline & versioning | [`../6-ci-cd/`](../6-ci-cd/) |
+
+---
+
+## 🔧 Automation Scripts
+
+**Location:** [`../../scripts/`](../../scripts/)
+
+See [`../../scripts/README.md`](../../scripts/README.md) for complete documentation.
+
+### Quick Reference
+
+```powershell
+# Build and start all services (daily development)
+.\scripts\docker-build-start.ps1
+
+# Calculate next version (CI/CD automation)
+.\scripts\get-next-version.ps1 -BranchName "feat/add-feature"
+
+# Tag images for release (CI/CD automation)
+.\scripts\tag-images.ps1 -Version "1.0.0"
+```
+
+---
+
+## 🐳 Docker Quick Reference
+
+**File:** [`DOCKER_COMMANDS.md`](DOCKER_COMMANDS.md)
+
+Quick commands for local Docker development:
+
+```powershell
+# Automated (recommended)
+.\scripts\docker-build-start.ps1
+
+# Manual
+cd infra
+$env:DOCKER_BUILDKIT=0
+docker-compose build
+docker-compose up -d
+```
+
+---
+
+## 📦 Docker Build Optimization
+
+**File:** [`DOCKERFILE_EXPLAINED.md`](DOCKERFILE_EXPLAINED.md)
+
+**Purpose:** Understand Docker layer caching and build optimization
+
+**Content:**
+- Why we COPY files separately
+- Layer caching explained
+- Performance comparisons
+- Real-world examples
+
+---
+
+## 📊 GitHub Import Tools
 
 **Location:** [`github-import/`](github-import/)
 
 **Purpose:** Automate importing epics and PBIs into GitHub Issues/Projects
 
 **Files:**
-
 - [`GITHUB_IMPORT_GUIDE.md`](github-import/GITHUB_IMPORT_GUIDE.md) - Complete guide (4 methods)
 - [`epics_and_pbis.csv`](github-import/epics_and_pbis.csv) - All PBIs in CSV format
 - [`github_import.py`](github-import/github_import.py) - Python automation script
 
 **Methods Available:**
-
 1. **Manual UI** - Good for learning
 2. **GitHub CLI** - Semi-automated (recommended)
 3. **Python Script** - Fully automated
 4. **GitHub API** - For API learning
 
-**Quick Start:**
-
-```bash
-cd github-import
-
-# Method 2: GitHub CLI (Recommended)
-gh issue create --title "..." --body "..." --label "epic-1,story-points-13"
-
-# Method 3: Python Script
-python github_import.py --token YOUR_PAT --repo owner/repo
-```
-
----
-
-### 2. Docker Build Optimization
-
-**File:** [`DOCKERFILE_EXPLAINED.md`](DOCKERFILE_EXPLAINED.md)
-
-**Purpose:** Understand why Dockerfiles copy files separately for optimal build performance
-
-**Content:**
-
-- Docker layer caching explained
-- Build optimization patterns
-- Real-world examples
-- Performance comparisons
-
-**When to Read:**
-
-- Understanding Docker build performance
-- Optimizing Docker builds
-- Learning Docker best practices
-
----
-
-## 🔧 Future Tools (Planned)
-
-### Development Tools
-
-- [ ] Database migration helper scripts
-- [ ] Service scaffolding templates
-- [ ] API testing collection (Postman/Insomnia)
-
-### DevOps Tools
-
-- [ ] Health check aggregator script
-- [ ] Log collection helper
-- [ ] Deployment automation scripts
-
-### Testing Tools
-
-- [ ] Test data generation scripts
-- [ ] Load testing scenarios
-- [ ] Integration test helpers
-
----
-
-## 🎯 Tool Usage Guidelines
-
-### When to Use Automation:
-
-- ✅ Repetitive tasks (issue creation)
-- ✅ Bulk operations (importing 70+ PBIs)
-- ✅ Consistent formatting (CSV → GitHub)
-
-### When to Do Manually:
-
-- ✅ First-time setup (learning)
-- ✅ One-off tasks
-- ✅ Customized scenarios
-
 ---
 
 ## 🔗 Related Documentation
 
+- **CI/CD Pipeline:** [`../6-ci-cd/`](../6-ci-cd/) - Automated builds, versioning, image tagging
+- **Image Tagging Strategy:** [`../6-ci-cd/IMAGE_TAGGING_STRATEGY.md`](../6-ci-cd/IMAGE_TAGGING_STRATEGY.md)
 - **Project Setup:** [`../1-getting-started/PROJECT_OVERVIEW.md`](../1-getting-started/PROJECT_OVERVIEW.md)
 - **Epic/PBI List:** [`../4-epics-and-pbis/`](../4-epics-and-pbis/)
-- **Progress Tracking:** [`../9-roadmap-and-tracking/ITERATION_CHECKLIST.md`](../9-roadmap-and-tracking/ITERATION_CHECKLIST.md)
 
 ---
 

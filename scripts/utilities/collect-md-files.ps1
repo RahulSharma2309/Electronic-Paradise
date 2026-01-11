@@ -1,5 +1,7 @@
-Write-Host "=====================================
-" -ForegroundColor Cyan
+# Collect All Markdown Files
+# Utility script to list all .md files in the repository
+
+Write-Host "=====================================" -ForegroundColor Cyan
 Write-Host " Collecting All MD Files" -ForegroundColor Cyan
 Write-Host "=====================================" -ForegroundColor Cyan
 Write-Host ""
@@ -8,6 +10,9 @@ $rootPath = $PSScriptRoot
 if ([string]::IsNullOrEmpty($rootPath)) {
     $rootPath = Get-Location
 }
+
+# Go up two levels to repository root (from scripts/utilities/)
+$rootPath = Split-Path (Split-Path $rootPath -Parent) -Parent
 
 Write-Host "Searching in: $rootPath" -ForegroundColor Yellow
 Write-Host ""
@@ -50,7 +55,7 @@ Write-Host ""
 # Export list to file
 $listFile = Join-Path $rootPath "md-files-list.txt"
 $content = @()
-$content += "Markdown Files in E-Commerce Project"
+$content += "Markdown Files in Electronic Paradise"
 $content += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $content += "="*70
 $content += ""
@@ -75,4 +80,3 @@ $content | Out-File -FilePath $listFile -Encoding UTF8
 
 Write-Host "File list exported to: $listFile" -ForegroundColor Green
 Write-Host ""
-
