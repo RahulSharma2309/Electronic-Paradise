@@ -1,3 +1,16 @@
+## 1.0.0 (2026-01-11)
+
+### 🚀 Features
+
+* Add Epic 1 and PBI 1.1 documentation ([a4eaa43](https://github.com/RahulSharma2309/Electronic-Paradise/commit/a4eaa43a382364042875800f20a33f81282c8afa))
+* Add PBI docs for Product Variants, Pricing, Specs ([9cfc25c](https://github.com/RahulSharma2309/Electronic-Paradise/commit/9cfc25c9f23c7196f9adcc1eab8baac5330f0237))
+* Complete Docker setup, database initialization, and checkout fixes ([#77](https://github.com/RahulSharma2309/Electronic-Paradise/issues/77)) ([8712b6b](https://github.com/RahulSharma2309/Electronic-Paradise/commit/8712b6b932fd83bd5a3489786c680fa51126271f))
+
+### 📚 Documentation
+
+* Add Epic 1 UX Design blueprint ([e5e93b8](https://github.com/RahulSharma2309/Electronic-Paradise/commit/e5e93b8c273c89540732c3b0dafa02c5d78bc337))
+* enhance PROJECT_ROADMAP with detailed CI/CD implementation notes and key learnings ([#86](https://github.com/RahulSharma2309/Electronic-Paradise/issues/86)) ([ad5c217](https://github.com/RahulSharma2309/Electronic-Paradise/commit/ad5c2172d49da8d7099910d508a096729498178b))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
