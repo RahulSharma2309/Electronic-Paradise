@@ -37,6 +37,24 @@ cd diagrams
 
 ---
 
+### Roadmap-Complete (Target State) Diagrams
+
+**Location:** [`roadmap-complete/`](roadmap-complete/)
+
+These diagrams show how the system looks **after** the roadmap is completed (Kubernetes, CI/CD, observability, caching/search, etc.).
+
+| Folder | Description |
+|------|-------------|
+| [`01-service-level/`](roadmap-complete/01-service-level/) | Service interactions + saga checkout |
+| [`02-system-level/`](roadmap-complete/02-system-level/) | Whole-system + K8s deployment views |
+| [`03-ci-cd/`](roadmap-complete/03-ci-cd/) | CI/CD pipeline view |
+| [`04-data/`](roadmap-complete/04-data/) | Databases + shared data stores |
+| [`05-observability/`](roadmap-complete/05-observability/) | Logging/metrics/tracing stack |
+
+Start here: [`roadmap-complete/README.md`](roadmap-complete/README.md)
+
+---
+
 ### Service-Specific Architecture
 
 **Location:** [`service-specific/`](service-specific/)
