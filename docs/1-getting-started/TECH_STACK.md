@@ -290,7 +290,7 @@
 
 ---
 
-### Kubernetes & Orchestration (📋 NEXT - Epic 7)
+### Kubernetes & Orchestration (📋 NEXT - Epic 3)
 
 | Technology            | Purpose                 | Why                               | License/Cost | Status         |
 | --------------------- | ----------------------- | --------------------------------- | ------------ | -------------- |
