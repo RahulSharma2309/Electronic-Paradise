@@ -146,7 +146,11 @@ jobs:
       - name: Set image tags
         id: tags
         run: |
-          REGISTRY="ghcr.io/${{ github.repository_owner }}"
+          # Convert repository owner to lowercase for Docker registry
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "repo_owner=$REPO_OWNER" >> $GITHUB_OUTPUT
+
+          REGISTRY="ghcr.io/$REPO_OWNER"
           VERSION="${{ steps.version.outputs.version }}"
           SHA="${{ steps.git.outputs.sha }}"
 
@@ -167,9 +171,9 @@ jobs:
           file: ./services/auth-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-auth:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-auth:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -180,9 +184,9 @@ jobs:
           file: ./services/user-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-user:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-user:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -193,9 +197,9 @@ jobs:
           file: ./services/product-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-product:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-product:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -206,9 +210,9 @@ jobs:
           file: ./services/order-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-order:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-order:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -219,9 +223,9 @@ jobs:
           file: ./services/payment-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-payment:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-payment:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -232,9 +236,9 @@ jobs:
           file: ./gateway/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-gateway:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-gateway:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -245,9 +249,9 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/electronic-paradise-frontend:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:v{1}-{2}', github.repository_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:latest', github.repository_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-frontend:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -269,4 +273,4 @@ jobs:
           echo "- ✅ Gateway" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Frontend" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Registry:** ghcr.io/${{ github.repository_owner }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** ghcr.io/${{ steps.tags.outputs.repo_owner }}" >> $GITHUB_STEP_SUMMARY
