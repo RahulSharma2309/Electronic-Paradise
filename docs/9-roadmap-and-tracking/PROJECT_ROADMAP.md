@@ -801,8 +801,19 @@
 ## Epic 6: CI/CD Pipeline
 **Duration:** 2 sprints  
 **Story Points:** 55  
+**Progress:** 34/55 (62% complete)  
 **Dependencies:** Epic 5 (tests must exist)  
 **Learning Focus:** GitHub Actions, automation, versioning
+
+**Completed PBIs:**
+- ✅ PBI 6.1: GitHub Actions CI Pipeline (13 pts)
+- ✅ PBI 6.2: Docker Build Automation (8 pts)
+- ✅ PBI 6.4: Code Quality Gates (SonarCloud) (13 pts)
+
+**Remaining PBIs:**
+- PBI 6.3: Automated Versioning (8 pts) - Optional/Future
+- PBI 6.5: Dependency Scanning (8 pts)
+- PBI 6.6: CD Pipeline - Deploy to Staging (5 pts)
 
 ### PBI 6.1: GitHub Actions CI Pipeline (COMPLETED ✅)
 **Story Points:** 13  
@@ -857,23 +868,42 @@
 
 ---
 
-### PBI 6.2: Docker Build Automation
+### PBI 6.2: Docker Build Automation (COMPLETED ✅)
 **Story Points:** 8  
 **Description:** Build and push Docker images
 
 **Acceptance Criteria:**
-- [ ] Build images for all services
-- [ ] Push to Docker Hub or GitHub Registry
-- [ ] Tag with version numbers
-- [ ] Optimize image sizes
-- [ ] Scan for vulnerabilities
+- [x] Build images for all services
+- [x] Push to GitHub Container Registry
+- [x] Tag with version numbers
+- [ ] Optimize image sizes (deferred to later)
+- [ ] Scan for vulnerabilities (PBI 6.5)
 
 **Technical Tasks:**
-- [ ] Add Docker build to workflow
-- [ ] Configure registry authentication
-- [ ] Add multi-stage builds
-- [ ] Integrate Trivy scanning
-- [ ] Add image tagging strategy
+- [x] Add Docker build job to workflow
+- [x] Configure GitHub Container Registry authentication
+- [x] Implement semantic versioning with scripts
+- [x] Add image tagging strategy (alpha and production tags)
+- [x] Build all 7 services (auth, user, product, order, payment, gateway, frontend)
+- [x] Push images to ghcr.io/rahulsharma2309
+- [x] Handle lowercase registry names
+- [x] Implement GitHub Actions cache for faster builds
+
+**Implementation Notes:**
+- Scripts created for version calculation and image tagging
+- CI workflow calls `get-next-version.sh` for semantic versioning
+- Alpha tags for PR builds: `alpha-<version>-<sha>` (e.g., `alpha-0.1.0-5482cd0`)
+- Production tags for main branch: `v<version>`, `v<version>-<sha>`, `latest`
+- Repository names converted to lowercase for Docker registry compatibility
+- All 7 microservices built and pushed as individual images
+- GitHub Container Registry used (ghcr.io) with automatic authentication via GITHUB_TOKEN
+
+**Key Learnings:**
+- Docker registry names must be lowercase (converted `RahulSharma2309` → `rahulsharma2309`)
+- Pushing to registry is part of CI, not CD (build artifacts, not deployment)
+- Individual service images enable independent deployment and scaling
+- GitHub Actions cache significantly speeds up subsequent builds
+- Scripts provide single source of truth for versioning logic (testable locally before CI)
 
 ---
 

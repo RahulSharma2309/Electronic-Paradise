@@ -13,7 +13,6 @@ This folder contains all documentation related to Continuous Integration and Con
 | [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | ✅ Complete |
 | [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md) | Quick command reference | ✅ Complete |
 | [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
-| [PHASE_2_COMPLETE.md](./PHASE_2_COMPLETE.md) | Phase 2 completion summary | ✅ Complete |
 
 ### **🔧 Scripts** (in `/scripts` folder)
 
@@ -103,6 +102,161 @@ docker images | Select-String "alpha"
 │  - Uses outputs (version, tags)                         │
 └─────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 📊 CI vs CD: Understanding the Boundary
+
+### **The Debate: Is Pushing to Registry CI or CD?**
+
+This is commonly debated, but **industry standard says: Pushing to Registry is CI** ✅
+
+### **The Clear Boundary:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    CI (Continuous Integration)          │
+│  "Is the code correct? Can it be packaged?"             │
+├─────────────────────────────────────────────────────────┤
+│  1. Checkout code                                       │
+│  2. Run linters/static analysis                         │
+│  3. Build code                                          │
+│  4. Run unit tests                                      │
+│  5. Run integration tests                               │
+│  6. Code quality checks (SonarCloud)                    │
+│  7. Build Docker images                                 │
+│  8. Push to Registry (GHCR)          ← WE ARE HERE      │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+        IMAGE STORED BUT NOT RUNNING YET
+                         ↓
+┌─────────────────────────────────────────────────────────┐
+│              CD (Continuous Deployment/Delivery)        │
+│  "Get the code to users in production"                  │
+├─────────────────────────────────────────────────────────┤
+│  1. Pull image from registry                            │
+│  2. Deploy to staging environment                       │
+│  3. Run smoke tests on staging                          │
+│  4. (Manual approval for prod?)                         │
+│  5. Deploy to production                                │
+│  6. Health checks                                       │
+│  7. Rollback if issues                                  │
+│  8. Notify team (Slack, email)                          │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+              USERS CAN ACCESS IT NOW!
+```
+
+### **Key Differences:**
+
+| Aspect | CI (What We Have) | CD (Future) |
+|--------|-------------------|-------------|
+| **Purpose** | Verify code quality | Deliver to users |
+| **Output** | Build artifact (image in registry) | Running service in production |
+| **Trigger** | Every commit/PR | Merge to main (or manual) |
+| **Risk** | Low (just building) | High (affecting real users) |
+| **Rollback** | Delete bad image | Rollback K8s deployment |
+| **User Impact** | None (they don't see it) | Direct (they access it) |
+
+### **Why Push to Registry is CI, Not CD:**
+
+1. **Image in registry ≠ Deployed**
+   - Just because it's in GHCR doesn't mean users can access it
+   - It's a **build artifact**, like a .jar or .exe file
+
+2. **CD = Deployment Actions**
+   - Updating Kubernetes deployments
+   - Rolling out to servers
+   - Making code accessible to end users
+
+3. **Industry Analogy:**
+   ```
+   Java:     Build → Test → Push to Maven  ← CI stops here
+   .NET:     Build → Test → Push to NuGet  ← CI stops here
+   Docker:   Build → Test → Push to GHCR   ← CI stops here
+   
+   Then CD:  Pull from registry → Deploy to K8s → Users access it
+   ```
+
+### **Current Implementation Status:**
+
+**✅ CI Pipeline (Complete):**
+```yaml
+.github/workflows/ci.yml:
+  ├─ Job 1: dotnet-analysis (build, test, SonarCloud)
+  ├─ Job 2: frontend-build (React build)
+  └─ Job 3: docker-build (build images, push to GHCR)
+```
+
+**Result:** 7 Docker images in GitHub Container Registry
+**User Impact:** None (images stored, not deployed)
+
+**❌ CD Pipeline (Not Built Yet):**
+```yaml
+.github/workflows/cd.yml (future):
+  ├─ Job 1: deploy-staging (pull images, deploy to K8s staging)
+  ├─ Job 2: smoke-tests (validate staging deployment)
+  └─ Job 3: deploy-production (deploy to K8s production)
+```
+
+**Result:** Running services accessible to users
+**User Impact:** Direct (they can use the application)
+
+### **Real-World Example:**
+
+**Scenario 1: Push to Feature Branch**
+```bash
+# You push code to feat/add-2fa
+git push origin feat/add-2fa
+
+# CI Pipeline runs:
+✅ Code builds
+✅ Tests pass
+✅ Image created: alpha-0.1.0-abc123d
+✅ Image pushed to GHCR
+
+# Question: Can users access your new feature?
+# Answer: ❌ NO! It's just sitting in the registry.
+#         Users are still using the old production version.
+```
+
+**Scenario 2: Merge to Main (CI only)**
+```bash
+# You merge to main
+git checkout main
+git merge feat/add-2fa
+
+# CI Pipeline runs:
+✅ Code builds
+✅ Tests pass
+✅ Image created: v1.1.0
+✅ Image pushed to GHCR
+
+# Question: Can users access your new feature?
+# Answer: ❌ STILL NO! Image is in GHCR but not deployed.
+#         Production is still running v1.0.0
+```
+
+**Scenario 3: Full CI/CD (Future State)**
+```bash
+# You merge to main
+git checkout main
+git merge feat/add-2fa
+
+# CI Pipeline runs:
+✅ Image v1.1.0 pushed to GHCR
+
+# CD Pipeline triggers:
+✅ Pulls v1.1.0 from GHCR
+✅ Deploys to K8s staging
+✅ Smoke tests pass
+✅ Deploys to K8s production
+
+# Question: Can users access your new feature?
+# Answer: ✅ YES! Now they can use it!
+```
+
+---
 
 ### **Why Separate Scripts Instead of Inline CI Logic?**
 
@@ -221,6 +375,27 @@ product-service:   cpu: 250m, memory: 1Gi (needs more memory for caching)
 
 ## 🎓 Key Concepts
 
+### **CI/CD Definitions:**
+
+**CI (Continuous Integration):**
+- Purpose: Verify code integrates correctly
+- Actions: Build, test, package (create Docker images)
+- Output: Build artifacts (images in registry)
+- When: Every commit, every PR
+- Risk: Low (no user impact)
+
+**CD (Continuous Deployment/Delivery):**
+- Purpose: Deliver code to users
+- Actions: Deploy, release, monitor
+- Output: Running services in production
+- When: Merge to main (automated or manual approval)
+- Risk: High (direct user impact)
+
+**Registry (The Middle Ground):**
+- Not CI output: It's just storage
+- Not CD yet: Code not running/accessible
+- Think of it as: A warehouse between factory (CI) and store (CD)
+
 ### **Tag Format:**
 ```
 Alpha:       alpha-1.1.0-abc123d
@@ -236,8 +411,14 @@ breaking/*        → Major  (1.0.0 → 2.0.0)
 
 ### **Publishing Strategy:**
 ```
-Alpha:       NOT published (unless PUBLISH_ALPHA=true)
-Production:  ALWAYS published (all 3 tags)
+Alpha (PR):        NOT published by default
+Production (main): ALWAYS published (all 3 tags)
+```
+
+### **Where We Are:**
+```
+✅ CI Complete:    Images in GHCR
+❌ CD Not Built:   Not deployed to K8s yet
 ```
 
 ---
