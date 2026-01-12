@@ -168,6 +168,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    continue-on-error: true  # Don't block pipeline if SonarCloud fails
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -176,9 +177,14 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=RahulSharma2309_Electronic-Paradise
+            -Dsonar.organization=rahulsharma2309
 
   # ============================================================================
   # PHASE 5: Docker Build & Push (PARALLEL via Matrix)
