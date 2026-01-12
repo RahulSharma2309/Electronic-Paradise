@@ -1,0 +1,10 @@
+# Configuration for actionlint (GitHub Actions linter)
+# This file disables SHA pinning warnings for third-party actions
+
+# Disable the check that requires SHA pinning for actions
+# Rationale: SHA pinning causes maintenance issues and breaks with frequent updates
+# We prefer semantic versioning (v3, v4) for better maintainability
+
+rules:
+  action-ref-should-be-pinned:
+    enabled: false

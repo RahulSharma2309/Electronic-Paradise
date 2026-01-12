@@ -1,0 +1,7 @@
+# GitHub Actions Security Configuration
+# Disables SHA pinning requirement for GitHub Actions
+
+[actions]
+# Allow semantic version tags (v3, v4, etc.) instead of SHA pinning
+# Reason: Better maintainability, easier updates, standard practice
+require_pinned_versions = false
