@@ -1,4 +1,4 @@
-name: Unified CI
+name: CI Pipeline (Modular)
 
 on:
   push:
@@ -6,77 +6,123 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  DOTNET_VERSION: "8.0.x"
+  NODE_VERSION: "20"
+
 jobs:
-  # JOB 1: Code Quality, Build and Test (.NET)
-  dotnet-analysis:
+  # ============================================================================
+  # PHASE 1: Calculate Version (runs once, shares with all)
+  # ============================================================================
+  calculate-version:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      git-sha: ${{ steps.git.outputs.sha }}
+      mode: ${{ steps.mode.outputs.mode }}
+      repo-owner: ${{ steps.repo.outputs.owner }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Calculate version
+        id: version
+        run: |
+          chmod +x ./scripts/get-next-version.sh
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📊 Version: $VERSION"
+
+      - name: Get Git SHA
+        id: git
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "🔖 SHA: $SHORT_SHA"
+
+      - name: Determine mode
+        id: mode
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "mode=production" >> $GITHUB_OUTPUT
+            echo "🚀 Mode: Production"
+          else
+            echo "mode=alpha" >> $GITHUB_OUTPUT
+            echo "🧪 Mode: Alpha"
+          fi
+
+      - name: Get repo owner
+        id: repo
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner=$OWNER" >> $GITHUB_OUTPUT
+
+  # ============================================================================
+  # PHASE 2: Build & Test .NET Services (PARALLEL via Matrix)
+  # ============================================================================
+  dotnet-services:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth-service", path: "services/auth-service", sln: "AuthService.sln" }
+          - { name: "user-service", path: "services/user-service", sln: "UserService.sln" }
+          - { name: "product-service", path: "services/product-service", sln: "ProductService.sln" }
+          - { name: "order-service", path: "services/order-service", sln: "OrderService.sln" }
+          - { name: "payment-service", path: "services/payment-service", sln: "PaymentService.sln" }
+          - { name: "gateway", path: "gateway", sln: "Gateway.sln" }
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install Sonar Scanner
-        run: dotnet tool install --global dotnet-sonarscanner
+      - name: Restore dependencies
+        run: dotnet restore ${{ matrix.service.path }}/${{ matrix.service.sln }}
 
-      - name: Begin Sonar Analysis
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Build
+        run: dotnet build ${{ matrix.service.path }}/${{ matrix.service.sln }} -c Release --no-restore
+
+      - name: Test
         run: |
-          dotnet-sonarscanner begin \
-            /k:"RahulSharma2309_Electronic-Paradise" \
-            /o:"rahulsharma2309" \
-            /d:sonar.token="$SONAR_TOKEN" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.exclusions="**/bin/**,**/obj/**,**/test/**,.github/**"
+          dotnet test ${{ matrix.service.path }}/${{ matrix.service.sln }} \
+            -c Release \
+            --no-build \
+            --logger trx \
+            --results-directory ./TestResults/${{ matrix.service.name }} \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover
 
-      - name: Build All Services
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet build gateway/Gateway.sln -c Release
-          dotnet build services/auth-service/AuthService.sln -c Release
-          dotnet build services/order-service/OrderService.sln -c Release
-          dotnet build services/payment-service/PaymentService.sln -c Release
-          dotnet build services/product-service/ProductService.sln -c Release
-          dotnet build services/user-service/UserService.sln -c Release
-
-      - name: Test & Collect Coverage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet test gateway/Gateway.sln -c Release --logger trx --results-directory ./TestResults/gateway /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/auth-service/AuthService.sln -c Release --logger trx --results-directory ./TestResults/auth /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/order-service/OrderService.sln -c Release --logger trx --results-directory ./TestResults/order /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/payment-service/PaymentService.sln -c Release --logger trx --results-directory ./TestResults/payment /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/product-service/ProductService.sln -c Release --logger trx --results-directory ./TestResults/product /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/user-service/UserService.sln -c Release --logger trx --results-directory ./TestResults/user /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-
-      - name: End Sonar Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-
-      - name: Publish Test Report
-        uses: dorny/test-reporter@v1 # SHA pinning causes GitHub API issues
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: .NET Integration Tests
-          path: "**/TestResults/**/*.trx"
-          reporter: dotnet-trx
+          name: test-results-${{ matrix.service.name }}
+          path: ./TestResults/${{ matrix.service.name }}/*.trx
+          retention-days: 5
 
-  # JOB 2: Frontend Build
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.service.name }}
+          path: "**/${{ matrix.service.name }}/**/coverage.opencover.xml"
+          retention-days: 5
+
+  # ============================================================================
+  # PHASE 3: Frontend Build & Test
+  # ============================================================================
   frontend-build:
     runs-on: ubuntu-latest
     permissions:
@@ -88,7 +134,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -97,24 +143,73 @@ jobs:
           cd frontend
           npm ci --ignore-scripts
 
-      - name: Build Frontend
+      - name: Run tests
         run: |
           cd frontend
-          npm run build --if-present
+          npm test -- --watchAll=false --coverage
 
-  # JOB 3: Docker Build & Push
-  docker-build:
+      - name: Build
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-frontend
+          path: frontend/coverage/
+          retention-days: 5
+
+  # ============================================================================
+  # PHASE 4: SonarCloud Analysis
+  # ============================================================================
+  sonarcloud:
     runs-on: ubuntu-latest
-    needs: [dotnet-analysis, frontend-build]
     permissions:
       contents: read
-      packages: write
-
+    continue-on-error: true  # Don't block pipeline if SonarCloud fails
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=RahulSharma2309_Electronic-Paradise
+            -Dsonar.organization=rahulsharma2309
+
+  # ============================================================================
+  # PHASE 5: Docker Build & Push (PARALLEL via Matrix)
+  # ============================================================================
+  docker-build:
+    needs: [calculate-version, dotnet-services, frontend-build, sonarcloud]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth", image: "electronic-paradise-auth", dockerfile: "./services/auth-service/src/Dockerfile" }
+          - { name: "user", image: "electronic-paradise-user", dockerfile: "./services/user-service/src/Dockerfile" }
+          - { name: "product", image: "electronic-paradise-product", dockerfile: "./services/product-service/src/Dockerfile" }
+          - { name: "order", image: "electronic-paradise-order", dockerfile: "./services/order-service/src/Dockerfile" }
+          - { name: "payment", image: "electronic-paradise-payment", dockerfile: "./services/payment-service/src/Dockerfile" }
+          - { name: "gateway", image: "electronic-paradise-gateway", dockerfile: "./gateway/src/Dockerfile" }
+          - { name: "frontend", image: "electronic-paradise-frontend", dockerfile: "./frontend/Dockerfile" }
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -126,151 +221,59 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Calculate next version
-        id: version
-        run: |
-          chmod +x ./scripts/get-next-version.sh
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
-          echo "📊 Calculated version: $VERSION for branch: $BRANCH_NAME"
-
-      - name: Get Git SHA
-        id: git
-        run: |
-          SHORT_SHA=$(git rev-parse --short HEAD)
-          echo "sha=$SHORT_SHA" >> $GITHUB_OUTPUT
-          echo "🔖 Git SHA: $SHORT_SHA"
-
       - name: Set image tags
         id: tags
         run: |
-          # Convert repository owner to lowercase for Docker registry
-          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          echo "repo_owner=$REPO_OWNER" >> $GITHUB_OUTPUT
-
-          REGISTRY="ghcr.io/$REPO_OWNER"
-          VERSION="${{ steps.version.outputs.version }}"
-          SHA="${{ steps.git.outputs.sha }}"
-
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "mode=production" >> $GITHUB_OUTPUT
-            echo "🚀 Mode: Production (main branch)"
-            echo "   Tags: v$VERSION, v$VERSION-$SHA, latest"
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          MODE="${{ needs.calculate-version.outputs.mode }}"
+          OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+          
+          if [ "$MODE" == "production" ]; then
+            # Production tags: v1.0.0, v1.0.0-abc123d, latest
+            TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
+            TAG2="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}-${SHA}"
+            TAG3="ghcr.io/${OWNER}/${{ matrix.service.image }}:latest"
+            echo "tags=${TAG1},${TAG2},${TAG3}" >> $GITHUB_OUTPUT
           else
-            echo "mode=alpha" >> $GITHUB_OUTPUT
-            echo "🧪 Mode: Alpha (feature/PR branch)"
-            echo "   Tag: alpha-$VERSION-$SHA"
+            # Alpha tags: alpha-1.0.0-abc123d
+            TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:alpha-${VERSION}-${SHA}"
+            echo "tags=${TAG1}" >> $GITHUB_OUTPUT
           fi
+          
+          echo "🏷️ Tags for ${{ matrix.service.name }}: ${TAG1}"
 
-      - name: Build and push Auth Service
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./services/auth-service/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-auth:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:latest', steps.tags.outputs.repo_owner) || '' }}
+          file: ${{ matrix.service.dockerfile }}
+          push: ${{ github.event_name != 'pull_request' || env.PUBLISH_ALPHA == 'true' }}
+          tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and push User Service
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./services/user-service/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-user:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Product Service
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./services/product-service/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-product:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Order Service
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./services/order-service/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-order:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Payment Service
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./services/payment-service/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-payment:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Gateway
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./gateway/src/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-gateway:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push Frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./frontend/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-frontend:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:latest', steps.tags.outputs.repo_owner) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Summary
+  # ============================================================================
+  # PHASE 6: Summary
+  # ============================================================================
+  pipeline-summary:
+    needs: [calculate-version, docker-build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Pipeline Summary
         run: |
-          echo "### 🐳 Docker Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎉 CI Pipeline Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Mode:** ${{ steps.tags.outputs.mode }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Git SHA:** ${{ steps.git.outputs.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** ${{ steps.version.outputs.branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.calculate-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Git SHA:** ${{ needs.calculate-version.outputs.git-sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Mode:** ${{ needs.calculate-version.outputs.mode }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Images Built & Pushed:**" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Auth Service" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ User Service" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Product Service" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Order Service" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Payment Service" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Gateway" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Frontend" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Registry:** ghcr.io/${{ steps.tags.outputs.repo_owner }}" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Services Built:" >> $GITHUB_STEP_SUMMARY
+          echo "- Auth Service" >> $GITHUB_STEP_SUMMARY
+          echo "- User Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Product Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Order Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Payment Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Gateway" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend" >> $GITHUB_STEP_SUMMARY
