@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.0.0...v1.1.0) (2026-01-12)
+
+### 🚀 Features
+
+* add modular parallel CI pipeline for testing ([#93](https://github.com/RahulSharma2309/Electronic-Paradise/issues/93)) ([efb615e](https://github.com/RahulSharma2309/Electronic-Paradise/commit/efb615e843a2496c7d6092c28be90791b8f17131))
+
 ## 1.0.0 (2026-01-11)
 
 ### 🚀 Features
