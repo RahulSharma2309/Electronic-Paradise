@@ -1,0 +1,69 @@
+name: Reusable - .NET Service CI
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+        description: "Service name (e.g., 'auth-service', 'gateway')"
+      service-path:
+        required: true
+        type: string
+        description: "Path to service directory (e.g., 'services/auth-service', 'gateway')"
+      solution-name:
+        required: true
+        type: string
+        description: "Solution file name (e.g., 'AuthService.sln', 'Gateway.sln')"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.service-path }}/${{ inputs.solution-name }}
+
+      - name: Build
+        run: dotnet build ${{ inputs.service-path }}/${{ inputs.solution-name }} -c Release --no-restore
+
+      - name: Test
+        run: |
+          dotnet test ${{ inputs.service-path }}/${{ inputs.solution-name }} \
+            -c Release \
+            --no-build \
+            --logger trx \
+            --results-directory ./TestResults/${{ inputs.service-name }} \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ inputs.service-name }}
+          path: ./TestResults/${{ inputs.service-name }}/*.trx
+          retention-days: 5
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ inputs.service-name }}
+          path: "**/${{ inputs.service-name }}/**/coverage.opencover.xml"
+          retention-days: 5
+
+      - name: Service Status
+        run: |
+          echo "### ✅ ${{ inputs.service-name }} - Build & Test Complete" >> $GITHUB_STEP_SUMMARY
