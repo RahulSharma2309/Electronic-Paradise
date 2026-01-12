@@ -6,12 +6,14 @@ on:
   pull_request:
     branches: [main, develop]
 
-# ============================================================================
-# 🎯 PHASE 1: BUILD & TEST (PARALLEL)
-# ============================================================================
+env:
+  DOTNET_VERSION: "8.0.x"
+  NODE_VERSION: "20"
 
 jobs:
-  # Calculate version once, share with all jobs
+  # ============================================================================
+  # PHASE 1: Calculate Version (runs once, shares with all)
+  # ============================================================================
   calculate-version:
     runs-on: ubuntu-latest
     outputs:
@@ -58,60 +60,69 @@ jobs:
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "owner=$OWNER" >> $GITHUB_OUTPUT
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # .NET Services - Build & Test in PARALLEL
-  # ─────────────────────────────────────────────────────────────────────────
-  dotnet-auth:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "auth-service"
-      service-path: "services/auth-service"
-      solution-name: "AuthService.sln"
-    secrets: inherit
+  # ============================================================================
+  # PHASE 2: Build & Test .NET Services (PARALLEL via Matrix)
+  # ============================================================================
+  dotnet-services:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth-service", path: "services/auth-service", sln: "AuthService.sln" }
+          - { name: "user-service", path: "services/user-service", sln: "UserService.sln" }
+          - { name: "product-service", path: "services/product-service", sln: "ProductService.sln" }
+          - { name: "order-service", path: "services/order-service", sln: "OrderService.sln" }
+          - { name: "payment-service", path: "services/payment-service", sln: "PaymentService.sln" }
+          - { name: "gateway", path: "gateway", sln: "Gateway.sln" }
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  dotnet-user:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "user-service"
-      service-path: "services/user-service"
-      solution-name: "UserService.sln"
-    secrets: inherit
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-  dotnet-product:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "product-service"
-      service-path: "services/product-service"
-      solution-name: "ProductService.sln"
-    secrets: inherit
+      - name: Restore dependencies
+        run: dotnet restore ${{ matrix.service.path }}/${{ matrix.service.sln }}
 
-  dotnet-order:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "order-service"
-      service-path: "services/order-service"
-      solution-name: "OrderService.sln"
-    secrets: inherit
+      - name: Build
+        run: dotnet build ${{ matrix.service.path }}/${{ matrix.service.sln }} -c Release --no-restore
 
-  dotnet-payment:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "payment-service"
-      service-path: "services/payment-service"
-      solution-name: "PaymentService.sln"
-    secrets: inherit
+      - name: Test
+        run: |
+          dotnet test ${{ matrix.service.path }}/${{ matrix.service.sln }} \
+            -c Release \
+            --no-build \
+            --logger trx \
+            --results-directory ./TestResults/${{ matrix.service.name }} \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover
 
-  dotnet-gateway:
-    uses: ./.github/workflows/_dotnet-service.yml
-    with:
-      service-name: "gateway"
-      service-path: "gateway"
-      solution-name: "Gateway.sln"
-    secrets: inherit
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.service.name }}
+          path: ./TestResults/${{ matrix.service.name }}/*.trx
+          retention-days: 5
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # Frontend - Build & Test
-  # ─────────────────────────────────────────────────────────────────────────
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ matrix.service.name }}
+          path: "**/${{ matrix.service.name }}/**/coverage.opencover.xml"
+          retention-days: 5
+
+  # ============================================================================
+  # PHASE 3: Frontend Build & Test
+  # ============================================================================
   frontend-build:
     runs-on: ubuntu-latest
     permissions:
@@ -123,7 +134,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
@@ -150,9 +161,9 @@ jobs:
           path: frontend/coverage/
           retention-days: 5
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # Code Quality Analysis (runs in parallel with builds)
-  # ─────────────────────────────────────────────────────────────────────────
+  # ============================================================================
+  # PHASE 4: SonarCloud Analysis
+  # ============================================================================
   sonarcloud:
     runs-on: ubuntu-latest
     permissions:
@@ -163,186 +174,96 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Install Sonar Scanner
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Restore all services
-        run: |
-          dotnet restore gateway/Gateway.sln
-          dotnet restore services/auth-service/AuthService.sln
-          dotnet restore services/order-service/OrderService.sln
-          dotnet restore services/payment-service/PaymentService.sln
-          dotnet restore services/product-service/ProductService.sln
-          dotnet restore services/user-service/UserService.sln
-
-      - name: Begin Sonar Analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # ============================================================================
+  # PHASE 5: Docker Build & Push (PARALLEL via Matrix)
+  # ============================================================================
+  docker-build:
+    needs: [calculate-version, dotnet-services, frontend-build, sonarcloud]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth", image: "electronic-paradise-auth", dockerfile: "./services/auth-service/src/Dockerfile" }
+          - { name: "user", image: "electronic-paradise-user", dockerfile: "./services/user-service/src/Dockerfile" }
+          - { name: "product", image: "electronic-paradise-product", dockerfile: "./services/product-service/src/Dockerfile" }
+          - { name: "order", image: "electronic-paradise-order", dockerfile: "./services/order-service/src/Dockerfile" }
+          - { name: "payment", image: "electronic-paradise-payment", dockerfile: "./services/payment-service/src/Dockerfile" }
+          - { name: "gateway", image: "electronic-paradise-gateway", dockerfile: "./gateway/src/Dockerfile" }
+          - { name: "frontend", image: "electronic-paradise-frontend", dockerfile: "./frontend/Dockerfile" }
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set image tags
+        id: tags
         run: |
-          dotnet-sonarscanner begin \
-            /k:"RahulSharma2309_Electronic-Paradise" \
-            /o:"rahulsharma2309" \
-            /d:sonar.token="$SONAR_TOKEN" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.exclusions="**/bin/**,**/obj/**,**/test/**,.github/**"
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          MODE="${{ needs.calculate-version.outputs.mode }}"
+          OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+          
+          if [ "$MODE" == "production" ]; then
+            # Production tags: v1.0.0, v1.0.0-abc123d, latest
+            TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
+            TAG2="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}-${SHA}"
+            TAG3="ghcr.io/${OWNER}/${{ matrix.service.image }}:latest"
+            echo "tags=${TAG1},${TAG2},${TAG3}" >> $GITHUB_OUTPUT
+          else
+            # Alpha tags: alpha-1.0.0-abc123d
+            TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:alpha-${VERSION}-${SHA}"
+            echo "tags=${TAG1}" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "🏷️ Tags for ${{ matrix.service.name }}: ${TAG1}"
 
-      - name: Build all services
-        run: |
-          dotnet build gateway/Gateway.sln -c Release --no-restore
-          dotnet build services/auth-service/AuthService.sln -c Release --no-restore
-          dotnet build services/order-service/OrderService.sln -c Release --no-restore
-          dotnet build services/payment-service/PaymentService.sln -c Release --no-restore
-          dotnet build services/product-service/ProductService.sln -c Release --no-restore
-          dotnet build services/user-service/UserService.sln -c Release --no-restore
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.service.dockerfile }}
+          push: ${{ github.event_name != 'pull_request' || env.PUBLISH_ALPHA == 'true' }}
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Test all services with coverage
-        run: |
-          dotnet test gateway/Gateway.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/auth-service/AuthService.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/order-service/OrderService.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/payment-service/PaymentService.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/product-service/ProductService.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-          dotnet test services/user-service/UserService.sln -c Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-
-      - name: End Sonar Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-
-# ============================================================================
-# 🎯 PHASE 2: DOCKER BUILD & PUSH (PARALLEL)
-# ============================================================================
-
-  # ─────────────────────────────────────────────────────────────────────────
-  # Docker Images - Build & Push in PARALLEL
-  # Runs ONLY after all tests pass + SonarCloud completes
-  # ─────────────────────────────────────────────────────────────────────────
-  docker-auth:
-    needs: [calculate-version, dotnet-auth, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "auth"
-      dockerfile-path: "./services/auth-service/src/Dockerfile"
-      image-name: "electronic-paradise-auth"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-user:
-    needs: [calculate-version, dotnet-user, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "user"
-      dockerfile-path: "./services/user-service/src/Dockerfile"
-      image-name: "electronic-paradise-user"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-product:
-    needs: [calculate-version, dotnet-product, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "product"
-      dockerfile-path: "./services/product-service/src/Dockerfile"
-      image-name: "electronic-paradise-product"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-order:
-    needs: [calculate-version, dotnet-order, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "order"
-      dockerfile-path: "./services/order-service/src/Dockerfile"
-      image-name: "electronic-paradise-order"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-payment:
-    needs: [calculate-version, dotnet-payment, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "payment"
-      dockerfile-path: "./services/payment-service/src/Dockerfile"
-      image-name: "electronic-paradise-payment"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-gateway:
-    needs: [calculate-version, dotnet-gateway, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "gateway"
-      dockerfile-path: "./gateway/src/Dockerfile"
-      image-name: "electronic-paradise-gateway"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-  docker-frontend:
-    needs: [calculate-version, frontend-build, sonarcloud]
-    uses: ./.github/workflows/_docker-build.yml
-    secrets: inherit
-    with:
-      service-name: "frontend"
-      dockerfile-path: "./frontend/Dockerfile"
-      image-name: "electronic-paradise-frontend"
-      version: ${{ needs.calculate-version.outputs.version }}
-      git-sha: ${{ needs.calculate-version.outputs.git-sha }}
-      mode: ${{ needs.calculate-version.outputs.mode }}
-      repo-owner: ${{ needs.calculate-version.outputs.repo-owner }}
-
-# ============================================================================
-# 🎯 PHASE 3: FINAL SUMMARY
-# ============================================================================
-
+  # ============================================================================
+  # PHASE 6: Summary
+  # ============================================================================
   pipeline-summary:
-    needs:
-      - calculate-version
-      - docker-auth
-      - docker-user
-      - docker-product
-      - docker-order
-      - docker-payment
-      - docker-gateway
-      - docker-frontend
+    needs: [calculate-version, docker-build]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Pipeline Summary
         run: |
-          echo "# 🎉 CI Pipeline Complete" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎉 CI Pipeline Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📊 Build Information" >> $GITHUB_STEP_SUMMARY
-          echo "- **Version:** ${{ needs.calculate-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Git SHA:** ${{ needs.calculate-version.outputs.git-sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Mode:** ${{ needs.calculate-version.outputs.mode }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.calculate-version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Git SHA:** ${{ needs.calculate-version.outputs.git-sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Mode:** ${{ needs.calculate-version.outputs.mode }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## ✅ Services Built & Tested" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Services Built:" >> $GITHUB_STEP_SUMMARY
           echo "- Auth Service" >> $GITHUB_STEP_SUMMARY
           echo "- User Service" >> $GITHUB_STEP_SUMMARY
           echo "- Product Service" >> $GITHUB_STEP_SUMMARY
@@ -350,8 +271,3 @@ jobs:
           echo "- Payment Service" >> $GITHUB_STEP_SUMMARY
           echo "- Gateway" >> $GITHUB_STEP_SUMMARY
           echo "- Frontend" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🐳 Docker Images Published" >> $GITHUB_STEP_SUMMARY
-          echo "**Registry:** ghcr.io/${{ needs.calculate-version.outputs.repo-owner }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All 7 services successfully built, tested, and published! 🚀" >> $GITHUB_STEP_SUMMARY
