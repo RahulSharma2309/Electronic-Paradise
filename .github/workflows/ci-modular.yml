@@ -62,46 +62,52 @@ jobs:
   # .NET Services - Build & Test in PARALLEL
   # ─────────────────────────────────────────────────────────────────────────
   dotnet-auth:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "auth-service"
       service-path: "services/auth-service"
       solution-name: "AuthService.sln"
+    secrets: inherit
 
   dotnet-user:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "user-service"
       service-path: "services/user-service"
       solution-name: "UserService.sln"
+    secrets: inherit
 
   dotnet-product:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "product-service"
       service-path: "services/product-service"
       solution-name: "ProductService.sln"
+    secrets: inherit
 
   dotnet-order:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "order-service"
       service-path: "services/order-service"
       solution-name: "OrderService.sln"
+    secrets: inherit
 
   dotnet-payment:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "payment-service"
       service-path: "services/payment-service"
       solution-name: "PaymentService.sln"
+    secrets: inherit
 
   dotnet-gateway:
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_dotnet-service.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_dotnet-service.yml
     with:
       service-name: "gateway"
       service-path: "gateway"
       solution-name: "Gateway.sln"
+    secrets: inherit
 
   # ─────────────────────────────────────────────────────────────────────────
   # Frontend - Build & Test
@@ -220,7 +226,7 @@ jobs:
   # ─────────────────────────────────────────────────────────────────────────
   docker-auth:
     needs: [calculate-version, dotnet-auth, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "auth"
@@ -233,7 +239,7 @@ jobs:
 
   docker-user:
     needs: [calculate-version, dotnet-user, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "user"
@@ -246,7 +252,7 @@ jobs:
 
   docker-product:
     needs: [calculate-version, dotnet-product, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "product"
@@ -259,7 +265,7 @@ jobs:
 
   docker-order:
     needs: [calculate-version, dotnet-order, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "order"
@@ -272,7 +278,7 @@ jobs:
 
   docker-payment:
     needs: [calculate-version, dotnet-payment, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "payment"
@@ -285,7 +291,7 @@ jobs:
 
   docker-gateway:
     needs: [calculate-version, dotnet-gateway, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "gateway"
@@ -298,7 +304,7 @@ jobs:
 
   docker-frontend:
     needs: [calculate-version, frontend-build, sonarcloud]
-    uses: RahulSharma2309/Electronic-Paradise/.github/workflows/_docker-build.yml@chore/make-ci-pipeline-modular
+    uses: ./.github/workflows/_docker-build.yml
     secrets: inherit
     with:
       service-name: "frontend"
