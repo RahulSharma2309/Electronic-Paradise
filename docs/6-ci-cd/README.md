@@ -10,6 +10,7 @@ This folder contains all documentation related to Continuous Integration and Con
 
 | Document | Purpose | Status |
 |----------|---------|--------|
+| [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) | Parallel CI with reusable workflows | ✅ Complete |
 | [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | ✅ Complete |
 | [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md) | Quick command reference | ✅ Complete |
 | [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
@@ -17,6 +18,7 @@ This folder contains all documentation related to Continuous Integration and Con
 | [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
 
 **💡 Start Here:**
+- **Want faster CI builds?** → [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) (60-70% faster!)
 - **New to CI/CD?** → [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) (explains what each PBI does)
 - **Setting up Docker builds?** → [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)
 - **Setting up releases?** → [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)
