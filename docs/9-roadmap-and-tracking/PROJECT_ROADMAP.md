@@ -8,9 +8,9 @@
 
 ---
 
-## ✅ Current Status (MVP Completed)
+## ✅ Current Status
 
-### Phase 0: Foundation (COMPLETED ✅)
+### Phase 0: MVP Foundation (COMPLETED ✅)
 - [x] Basic microservices architecture (5 services)
 - [x] API Gateway (YARP)
 - [x] User authentication (JWT)
@@ -20,7 +20,6 @@
 - [x] Payment processing (wallet)
 - [x] Docker containerization
 - [x] Basic documentation
-- [x] **Unit & Integration Testing Suite (All Services + Frontend)**
 
 **Story Points Completed: ~144 points**
 
@@ -28,691 +27,12 @@
 
 ## 🎯 Roadmap - Sequential Implementation
 
-**Recommended Learning Path:**
-1. **Epic 1: Testing Strategy** ✅ (Foundation complete - ensures code quality)
-2. **Epic 2: CI/CD Pipeline** 🚧 (76% complete - automates build and deployment)
-3. **Epic 3: Kubernetes Deployment** 📋 (Next - deploy MVP to production)
+**Recommended Learning Path (Based on Actual Progression):**
+1. **Epic 1: Testing Strategy** ✅ **COMPLETED** (Foundation - ensures code quality)
+2. **Epic 2: CI/CD Pipeline** 🚧 **76% COMPLETE** (Automates build and deployment)
+3. **Epic 3: Kubernetes Deployment** 📋 **NEXT** (Deploy MVP to production)
 4. **Epic 4: Enhanced Product Domain** 📋 (Then add features to live system)
-5. **Epic 5-10** 📋 (Progressive enhancement)
-
----
-
-## Epic 4: Enhanced Product Domain & Design Patterns
-**Duration:** 4-5 sprints  
-**Story Points:** 144  
-**Dependencies:** None  
-**Learning Focus:** Factory, Builder, Strategy patterns; .NET advanced features
-
-### PBI 1.1: Product Category & Type System
-**Story Points:** 13  
-**Description:** Implement product hierarchy for electronics (Smartphones, Laptops, Tablets, Accessories, Wearables)
-
-**Acceptance Criteria:**
-- [ ] Create abstract Product base class
-- [ ] Implement ProductType enum with all categories
-- [ ] Create specific product classes (Smartphone, Laptop, etc.)
-- [ ] Add category-specific attributes (screen size, RAM, storage, etc.)
-- [ ] Update database schema with inheritance (TPH or TPT)
-- [ ] Create migrations
-- [ ] Update Product Service API
-- [ ] Add category filtering endpoints
-
-**Technical Tasks:**
-- [ ] Implement Factory Pattern for product creation
-- [ ] Create ProductFactory with registration mechanism
-- [ ] Add unit tests for product creation
-- [ ] Update Swagger documentation
-
----
-
-### PBI 1.2: Product Variant System (Builder Pattern)
-**Story Points:** 21  
-**Description:** Implement product variants (color, storage, RAM) using Builder pattern
-
-**Acceptance Criteria:**
-- [ ] Create ProductVariant entity
-- [ ] Implement ProductBuilder for complex products
-- [ ] Add SKU generation logic
-- [ ] Support variant-specific pricing
-- [ ] Support variant-specific stock
-- [ ] Create variant management API
-- [ ] Add frontend variant selector UI
-
-**Technical Tasks:**
-- [ ] Implement Builder Pattern
-- [ ] Create FluentAPI for product building
-- [ ] Add validation for variant combinations
-- [ ] Write integration tests
-- [ ] Update frontend ProductCard component
-
----
-
-### PBI 1.3: Dynamic Pricing Strategy System
-**Story Points:** 13  
-**Description:** Implement multiple pricing strategies (Regular, Sale, Bundle, Seasonal)
-
-**Acceptance Criteria:**
-- [ ] Create IPricingStrategy interface
-- [ ] Implement concrete strategies (Regular, Percentage, Fixed, Bundle)
-- [ ] Add PriceCalculator service
-- [ ] Support time-based pricing (seasonal sales)
-- [ ] Create pricing rules engine
-- [ ] Add admin API for price management
-- [ ] Update product display to show discounts
-
-**Technical Tasks:**
-- [ ] Implement Strategy Pattern
-- [ ] Create PricingContext
-- [ ] Add discount validation logic
-- [ ] Write unit tests for each strategy
-- [ ] Create frontend discount badge component
-
----
-
-### PBI 1.4: Product Specifications & Attributes System
-**Story Points:** 8  
-**Description:** Flexible attribute system for different product types
-
-**Acceptance Criteria:**
-- [ ] Create ProductAttribute entity (key-value pairs)
-- [ ] Support typed attributes (string, number, boolean)
-- [ ] Create attribute groups (Technical Specs, Physical Specs)
-- [ ] Add attribute search/filter capability
-- [ ] Create attribute management API
-- [ ] Display attributes in product details
-
-**Technical Tasks:**
-- [ ] Implement EAV (Entity-Attribute-Value) pattern
-- [ ] Add JSON column for flexible attributes
-- [ ] Create attribute validation
-- [ ] Add frontend attribute display component
-
----
-
-### PBI 1.5: Product Images & Media Management
-**Story Points:** 13  
-**Description:** Multi-image support with primary image selection
-
-**Acceptance Criteria:**
-- [ ] Create ProductImage entity
-- [ ] Support multiple images per product
-- [ ] Implement image upload API
-- [ ] Add image storage (local/blob storage)
-- [ ] Support image ordering
-- [ ] Create thumbnail generation
-- [ ] Add image gallery frontend component
-
-**Technical Tasks:**
-- [ ] Implement file upload with validation
-- [ ] Add image optimization (resize, compress)
-- [ ] Create image CDN integration point
-- [ ] Write tests for file operations
-- [ ] Create React image carousel
-
----
-
-### PBI 1.6: Product Search & Filtering
-**Story Points:** 21  
-**Description:** Advanced search with filters, sorting, pagination
-
-**Acceptance Criteria:**
-- [ ] Implement full-text search
-- [ ] Add filter by category, price range, brand
-- [ ] Add filter by attributes (RAM, storage, etc.)
-- [ ] Implement sorting (price, name, popularity, newest)
-- [ ] Add pagination with configurable page size
-- [ ] Create search suggestions/autocomplete
-- [ ] Optimize database queries with indexes
-
-**Technical Tasks:**
-- [ ] Implement Specification Pattern for filters
-- [ ] Create composable filter queries
-- [ ] Add database indexes
-- [ ] Implement search result ranking
-- [ ] Create frontend filter sidebar
-- [ ] Add URL parameter state management
-
----
-
-### PBI 1.7: Inventory Management & Stock Alerts
-**Story Points:** 13  
-**Description:** Advanced inventory tracking with low-stock alerts
-
-**Acceptance Criteria:**
-- [ ] Add low-stock threshold configuration
-- [ ] Implement stock level alerts
-- [ ] Create inventory history tracking
-- [ ] Add reorder point calculation
-- [ ] Create inventory reports API
-- [ ] Add admin inventory dashboard
-
-**Technical Tasks:**
-- [ ] Implement Observer Pattern for stock alerts
-- [ ] Create StockObserver interface
-- [ ] Add background job for stock monitoring
-- [ ] Write unit tests for alert logic
-- [ ] Create admin dashboard component
-
----
-
-### PBI 1.8: Product Reviews & Ratings
-**Story Points:** 21  
-**Description:** Customer reviews with ratings and moderation
-
-**Acceptance Criteria:**
-- [ ] Create Review entity
-- [ ] Allow only verified buyers to review
-- [ ] Support 1-5 star ratings
-- [ ] Add review text with validation
-- [ ] Calculate average rating per product
-- [ ] Implement review pagination
-- [ ] Add review reporting/moderation
-- [ ] Display reviews on product page
-
-**Technical Tasks:**
-- [ ] Create ReviewService
-- [ ] Add verification check with OrderService
-- [ ] Implement rating aggregation
-- [ ] Add moderation workflow
-- [ ] Create frontend review form
-- [ ] Add star rating component
-
----
-
-### PBI 1.9: Wishlist Feature
-**Story Points:** 13  
-**Description:** User wishlist with price tracking
-
-**Acceptance Criteria:**
-- [ ] Create Wishlist entity
-- [ ] Add/remove products from wishlist
-- [ ] Track price changes for wishlist items
-- [ ] Send price drop notifications
-- [ ] Add wishlist page UI
-- [ ] Support sharing wishlists (future)
-
-**Technical Tasks:**
-- [ ] Create WishlistService
-- [ ] Implement Observer for price changes
-- [ ] Add wishlist API endpoints
-- [ ] Create frontend wishlist page
-- [ ] Add "Add to Wishlist" button
-
----
-
-### PBI 1.10: Product Comparison Feature
-**Story Points:** 8  
-**Description:** Side-by-side product comparison
-
-**Acceptance Criteria:**
-- [ ] Select up to 4 products to compare
-- [ ] Display all attributes side-by-side
-- [ ] Highlight differences
-- [ ] Support comparison within same category
-- [ ] Add comparison page UI
-
-**Technical Tasks:**
-- [ ] Create comparison state management
-- [ ] Add comparison API endpoint
-- [ ] Create frontend comparison table
-- [ ] Add responsive mobile view
-- [ ] Store comparison in localStorage
-
----
-
-## Epic 5: Advanced Order Management & Patterns
-**Duration:** 3-4 sprints  
-**Story Points:** 89  
-**Dependencies:** Epic 1 (product variants)  
-**Learning Focus:** State, Chain of Responsibility, Saga patterns
-
-### PBI 2.1: Order State Machine
-**Story Points:** 13  
-**Description:** Implement proper order lifecycle with state transitions
-
-**Acceptance Criteria:**
-- [ ] Define order states (Pending, Processing, Shipped, Delivered, Cancelled, Refunded)
-- [ ] Create state transition rules
-- [ ] Implement State Pattern
-- [ ] Add state change validation
-- [ ] Create order history tracking
-- [ ] Add state change notifications
-
-**Technical Tasks:**
-- [ ] Implement State Pattern
-- [ ] Create OrderState abstract class
-- [ ] Create concrete state classes
-- [ ] Add unit tests for transitions
-- [ ] Update frontend order status display
-
----
-
-### PBI 2.2: Order Validation Pipeline
-**Story Points:** 13  
-**Description:** Multi-step order validation using Chain of Responsibility
-
-**Acceptance Criteria:**
-- [ ] Validate stock availability
-- [ ] Validate user wallet balance
-- [ ] Validate product availability
-- [ ] Validate address completeness
-- [ ] Validate order total
-- [ ] Return detailed validation errors
-
-**Technical Tasks:**
-- [ ] Implement Chain of Responsibility Pattern
-- [ ] Create IOrderValidator interface
-- [ ] Create concrete validators
-- [ ] Chain validators in pipeline
-- [ ] Add comprehensive error messages
-- [ ] Write integration tests
-
----
-
-### PBI 2.3: Order Cancellation & Refund Flow
-**Story Points:** 13  
-**Description:** Complete cancellation with automatic refund
-
-**Acceptance Criteria:**
-- [ ] Allow cancellation in specific states
-- [ ] Implement automatic stock restoration
-- [ ] Process automatic wallet refund
-- [ ] Send cancellation email
-- [ ] Add cancellation reason tracking
-- [ ] Update order history
-
-**Technical Tasks:**
-- [ ] Create OrderCancellationService
-- [ ] Implement compensation transactions
-- [ ] Add integration with PaymentService
-- [ ] Add integration with ProductService
-- [ ] Create frontend cancellation UI
-- [ ] Write E2E tests
-
----
-
-### PBI 2.4: Order Modification Support
-**Story Points:** 21  
-**Description:** Allow order modifications before shipping
-
-**Acceptance Criteria:**
-- [ ] Allow quantity changes
-- [ ] Allow item removal
-- [ ] Recalculate totals
-- [ ] Process payment difference
-- [ ] Validate stock for changes
-- [ ] Update order history
-- [ ] Restrict after shipping
-
-**Technical Tasks:**
-- [ ] Create OrderModificationService
-- [ ] Implement validation rules
-- [ ] Handle payment adjustments
-- [ ] Add modification API
-- [ ] Create frontend modification UI
-- [ ] Write integration tests
-
----
-
-### PBI 2.5: Distributed Transaction (Saga Pattern)
-**Story Points:** 21  
-**Description:** Implement Saga pattern for order creation reliability
-
-**Acceptance Criteria:**
-- [ ] Create orchestrator for order creation
-- [ ] Define compensation actions for each step
-- [ ] Implement rollback mechanisms
-- [ ] Add saga state persistence
-- [ ] Handle partial failures gracefully
-- [ ] Add comprehensive logging
-
-**Technical Tasks:**
-- [ ] Implement Saga Pattern (Orchestration)
-- [ ] Create ISagaStep interface
-- [ ] Create compensating transactions
-- [ ] Add saga state machine
-- [ ] Implement idempotency
-- [ ] Add distributed tracing
-
----
-
-### PBI 2.6: Invoice Generation
-**Story Points:** 8  
-**Description:** Generate PDF invoices for orders
-
-**Acceptance Criteria:**
-- [ ] Generate invoice on order completion
-- [ ] Include all order details
-- [ ] Add tax calculation
-- [ ] Support invoice download
-- [ ] Store invoices persistently
-- [ ] Send invoice via email
-
-**Technical Tasks:**
-- [ ] Integrate PDF library (QuestPDF or similar)
-- [ ] Create invoice template
-- [ ] Add invoice generation service
-- [ ] Create download endpoint
-- [ ] Add email attachment support
-- [ ] Write tests for PDF generation
-
----
-
-## Epic 6: Advanced Payment & Checkout
-**Duration:** 2-3 sprints  
-**Story Points:** 55  
-**Dependencies:** Epic 2 (order states)  
-**Learning Focus:** Adapter, Facade, Strategy patterns
-
-### PBI 3.1: Multiple Payment Methods (Adapter Pattern)
-**Story Points:** 21  
-**Description:** Support wallet, credit card, UPI, net banking
-
-**Acceptance Criteria:**
-- [ ] Create IPaymentGateway interface
-- [ ] Implement WalletPaymentGateway (existing)
-- [ ] Implement mock CreditCardGateway
-- [ ] Implement mock UPIGateway
-- [ ] Add payment method selection UI
-- [ ] Store payment method preferences
-- [ ] Add payment retry mechanism
-
-**Technical Tasks:**
-- [ ] Implement Adapter Pattern
-- [ ] Create payment gateway adapters
-- [ ] Add payment method configuration
-- [ ] Implement fallback mechanisms
-- [ ] Create frontend payment selector
-- [ ] Add payment method icons
-
----
-
-### PBI 3.2: Checkout Facade
-**Story Points:** 8  
-**Description:** Simplify complex checkout process with Facade
-
-**Acceptance Criteria:**
-- [ ] Create CheckoutFacade
-- [ ] Encapsulate multi-step checkout
-- [ ] Provide simple API for frontend
-- [ ] Handle all service coordination
-- [ ] Add checkout session management
-
-**Technical Tasks:**
-- [ ] Implement Facade Pattern
-- [ ] Create CheckoutService
-- [ ] Coordinate all checkout steps
-- [ ] Add session timeout handling
-- [ ] Write integration tests
-
----
-
-### PBI 3.3: Payment Retry & Failure Handling
-**Story Points:** 13  
-**Description:** Robust payment failure handling with retry
-
-**Acceptance Criteria:**
-- [ ] Implement exponential backoff retry
-- [ ] Add maximum retry limit
-- [ ] Handle timeout scenarios
-- [ ] Provide clear error messages
-- [ ] Allow manual retry from UI
-- [ ] Log all payment attempts
-
-**Technical Tasks:**
-- [ ] Implement Polly retry policies
-- [ ] Add circuit breaker pattern
-- [ ] Create PaymentRetryService
-- [ ] Add comprehensive logging
-- [ ] Create retry UI component
-- [ ] Write failure scenario tests
-
----
-
-### PBI 3.4: Promotional Codes & Discounts
-**Story Points:** 13  
-**Description:** Coupon code system with various discount types
-
-**Acceptance Criteria:**
-- [ ] Create Coupon entity
-- [ ] Support percentage and fixed discounts
-- [ ] Add minimum order value rules
-- [ ] Support expiry dates
-- [ ] Add usage limit per coupon
-- [ ] Add usage limit per user
-- [ ] Apply coupon at checkout
-- [ ] Display discount breakdown
-
-**Technical Tasks:**
-- [ ] Create CouponService
-- [ ] Implement validation rules
-- [ ] Add coupon application logic
-- [ ] Create admin coupon management
-- [ ] Add frontend coupon input
-- [ ] Write validation tests
-
----
-
-## Epic 7: Frontend Architecture & React Patterns
-**Duration:** 3-4 sprints  
-**Story Points:** 89  
-**Dependencies:** Epics 1-3 (APIs must exist)  
-**Learning Focus:** Advanced React, performance, accessibility
-
-### PBI 4.1: React Query Integration
-**Story Points:** 13  
-**Description:** Replace axios calls with React Query for server state
-
-**Acceptance Criteria:**
-- [ ] Install and configure React Query
-- [ ] Create query hooks for all APIs
-- [ ] Implement automatic caching
-- [ ] Add optimistic updates
-- [ ] Implement pagination with useInfiniteQuery
-- [ ] Add error retry logic
-- [ ] Configure stale time per query
-
-**Technical Tasks:**
-- [ ] Set up QueryClient
-- [ ] Create custom hooks (useProducts, useOrders, etc.)
-- [ ] Add query invalidation on mutations
-- [ ] Configure devtools
-- [ ] Migrate all API calls
-- [ ] Write hook tests
-
----
-
-### PBI 4.2: Advanced State Management (Zustand)
-**Story Points:** 8  
-**Description:** Replace Context API with Zustand for global state
-
-**Acceptance Criteria:**
-- [ ] Install Zustand
-- [ ] Create stores (auth, cart, UI)
-- [ ] Implement persist middleware
-- [ ] Add devtools integration
-- [ ] Migrate from Context API
-- [ ] Type-safe store access
-
-**Technical Tasks:**
-- [ ] Create store structure
-- [ ] Implement selectors
-- [ ] Add middleware configuration
-- [ ] Migrate existing state
-- [ ] Write store tests
-
----
-
-### PBI 4.3: Form Management with React Hook Form
-**Story Points:** 8  
-**Description:** Replace controlled forms with React Hook Form
-
-**Acceptance Criteria:**
-- [ ] Install React Hook Form + Zod
-- [ ] Create validation schemas
-- [ ] Migrate all forms (login, register, checkout, profile)
-- [ ] Add field-level validation
-- [ ] Implement form error display
-- [ ] Add loading states
-
-**Technical Tasks:**
-- [ ] Create form components
-- [ ] Set up Zod schemas
-- [ ] Add custom validation rules
-- [ ] Implement error boundaries
-- [ ] Write form tests
-
----
-
-### PBI 4.4: Code Splitting & Lazy Loading
-**Story Points:** 5  
-**Description:** Optimize bundle size with code splitting
-
-**Acceptance Criteria:**
-- [ ] Implement route-based code splitting
-- [ ] Add React.lazy for heavy components
-- [ ] Configure Suspense boundaries
-- [ ] Add loading fallbacks
-- [ ] Analyze bundle size
-- [ ] Achieve <100KB initial bundle
-
-**Technical Tasks:**
-- [ ] Split routes with lazy()
-- [ ] Create loading components
-- [ ] Configure webpack chunks
-- [ ] Add preload strategies
-- [ ] Measure performance improvements
-
----
-
-### PBI 4.5: Progressive Web App (PWA)
-**Story Points:** 13  
-**Description:** Convert to installable PWA with offline support
-
-**Acceptance Criteria:**
-- [ ] Add service worker
-- [ ] Create manifest.json
-- [ ] Implement offline page
-- [ ] Add install prompt
-- [ ] Cache static assets
-- [ ] Support offline browsing
-- [ ] Pass Lighthouse PWA audit
-
-**Technical Tasks:**
-- [ ] Configure Workbox
-- [ ] Create caching strategies
-- [ ] Add offline detection
-- [ ] Design offline UI
-- [ ] Test offline scenarios
-- [ ] Add PWA icons
-
----
-
-### PBI 4.6: Accessibility (A11y) Compliance
-**Story Points:** 13  
-**Description:** WCAG 2.1 AA compliance
-
-**Acceptance Criteria:**
-- [ ] Add ARIA labels to all interactive elements
-- [ ] Implement keyboard navigation
-- [ ] Add focus management
-- [ ] Support screen readers
-- [ ] Add skip links
-- [ ] Ensure color contrast ratios
-- [ ] Pass axe-core audit
-
-**Technical Tasks:**
-- [ ] Run accessibility audit
-- [ ] Fix all critical issues
-- [ ] Add semantic HTML
-- [ ] Implement focus trap for modals
-- [ ] Add live region announcements
-- [ ] Write accessibility tests
-
----
-
-### PBI 4.7: Animation & Micro-interactions
-**Story Points:** 8  
-**Description:** Smooth animations with Framer Motion
-
-**Acceptance Criteria:**
-- [ ] Add page transitions
-- [ ] Animate cart add/remove
-- [ ] Add loading skeletons
-- [ ] Implement smooth scrolling
-- [ ] Add hover effects
-- [ ] Optimize animation performance
-
-**Technical Tasks:**
-- [ ] Install Framer Motion
-- [ ] Create animation variants
-- [ ] Add layout animations
-- [ ] Implement gesture controls
-- [ ] Test on mobile devices
-
----
-
-### PBI 4.8: Error Boundaries & Error Handling
-**Story Points:** 5  
-**Description:** Comprehensive error handling UI
-
-**Acceptance Criteria:**
-- [ ] Create error boundary components
-- [ ] Add fallback UI for errors
-- [ ] Implement error logging
-- [ ] Add retry mechanisms
-- [ ] Display user-friendly messages
-- [ ] Add error reporting (Sentry integration point)
-
-**Technical Tasks:**
-- [ ] Create ErrorBoundary component
-- [ ] Add error fallback UI
-- [ ] Implement error logger
-- [ ] Add retry buttons
-- [ ] Write error scenarios tests
-
----
-
-### PBI 4.9: Component Library & Storybook
-**Story Points:** 13  
-**Description:** Document components with Storybook
-
-**Acceptance Criteria:**
-- [ ] Set up Storybook
-- [ ] Create stories for all components
-- [ ] Add component documentation
-- [ ] Implement design tokens
-- [ ] Add interaction testing
-- [ ] Deploy Storybook
-
-**Technical Tasks:**
-- [ ] Install Storybook
-- [ ] Create story files
-- [ ] Add MDX documentation
-- [ ] Configure addons
-- [ ] Set up Chromatic (optional)
-
----
-
-### PBI 4.10: Performance Optimization
-**Story Points:** 8  
-**Description:** Achieve 90+ Lighthouse score
-
-**Acceptance Criteria:**
-- [ ] Optimize images (WebP, lazy loading)
-- [ ] Minimize bundle size
-- [ ] Implement virtualization for long lists
-- [ ] Add memoization where needed
-- [ ] Reduce CLS and FID
-- [ ] Pass Lighthouse audit
-
-**Technical Tasks:**
-- [ ] Run Lighthouse audit
-- [ ] Optimize critical rendering path
-- [ ] Add React.memo strategically
-- [ ] Implement virtual scrolling
-- [ ] Measure Core Web Vitals
-- [ ] Add performance monitoring
+5. **Epics 5-10** 📋 (Progressive enhancement)
 
 ---
 
@@ -723,7 +43,7 @@
 **Dependencies:** MVP code must exist  
 **Learning Focus:** TDD, testing patterns, automation
 
-### PBI 5.1: Backend Unit Tests (.NET) (COMPLETED ✅)
+### PBI 1.1: Backend Unit Tests (.NET) (COMPLETED ✅)
 **Story Points:** 21  
 **Description:** Comprehensive unit tests for all services
 
@@ -745,13 +65,13 @@
 
 ---
 
-### PBI 5.2: Backend Integration Tests (COMPLETED ✅)
+### PBI 1.2: Backend Integration Tests (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Integration tests with real database
 
 **Acceptance Criteria:**
 - [x] Test API endpoints end-to-end
-- [x] Use Docker image of SQL Server (instead of real SQL)
+- [x] Use Docker image of SQL Server
 - [x] Test service-to-service communication (via Mocks)
 - [x] Test database transactions
 - [x] Test error scenarios
@@ -766,7 +86,7 @@
 
 ---
 
-### PBI 5.3: Frontend Unit Tests (COMPLETED ✅)
+### PBI 1.3: Frontend Unit Tests (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Unit tests for React components and hooks
 
@@ -787,7 +107,7 @@
 
 ---
 
-### PBI 5.4: E2E Tests (Playwright)
+### PBI 1.4: E2E Tests (Playwright)
 **Story Points:** 8  
 **Description:** End-to-end user journey tests
 
@@ -812,20 +132,20 @@
 **Duration:** 2 sprints  
 **Story Points:** 55  
 **Progress:** 42/55 (76% complete)  
-**Dependencies:** Epic 5 (tests must exist)  
+**Dependencies:** Epic 1 (tests must exist)  
 **Learning Focus:** GitHub Actions, automation, versioning
 
 **Completed PBIs:**
-- ✅ PBI 6.1: GitHub Actions CI Pipeline (13 pts)
-- ✅ PBI 6.2: Docker Build Automation (8 pts)
-- ✅ PBI 6.3: Automated Versioning - Semantic Release (8 pts)
-- ✅ PBI 6.4: Code Quality Gates (SonarCloud) (13 pts)
+- ✅ PBI 2.1: GitHub Actions CI Pipeline (13 pts)
+- ✅ PBI 2.2: Docker Build Automation (8 pts)
+- ✅ PBI 2.3: Automated Versioning - Semantic Release (8 pts)
+- ✅ PBI 2.4: Code Quality Gates (SonarCloud) (13 pts)
 
 **Remaining PBIs:**
-- PBI 6.5: Dependency Scanning (8 pts)
-- PBI 6.6: CD Pipeline - Deploy to Staging (5 pts)
+- PBI 2.5: Dependency Scanning (8 pts)
+- PBI 2.6: CD Pipeline - Deploy to Staging (5 pts)
 
-### PBI 6.1: GitHub Actions CI Pipeline (COMPLETED ✅)
+### PBI 2.1: GitHub Actions CI Pipeline (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Automated build and test on every commit
 
@@ -838,47 +158,30 @@
 - [x] Upload coverage reports
 - [x] Fail on test failures
 - [x] Run on PR and main branch
+- [x] **Parallel execution via matrix strategy (60-70% faster)**
 
 **Technical Tasks:**
 - [x] Create .github/workflows/ci.yml
-- [x] Configure parallel jobs for .NET and Frontend (not matrix - separate jobs for better clarity)
-- [x] Set up test reporting with dorny/test-reporter (GitHub Checks integration)
-- [x] Add coverage collection with Coverlet (OpenCover format for SonarCloud)
-- [x] Configure unique test result directories to prevent overwriting
-- [x] Implement robust mocking for integration tests (HttpClient mocking with callbacks)
-- [x] Add explicit permissions (least privilege principle)
+- [x] Configure matrix strategy for parallel .NET service builds
+- [x] Configure matrix strategy for parallel Docker builds
+- [x] Set up test reporting
+- [x] Add coverage collection with Coverlet
+- [x] Configure unique test result directories
+- [x] Implement robust mocking for integration tests
+- [x] Add explicit permissions
 - [x] Use --ignore-scripts for npm security
 - [ ] Configure branch protection
 - [ ] Add status badges to README
 
 **Implementation Notes:**
-- Used version tags (@v4, @v1) instead of commit SHAs due to GitHub API resolution issues
-- Parallel jobs improve performance (~5 min total vs ~7 min sequential)
+- **Modular CI with Matrix Strategy:** All .NET services build in parallel (6 jobs), all Docker images build in parallel (7 jobs)
+- **Performance:** ~10-15 min total (vs ~30-40 min sequential)
 - All 120+ tests passing across all services
+- SHA pinning disabled for GitHub Actions (deliberate decision for maintainability)
 
 ---
 
-### 🎓 Key Learnings from PBI 6.1 & 6.4:
-
-**Challenges Overcome:**
-1. **GitHub Actions SHA Resolution** - Commit SHA pinning for actions failed due to GitHub API issues; resolved by using semantic version tags with documented rationale
-2. **Integration Test Reliability** - External service calls caused 503 errors in CI; resolved with callback-based HttpClient mocking
-3. **Test Result Conflicts** - Multiple test projects overwriting .trx files; resolved with unique directories per service
-4. **NuGet Authentication** - Ep.Platform package required auth in CI; resolved by switching from PackageReference to ProjectReference
-5. **SonarCloud Conflicts** - Automatic Analysis conflicted with CI-based analysis; required manual disabling in dashboard
-6. **Infrastructure vs Application Code** - Workflow files flagged by SonarCloud; resolved by excluding .github/** from analysis
-
-**Best Practices Established:**
-- ✅ Explicit job permissions (principle of least privilege)
-- ✅ Parallel job execution for performance
-- ✅ Unique test result directories
-- ✅ Robust mocking strategies for integration tests
-- ✅ Separation of infrastructure and application code in quality scans
-- ✅ Pragmatic security (working version tags > broken SHA pins)
-
----
-
-### PBI 6.2: Docker Build Automation (COMPLETED ✅)
+### PBI 2.2: Docker Build Automation (COMPLETED ✅)
 **Story Points:** 8  
 **Description:** Build and push Docker images
 
@@ -886,8 +189,9 @@
 - [x] Build images for all services
 - [x] Push to GitHub Container Registry
 - [x] Tag with version numbers
+- [x] Parallel Docker builds (matrix strategy)
 - [ ] Optimize image sizes (deferred to later)
-- [ ] Scan for vulnerabilities (PBI 6.5)
+- [ ] Scan for vulnerabilities (PBI 2.5)
 
 **Technical Tasks:**
 - [x] Add Docker build job to workflow
@@ -898,26 +202,18 @@
 - [x] Push images to ghcr.io/rahulsharma2309
 - [x] Handle lowercase registry names
 - [x] Implement GitHub Actions cache for faster builds
+- [x] Enable parallel Docker builds via matrix
 
 **Implementation Notes:**
-- Scripts created for version calculation and image tagging
-- CI workflow calls `get-next-version.sh` for semantic versioning
+- Scripts: `get-next-version.sh` for semantic versioning
 - Alpha tags for PR builds: `alpha-<version>-<sha>` (e.g., `alpha-0.1.0-5482cd0`)
 - Production tags for main branch: `v<version>`, `v<version>-<sha>`, `latest`
-- Repository names converted to lowercase for Docker registry compatibility
-- All 7 microservices built and pushed as individual images
-- GitHub Container Registry used (ghcr.io) with automatic authentication via GITHUB_TOKEN
-
-**Key Learnings:**
-- Docker registry names must be lowercase (converted `RahulSharma2309` → `rahulsharma2309`)
-- Pushing to registry is part of CI, not CD (build artifacts, not deployment)
-- Individual service images enable independent deployment and scaling
-- GitHub Actions cache significantly speeds up subsequent builds
-- Scripts provide single source of truth for versioning logic (testable locally before CI)
+- All 7 microservices built in parallel and pushed as individual images
+- GitHub Container Registry (ghcr.io) with automatic GITHUB_TOKEN authentication
 
 ---
 
-### PBI 6.3: Automated Versioning (Semantic Release) (COMPLETED ✅)
+### PBI 2.3: Automated Versioning (Semantic Release) (COMPLETED ✅)
 **Story Points:** 8  
 **Description:** Automatic version bumping and changelog
 
@@ -936,14 +232,12 @@
 - [x] Test release process
 
 **Implementation Notes:**
-- Configuration file: `.releaserc.json`
-- Workflow triggers on push to main branch
-- Automatically skips if commit contains `[skip ci]`
-- Supports conventional commit types: feat, fix, docs, chore, etc.
-- Generates changelog with emoji sections (🚀 Features, 🐛 Bug Fixes, etc.)
+- Configuration: `.releaserc.json`
+- Triggers on push to main branch
+- Conventional commit types: feat, fix, docs, chore, etc.
+- Generates changelog with emoji sections
 - Creates GitHub releases with automated release notes
-- Updates CHANGELOG.md and commits back to repository
-- NPM publish disabled (not a Node.js library)
+- Updates CHANGELOG.md automatically
 
 **Commit Message Format:**
 ```
@@ -955,16 +249,9 @@ Examples:
 - feat!: breaking change (major bump)
 ```
 
-**Key Learnings:**
-- Semantic Release is purely for documentation (doesn't affect Docker/K8s)
-- Requires team discipline to use conventional commit format
-- Tool automatically generates changelogs - no manual writing needed
-- Integrates seamlessly with existing CI/CD (creates tags that Docker build uses)
-- GitHub Releases provide professional project appearance
-
 ---
 
-### PBI 6.4: Code Quality Gates (SonarCloud) (COMPLETED ✅)
+### PBI 2.4: Code Quality Gates (SonarCloud) (COMPLETED ✅)
 **Story Points:** 13  
 **Description:** Automated code quality checks
 
@@ -974,29 +261,27 @@ Examples:
 - [x] Check duplications
 - [x] Check security vulnerabilities
 - [x] Fail build on quality gate failure
+- [x] Configure SHA pinning exclusion
 - [ ] Display quality badge
 
 **Technical Tasks:**
-- [x] Set up SonarCloud (cloud-based SaaS)
-- [x] Configure dotnet-sonarscanner begin/end wrapper in CI
+- [x] Set up SonarCloud
+- [x] Configure dotnet-sonarscanner in CI
 - [x] Integrate OpenCover code coverage reports
 - [x] Configure exclusions (bin, obj, test, .github)
 - [x] Set quality gate thresholds
-- [x] Fix duplicate ProjectGuid warnings (changed PackageReference to ProjectReference for Ep.Platform)
-- [x] Resolve integration test reliability (mocked external dependencies)
-- [x] Fix nullability warnings in test fixtures
-- [ ] Disable Automatic Analysis in SonarCloud (conflicts with CI-based analysis)
+- [x] Add sonar-project.properties to ignore SHA pinning warnings
 - [ ] Add quality badge to README
 
 **Implementation Notes:**
-- Excluded .github/** from analysis (infrastructure code, not application code)
-- Used fetch-depth: 0 for full Git history (required for accurate blame and change tracking)
-- Sonar analysis runs between build and end steps to capture all metrics
-- Organization: rahulsharma2309, Project Key: RahulSharma2309_Electronic-Paradise
+- Excluded .github/** from analysis
+- Organization: rahulsharma2309
+- Project Key: RahulSharma2309_Electronic-Paradise
+- SHA pinning warnings suppressed (deliberate architectural decision)
 
 ---
 
-### PBI 6.5: Dependency Scanning (Mend/Snyk)
+### PBI 2.5: Dependency Scanning
 **Story Points:** 8  
 **Description:** Automated vulnerability scanning
 
@@ -1016,7 +301,7 @@ Examples:
 
 ---
 
-### PBI 6.6: CD Pipeline (Deploy to Staging)
+### PBI 2.6: CD Pipeline (Deploy to Staging)
 **Story Points:** 5  
 **Description:** Automated deployment to staging environment
 
@@ -1035,13 +320,13 @@ Examples:
 
 ---
 
-## Epic 3: Kubernetes Deployment
+## Epic 3: Kubernetes Deployment (NEXT 📋)
 **Duration:** 3-4 sprints  
 **Story Points:** 89  
-**Dependencies:** Epic 6 (images must be built)  
+**Dependencies:** Epic 2 (images must be built)  
 **Learning Focus:** K8s, Helm, ingress, monitoring
 
-### PBI 7.1: K8s Cluster Setup (K3s)
+### PBI 3.1: K8s Cluster Setup (K3s)
 **Story Points:** 8  
 **Description:** Set up local K3s cluster
 
@@ -1061,7 +346,7 @@ Examples:
 
 ---
 
-### PBI 7.2: Kubernetes Manifests
+### PBI 3.2: Kubernetes Manifests
 **Story Points:** 13  
 **Description:** Create K8s manifests for all services
 
@@ -1083,7 +368,7 @@ Examples:
 
 ---
 
-### PBI 7.3: Helm Charts
+### PBI 3.3: Helm Charts
 **Story Points:** 13  
 **Description:** Package application as Helm chart
 
@@ -1105,7 +390,7 @@ Examples:
 
 ---
 
-### PBI 7.4: Ingress & Load Balancing
+### PBI 3.4: Ingress & Load Balancing
 **Story Points:** 8  
 **Description:** Set up ingress controller and routing
 
@@ -1126,7 +411,7 @@ Examples:
 
 ---
 
-### PBI 7.5: Persistent Storage
+### PBI 3.5: Persistent Storage
 **Story Points:** 8  
 **Description:** Configure persistent volumes for database
 
@@ -1146,7 +431,7 @@ Examples:
 
 ---
 
-### PBI 7.6: ConfigMaps & Secrets Management
+### PBI 3.6: ConfigMaps & Secrets Management
 **Story Points:** 5  
 **Description:** Externalize configuration
 
@@ -1166,7 +451,7 @@ Examples:
 
 ---
 
-### PBI 7.7: Horizontal Pod Autoscaling (HPA)
+### PBI 3.7: Horizontal Pod Autoscaling (HPA)
 **Story Points:** 8  
 **Description:** Auto-scale pods based on load
 
@@ -1187,7 +472,7 @@ Examples:
 
 ---
 
-### PBI 7.8: Service Mesh (Istio - Optional)
+### PBI 3.8: Service Mesh (Istio - Optional)
 **Story Points:** 21  
 **Description:** Add Istio for advanced traffic management
 
@@ -1209,7 +494,7 @@ Examples:
 
 ---
 
-### PBI 7.9: GitOps with ArgoCD (Optional)
+### PBI 3.9: GitOps with ArgoCD (Optional)
 **Story Points:** 5  
 **Description:** Automated deployment from Git
 
@@ -1229,15 +514,694 @@ Examples:
 
 ---
 
+## Epic 4: Enhanced Product Domain & Design Patterns
+**Duration:** 4-5 sprints  
+**Story Points:** 144  
+**Dependencies:** None (can start after Epic 3)  
+**Learning Focus:** Factory, Builder, Strategy patterns; .NET advanced features
+
+### PBI 4.1: Product Category & Type System
+**Story Points:** 13  
+**Description:** Implement product hierarchy for electronics
+
+**Acceptance Criteria:**
+- [ ] Create abstract Product base class
+- [ ] Implement ProductType enum with all categories
+- [ ] Create specific product classes (Smartphone, Laptop, Tablet, Accessories, Wearables)
+- [ ] Add category-specific attributes
+- [ ] Update database schema with inheritance (TPH or TPT)
+- [ ] Create migrations
+- [ ] Update Product Service API
+- [ ] Add category filtering endpoints
+
+**Technical Tasks:**
+- [ ] Implement Factory Pattern for product creation
+- [ ] Create ProductFactory with registration mechanism
+- [ ] Add unit tests for product creation
+- [ ] Update Swagger documentation
+
+---
+
+### PBI 4.2: Product Variant System (Builder Pattern)
+**Story Points:** 21  
+**Description:** Implement product variants using Builder pattern
+
+**Acceptance Criteria:**
+- [ ] Create ProductVariant entity
+- [ ] Implement ProductBuilder for complex products
+- [ ] Add SKU generation logic
+- [ ] Support variant-specific pricing
+- [ ] Support variant-specific stock
+- [ ] Create variant management API
+- [ ] Add frontend variant selector UI
+
+**Technical Tasks:**
+- [ ] Implement Builder Pattern
+- [ ] Create FluentAPI for product building
+- [ ] Add validation for variant combinations
+- [ ] Write integration tests
+- [ ] Update frontend ProductCard component
+
+---
+
+### PBI 4.3: Dynamic Pricing Strategy System
+**Story Points:** 13  
+**Description:** Implement multiple pricing strategies
+
+**Acceptance Criteria:**
+- [ ] Create IPricingStrategy interface
+- [ ] Implement concrete strategies (Regular, Percentage, Fixed, Bundle)
+- [ ] Add PriceCalculator service
+- [ ] Support time-based pricing
+- [ ] Create pricing rules engine
+- [ ] Add admin API for price management
+- [ ] Update product display to show discounts
+
+**Technical Tasks:**
+- [ ] Implement Strategy Pattern
+- [ ] Create PricingContext
+- [ ] Add discount validation logic
+- [ ] Write unit tests for each strategy
+- [ ] Create frontend discount badge component
+
+---
+
+### PBI 4.4: Product Specifications & Attributes System
+**Story Points:** 8  
+**Description:** Flexible attribute system for different product types
+
+**Acceptance Criteria:**
+- [ ] Create ProductAttribute entity (key-value pairs)
+- [ ] Support typed attributes (string, number, boolean)
+- [ ] Create attribute groups
+- [ ] Add attribute search/filter capability
+- [ ] Create attribute management API
+- [ ] Display attributes in product details
+
+**Technical Tasks:**
+- [ ] Implement EAV pattern
+- [ ] Add JSON column for flexible attributes
+- [ ] Create attribute validation
+- [ ] Add frontend attribute display component
+
+---
+
+### PBI 4.5: Product Images & Media Management
+**Story Points:** 13  
+**Description:** Multi-image support with primary image selection
+
+**Acceptance Criteria:**
+- [ ] Create ProductImage entity
+- [ ] Support multiple images per product
+- [ ] Implement image upload API
+- [ ] Add image storage (local/blob storage)
+- [ ] Support image ordering
+- [ ] Create thumbnail generation
+- [ ] Add image gallery frontend component
+
+**Technical Tasks:**
+- [ ] Implement file upload with validation
+- [ ] Add image optimization
+- [ ] Create image CDN integration point
+- [ ] Write tests for file operations
+- [ ] Create React image carousel
+
+---
+
+### PBI 4.6: Product Search & Filtering
+**Story Points:** 21  
+**Description:** Advanced search with filters, sorting, pagination
+
+**Acceptance Criteria:**
+- [ ] Implement full-text search
+- [ ] Add filter by category, price range, brand
+- [ ] Add filter by attributes
+- [ ] Implement sorting (price, name, popularity, newest)
+- [ ] Add pagination with configurable page size
+- [ ] Create search suggestions/autocomplete
+- [ ] Optimize database queries with indexes
+
+**Technical Tasks:**
+- [ ] Implement Specification Pattern for filters
+- [ ] Create composable filter queries
+- [ ] Add database indexes
+- [ ] Implement search result ranking
+- [ ] Create frontend filter sidebar
+- [ ] Add URL parameter state management
+
+---
+
+### PBI 4.7: Inventory Management & Stock Alerts
+**Story Points:** 13  
+**Description:** Advanced inventory tracking
+
+**Acceptance Criteria:**
+- [ ] Add low-stock threshold configuration
+- [ ] Implement stock level alerts
+- [ ] Create inventory history tracking
+- [ ] Add reorder point calculation
+- [ ] Create inventory reports API
+- [ ] Add admin inventory dashboard
+
+**Technical Tasks:**
+- [ ] Implement Observer Pattern for stock alerts
+- [ ] Create StockObserver interface
+- [ ] Add background job for stock monitoring
+- [ ] Write unit tests for alert logic
+- [ ] Create admin dashboard component
+
+---
+
+### PBI 4.8: Product Reviews & Ratings
+**Story Points:** 21  
+**Description:** Customer reviews with ratings and moderation
+
+**Acceptance Criteria:**
+- [ ] Create Review entity
+- [ ] Allow only verified buyers to review
+- [ ] Support 1-5 star ratings
+- [ ] Add review text with validation
+- [ ] Calculate average rating per product
+- [ ] Implement review pagination
+- [ ] Add review reporting/moderation
+- [ ] Display reviews on product page
+
+**Technical Tasks:**
+- [ ] Create ReviewService
+- [ ] Add verification check with OrderService
+- [ ] Implement rating aggregation
+- [ ] Add moderation workflow
+- [ ] Create frontend review form
+- [ ] Add star rating component
+
+---
+
+### PBI 4.9: Wishlist Feature
+**Story Points:** 13  
+**Description:** User wishlist with price tracking
+
+**Acceptance Criteria:**
+- [ ] Create Wishlist entity
+- [ ] Add/remove products from wishlist
+- [ ] Track price changes for wishlist items
+- [ ] Send price drop notifications
+- [ ] Add wishlist page UI
+- [ ] Support sharing wishlists
+
+**Technical Tasks:**
+- [ ] Create WishlistService
+- [ ] Implement Observer for price changes
+- [ ] Add wishlist API endpoints
+- [ ] Create frontend wishlist page
+- [ ] Add "Add to Wishlist" button
+
+---
+
+### PBI 4.10: Product Comparison Feature
+**Story Points:** 8  
+**Description:** Side-by-side product comparison
+
+**Acceptance Criteria:**
+- [ ] Select up to 4 products to compare
+- [ ] Display all attributes side-by-side
+- [ ] Highlight differences
+- [ ] Support comparison within same category
+- [ ] Add comparison page UI
+
+**Technical Tasks:**
+- [ ] Create comparison state management
+- [ ] Add comparison API endpoint
+- [ ] Create frontend comparison table
+- [ ] Add responsive mobile view
+- [ ] Store comparison in localStorage
+
+---
+
+## Epic 5: Advanced Order Management & Patterns
+**Duration:** 3-4 sprints  
+**Story Points:** 89  
+**Dependencies:** Epic 4 (product variants)  
+**Learning Focus:** State, Chain of Responsibility, Saga patterns
+
+### PBI 5.1: Order State Machine
+**Story Points:** 13  
+**Description:** Implement proper order lifecycle
+
+**Acceptance Criteria:**
+- [ ] Define order states (Pending, Processing, Shipped, Delivered, Cancelled, Refunded)
+- [ ] Create state transition rules
+- [ ] Implement State Pattern
+- [ ] Add state change validation
+- [ ] Create order history tracking
+- [ ] Add state change notifications
+
+**Technical Tasks:**
+- [ ] Implement State Pattern
+- [ ] Create OrderState abstract class
+- [ ] Create concrete state classes
+- [ ] Add unit tests for transitions
+- [ ] Update frontend order status display
+
+---
+
+### PBI 5.2: Order Validation Pipeline
+**Story Points:** 13  
+**Description:** Multi-step validation using Chain of Responsibility
+
+**Acceptance Criteria:**
+- [ ] Validate stock availability
+- [ ] Validate user wallet balance
+- [ ] Validate product availability
+- [ ] Validate address completeness
+- [ ] Validate order total
+- [ ] Return detailed validation errors
+
+**Technical Tasks:**
+- [ ] Implement Chain of Responsibility Pattern
+- [ ] Create IOrderValidator interface
+- [ ] Create concrete validators
+- [ ] Chain validators in pipeline
+- [ ] Add comprehensive error messages
+- [ ] Write integration tests
+
+---
+
+### PBI 5.3: Order Cancellation & Refund Flow
+**Story Points:** 13  
+**Description:** Complete cancellation with automatic refund
+
+**Acceptance Criteria:**
+- [ ] Allow cancellation in specific states
+- [ ] Implement automatic stock restoration
+- [ ] Process automatic wallet refund
+- [ ] Send cancellation email
+- [ ] Add cancellation reason tracking
+- [ ] Update order history
+
+**Technical Tasks:**
+- [ ] Create OrderCancellationService
+- [ ] Implement compensation transactions
+- [ ] Add integration with PaymentService
+- [ ] Add integration with ProductService
+- [ ] Create frontend cancellation UI
+- [ ] Write E2E tests
+
+---
+
+### PBI 5.4: Order Modification Support
+**Story Points:** 21  
+**Description:** Allow order modifications before shipping
+
+**Acceptance Criteria:**
+- [ ] Allow quantity changes
+- [ ] Allow item removal
+- [ ] Recalculate totals
+- [ ] Process payment difference
+- [ ] Validate stock for changes
+- [ ] Update order history
+- [ ] Restrict after shipping
+
+**Technical Tasks:**
+- [ ] Create OrderModificationService
+- [ ] Implement validation rules
+- [ ] Handle payment adjustments
+- [ ] Add modification API
+- [ ] Create frontend modification UI
+- [ ] Write integration tests
+
+---
+
+### PBI 5.5: Distributed Transaction (Saga Pattern)
+**Story Points:** 21  
+**Description:** Implement Saga pattern for reliability
+
+**Acceptance Criteria:**
+- [ ] Create orchestrator for order creation
+- [ ] Define compensation actions for each step
+- [ ] Implement rollback mechanisms
+- [ ] Add saga state persistence
+- [ ] Handle partial failures gracefully
+- [ ] Add comprehensive logging
+
+**Technical Tasks:**
+- [ ] Implement Saga Pattern (Orchestration)
+- [ ] Create ISagaStep interface
+- [ ] Create compensating transactions
+- [ ] Add saga state machine
+- [ ] Implement idempotency
+- [ ] Add distributed tracing
+
+---
+
+### PBI 5.6: Invoice Generation
+**Story Points:** 8  
+**Description:** Generate PDF invoices for orders
+
+**Acceptance Criteria:**
+- [ ] Generate invoice on order completion
+- [ ] Include all order details
+- [ ] Add tax calculation
+- [ ] Support invoice download
+- [ ] Store invoices persistently
+- [ ] Send invoice via email
+
+**Technical Tasks:**
+- [ ] Integrate PDF library (QuestPDF)
+- [ ] Create invoice template
+- [ ] Add invoice generation service
+- [ ] Create download endpoint
+- [ ] Add email attachment support
+- [ ] Write tests for PDF generation
+
+---
+
+## Epic 6: Advanced Payment & Checkout
+**Duration:** 2-3 sprints  
+**Story Points:** 55  
+**Dependencies:** Epic 5 (order states)  
+**Learning Focus:** Adapter, Facade, Strategy patterns
+
+### PBI 6.1: Multiple Payment Methods (Adapter Pattern)
+**Story Points:** 21  
+**Description:** Support wallet, credit card, UPI, net banking
+
+**Acceptance Criteria:**
+- [ ] Create IPaymentGateway interface
+- [ ] Implement WalletPaymentGateway (existing)
+- [ ] Implement mock CreditCardGateway
+- [ ] Implement mock UPIGateway
+- [ ] Add payment method selection UI
+- [ ] Store payment method preferences
+- [ ] Add payment retry mechanism
+
+**Technical Tasks:**
+- [ ] Implement Adapter Pattern
+- [ ] Create payment gateway adapters
+- [ ] Add payment method configuration
+- [ ] Implement fallback mechanisms
+- [ ] Create frontend payment selector
+- [ ] Add payment method icons
+
+---
+
+### PBI 6.2: Checkout Facade
+**Story Points:** 8  
+**Description:** Simplify complex checkout process
+
+**Acceptance Criteria:**
+- [ ] Create CheckoutFacade
+- [ ] Encapsulate multi-step checkout
+- [ ] Provide simple API for frontend
+- [ ] Handle all service coordination
+- [ ] Add checkout session management
+
+**Technical Tasks:**
+- [ ] Implement Facade Pattern
+- [ ] Create CheckoutService
+- [ ] Coordinate all checkout steps
+- [ ] Add session timeout handling
+- [ ] Write integration tests
+
+---
+
+### PBI 6.3: Payment Retry & Failure Handling
+**Story Points:** 13  
+**Description:** Robust payment failure handling
+
+**Acceptance Criteria:**
+- [ ] Implement exponential backoff retry
+- [ ] Add maximum retry limit
+- [ ] Handle timeout scenarios
+- [ ] Provide clear error messages
+- [ ] Allow manual retry from UI
+- [ ] Log all payment attempts
+
+**Technical Tasks:**
+- [ ] Implement Polly retry policies
+- [ ] Add circuit breaker pattern
+- [ ] Create PaymentRetryService
+- [ ] Add comprehensive logging
+- [ ] Create retry UI component
+- [ ] Write failure scenario tests
+
+---
+
+### PBI 6.4: Promotional Codes & Discounts
+**Story Points:** 13  
+**Description:** Coupon code system
+
+**Acceptance Criteria:**
+- [ ] Create Coupon entity
+- [ ] Support percentage and fixed discounts
+- [ ] Add minimum order value rules
+- [ ] Support expiry dates
+- [ ] Add usage limit per coupon
+- [ ] Add usage limit per user
+- [ ] Apply coupon at checkout
+- [ ] Display discount breakdown
+
+**Technical Tasks:**
+- [ ] Create CouponService
+- [ ] Implement validation rules
+- [ ] Add coupon application logic
+- [ ] Create admin coupon management
+- [ ] Add frontend coupon input
+- [ ] Write validation tests
+
+---
+
+## Epic 7: Frontend Architecture & React Patterns
+**Duration:** 3-4 sprints  
+**Story Points:** 89  
+**Dependencies:** Epics 4-6 (APIs must exist)  
+**Learning Focus:** Advanced React, performance, accessibility
+
+### PBI 7.1: React Query Integration
+**Story Points:** 13  
+**Description:** Replace axios with React Query
+
+**Acceptance Criteria:**
+- [ ] Install and configure React Query
+- [ ] Create query hooks for all APIs
+- [ ] Implement automatic caching
+- [ ] Add optimistic updates
+- [ ] Implement pagination with useInfiniteQuery
+- [ ] Add error retry logic
+- [ ] Configure stale time per query
+
+**Technical Tasks:**
+- [ ] Set up QueryClient
+- [ ] Create custom hooks (useProducts, useOrders, etc.)
+- [ ] Add query invalidation on mutations
+- [ ] Configure devtools
+- [ ] Migrate all API calls
+- [ ] Write hook tests
+
+---
+
+### PBI 7.2: Advanced State Management (Zustand)
+**Story Points:** 8  
+**Description:** Replace Context API with Zustand
+
+**Acceptance Criteria:**
+- [ ] Install Zustand
+- [ ] Create stores (auth, cart, UI)
+- [ ] Implement persist middleware
+- [ ] Add devtools integration
+- [ ] Migrate from Context API
+- [ ] Type-safe store access
+
+**Technical Tasks:**
+- [ ] Create store structure
+- [ ] Implement selectors
+- [ ] Add middleware configuration
+- [ ] Migrate existing state
+- [ ] Write store tests
+
+---
+
+### PBI 7.3: Form Management with React Hook Form
+**Story Points:** 8  
+**Description:** Replace controlled forms
+
+**Acceptance Criteria:**
+- [ ] Install React Hook Form + Zod
+- [ ] Create validation schemas
+- [ ] Migrate all forms
+- [ ] Add field-level validation
+- [ ] Implement form error display
+- [ ] Add loading states
+
+**Technical Tasks:**
+- [ ] Create form components
+- [ ] Set up Zod schemas
+- [ ] Add custom validation rules
+- [ ] Implement error boundaries
+- [ ] Write form tests
+
+---
+
+### PBI 7.4: Code Splitting & Lazy Loading
+**Story Points:** 5  
+**Description:** Optimize bundle size
+
+**Acceptance Criteria:**
+- [ ] Implement route-based code splitting
+- [ ] Add React.lazy for heavy components
+- [ ] Configure Suspense boundaries
+- [ ] Add loading fallbacks
+- [ ] Analyze bundle size
+- [ ] Achieve <100KB initial bundle
+
+**Technical Tasks:**
+- [ ] Split routes with lazy()
+- [ ] Create loading components
+- [ ] Configure webpack chunks
+- [ ] Add preload strategies
+- [ ] Measure performance improvements
+
+---
+
+### PBI 7.5: Progressive Web App (PWA)
+**Story Points:** 13  
+**Description:** Convert to installable PWA
+
+**Acceptance Criteria:**
+- [ ] Add service worker
+- [ ] Create manifest.json
+- [ ] Implement offline page
+- [ ] Add install prompt
+- [ ] Cache static assets
+- [ ] Support offline browsing
+- [ ] Pass Lighthouse PWA audit
+
+**Technical Tasks:**
+- [ ] Configure Workbox
+- [ ] Create caching strategies
+- [ ] Add offline detection
+- [ ] Design offline UI
+- [ ] Test offline scenarios
+- [ ] Add PWA icons
+
+---
+
+### PBI 7.6: Accessibility (A11y) Compliance
+**Story Points:** 13  
+**Description:** WCAG 2.1 AA compliance
+
+**Acceptance Criteria:**
+- [ ] Add ARIA labels
+- [ ] Implement keyboard navigation
+- [ ] Add focus management
+- [ ] Support screen readers
+- [ ] Add skip links
+- [ ] Ensure color contrast ratios
+- [ ] Pass axe-core audit
+
+**Technical Tasks:**
+- [ ] Run accessibility audit
+- [ ] Fix all critical issues
+- [ ] Add semantic HTML
+- [ ] Implement focus trap for modals
+- [ ] Add live region announcements
+- [ ] Write accessibility tests
+
+---
+
+### PBI 7.7: Animation & Micro-interactions
+**Story Points:** 8  
+**Description:** Smooth animations with Framer Motion
+
+**Acceptance Criteria:**
+- [ ] Add page transitions
+- [ ] Animate cart add/remove
+- [ ] Add loading skeletons
+- [ ] Implement smooth scrolling
+- [ ] Add hover effects
+- [ ] Optimize animation performance
+
+**Technical Tasks:**
+- [ ] Install Framer Motion
+- [ ] Create animation variants
+- [ ] Add layout animations
+- [ ] Implement gesture controls
+- [ ] Test on mobile devices
+
+---
+
+### PBI 7.8: Error Boundaries & Error Handling
+**Story Points:** 5  
+**Description:** Comprehensive error handling UI
+
+**Acceptance Criteria:**
+- [ ] Create error boundary components
+- [ ] Add fallback UI for errors
+- [ ] Implement error logging
+- [ ] Add retry mechanisms
+- [ ] Display user-friendly messages
+- [ ] Add error reporting
+
+**Technical Tasks:**
+- [ ] Create ErrorBoundary component
+- [ ] Add error fallback UI
+- [ ] Implement error logger
+- [ ] Add retry buttons
+- [ ] Write error scenarios tests
+
+---
+
+### PBI 7.9: Component Library & Storybook
+**Story Points:** 13  
+**Description:** Document components with Storybook
+
+**Acceptance Criteria:**
+- [ ] Set up Storybook
+- [ ] Create stories for all components
+- [ ] Add component documentation
+- [ ] Implement design tokens
+- [ ] Add interaction testing
+- [ ] Deploy Storybook
+
+**Technical Tasks:**
+- [ ] Install Storybook
+- [ ] Create story files
+- [ ] Add MDX documentation
+- [ ] Configure addons
+- [ ] Set up Chromatic (optional)
+
+---
+
+### PBI 7.10: Performance Optimization
+**Story Points:** 8  
+**Description:** Achieve 90+ Lighthouse score
+
+**Acceptance Criteria:**
+- [ ] Optimize images (WebP, lazy loading)
+- [ ] Minimize bundle size
+- [ ] Implement virtualization for long lists
+- [ ] Add memoization where needed
+- [ ] Reduce CLS and FID
+- [ ] Pass Lighthouse audit
+
+**Technical Tasks:**
+- [ ] Run Lighthouse audit
+- [ ] Optimize critical rendering path
+- [ ] Add React.memo strategically
+- [ ] Implement virtual scrolling
+- [ ] Measure Core Web Vitals
+- [ ] Add performance monitoring
+
+---
+
 ## Epic 8: Observability & Monitoring
 **Duration:** 2-3 sprints  
 **Story Points:** 55  
-**Dependencies:** Epic 7 (K8s deployment)  
+**Dependencies:** Epic 3 (K8s deployment)  
 **Learning Focus:** Prometheus, Grafana, Loki, Jaeger, OpenTelemetry
 
 ### PBI 8.1: Structured Logging (Serilog)
 **Story Points:** 8  
-**Description:** Add comprehensive logging to all services
+**Description:** Add comprehensive logging
 
 **Acceptance Criteria:**
 - [ ] Integrate Serilog in all services
@@ -1309,8 +1273,8 @@ Examples:
 - [ ] Deploy Grafana to K8s
 - [ ] Create dashboard for each service
 - [ ] Display request rates, errors, latency
-- [ ] Show resource usage (CPU, memory)
-- [ ] Add business metrics (orders, revenue)
+- [ ] Show resource usage
+- [ ] Add business metrics
 - [ ] Support dashboard as code
 
 **Technical Tasks:**
@@ -1332,7 +1296,7 @@ Examples:
 - [ ] Integrate OpenTelemetry in services
 - [ ] Trace service-to-service calls
 - [ ] Include database queries in traces
-- [ ] Add custom spans for key operations
+- [ ] Add custom spans
 - [ ] Visualize traces in Jaeger UI
 
 **Technical Tasks:**
@@ -1348,10 +1312,10 @@ Examples:
 ## Epic 9: Advanced Features
 **Duration:** 4-5 sprints  
 **Story Points:** 89  
-**Dependencies:** Epics 1-8 (foundation complete)  
+**Dependencies:** Epics 1-8  
 **Learning Focus:** Real-world e-commerce features
 
-### PBI 9.1: Notification System (Observer Pattern)
+### PBI 9.1: Notification System
 **Story Points:** 13  
 **Description:** Email and in-app notifications
 
@@ -1368,7 +1332,7 @@ Examples:
 - [ ] Implement Observer Pattern
 - [ ] Integrate email provider (SendGrid/SMTP)
 - [ ] Create email templates
-- [ ] Add notification queue (RabbitMQ/Azure Service Bus)
+- [ ] Add notification queue
 - [ ] Create frontend notification component
 - [ ] Write notification tests
 
@@ -1376,7 +1340,7 @@ Examples:
 
 ### PBI 9.2: Recommendation Engine
 **Story Points:** 21  
-**Description:** Product recommendations based on behavior
+**Description:** Product recommendations
 
 **Acceptance Criteria:**
 - [ ] Recommend "Customers also bought"
@@ -1387,8 +1351,8 @@ Examples:
 
 **Technical Tasks:**
 - [ ] Create RecommendationService
-- [ ] Implement collaborative filtering (basic)
-- [ ] Track user behavior (views, purchases)
+- [ ] Implement collaborative filtering
+- [ ] Track user behavior
 - [ ] Calculate product similarity
 - [ ] Create recommendation API
 - [ ] Add frontend recommendation component
@@ -1409,7 +1373,7 @@ Examples:
 - [ ] View system health
 
 **Technical Tasks:**
-- [ ] Create admin frontend (React Admin or custom)
+- [ ] Create admin frontend
 - [ ] Add admin authentication
 - [ ] Create analytics API
 - [ ] Create admin CRUD endpoints
@@ -1442,7 +1406,7 @@ Examples:
 
 ### PBI 9.5: Real-time Features (SignalR)
 **Story Points:** 13  
-**Description:** Real-time order updates and notifications
+**Description:** Real-time order updates
 
 **Acceptance Criteria:**
 - [ ] Send real-time order status updates
@@ -1548,12 +1512,12 @@ Examples:
 
 ---
 
-### PBI 10.5: Secrets Management (Azure Key Vault or Vault)
+### PBI 10.5: Secrets Management (Vault)
 **Story Points:** 13  
 **Description:** Secure secrets storage
 
 **Acceptance Criteria:**
-- [ ] Deploy Vault (or use Azure Key Vault)
+- [ ] Deploy Vault
 - [ ] Store all secrets in Vault
 - [ ] Rotate secrets periodically
 - [ ] Audit secret access
@@ -1593,27 +1557,34 @@ Examples:
 
 | Epic | Story Points | Duration | Dependencies | Status |
 |------|-------------|----------|--------------|--------|
-| **Epic 1: Testing Strategy** | **55** | **2-3 sprints** | **MVP code** | **✅ DONE (85%)** |
-| **Epic 2: CI/CD Pipeline** | **55** | **2 sprints** | **Epic 1** | **🚧 In Progress (76%)** |
+| **Epic 0: MVP Foundation** | **144** | **Completed** | **None** | **✅ DONE** |
+| **Epic 1: Testing Strategy** | **55** | **2-3 sprints** | **MVP** | **✅ DONE (85%)** |
+| **Epic 2: CI/CD Pipeline** | **55** | **2 sprints** | **Epic 1** | **🚧 76% COMPLETE** |
 | **Epic 3: Kubernetes Deployment** | **89** | **3-4 sprints** | **Epic 2** | **📋 NEXT** |
-| Epic 4: Enhanced Product Domain | 144 | 4-5 sprints | None | Pending |
-| Epic 5: Advanced Order Management | 89 | 3-4 sprints | Epic 4 | Pending |
-| Epic 6: Advanced Payment & Checkout | 55 | 2-3 sprints | Epic 5 | Pending |
-| Epic 7: Frontend Architecture | 89 | 3-4 sprints | Epics 4-6 | Pending |
-| Epic 8: Observability & Monitoring | 55 | 2-3 sprints | Epic 3 | Pending |
-| Epic 9: Advanced Features | 89 | 4-5 sprints | Epics 4-8 | Pending |
-| Epic 10: Performance & Security | 55 | 2-3 sprints | All | Pending |
-| **TOTAL** | **775** | **28-39 sprints** | **~7-10 months** | |
+| **Epic 4: Enhanced Product Domain** | **144** | **4-5 sprints** | **Epic 3** | **📋 Pending** |
+| **Epic 5: Advanced Order Management** | **89** | **3-4 sprints** | **Epic 4** | **📋 Pending** |
+| **Epic 6: Advanced Payment & Checkout** | **55** | **2-3 sprints** | **Epic 5** | **📋 Pending** |
+| **Epic 7: Frontend Architecture** | **89** | **3-4 sprints** | **Epics 4-6** | **📋 Pending** |
+| **Epic 8: Observability & Monitoring** | **55** | **2-3 sprints** | **Epic 3** | **📋 Pending** |
+| **Epic 9: Advanced Features** | **89** | **4-5 sprints** | **Epics 4-8** | **📋 Pending** |
+| **Epic 10: Performance & Security** | **55** | **2-3 sprints** | **All** | **📋 Pending** |
+| **TOTAL** | **919** | **30-41 sprints** | **~8-10 months** | |
 
-**Phase 0 & Epic 1 (Completed):** 144 + 47 = **191 points**  
-**Epic 2 (In Progress):** 42/55 points  
-**Remaining:** 631 points  
-**Grand Total:** 864 points
+**Completed:** Phase 0 (144 pts) + Epic 1 (47 pts) + Epic 2 partial (42 pts) = **233 points**  
+**Remaining:** 686 points  
+**Current Progress:** 25.3% complete
+
+---
+
+## 🎯 Recommended Next Actions
+
+1. ✅ Complete Epic 2 (13 points remaining) - Finish PBI 2.5 & 2.6
+2. 📋 Start Epic 3 - K8s Deployment (MVP to production)
+3. 📋 Then Epic 4 - Add features to live system
 
 ---
 
 **This roadmap transforms your MVP into a production-grade, enterprise-level e-commerce platform while maximizing your learning!** 🚀
 
-**Last Updated:** January 11, 2026  
-**Status:** Epic 2 In Progress (76% complete) - CI/CD Pipeline with Docker Build & Semantic Release ✅
-
+**Last Updated:** January 13, 2026  
+**Current Sprint:** Epic 2 - CI/CD Pipeline (76% complete)
