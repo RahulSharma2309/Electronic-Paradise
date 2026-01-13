@@ -6,20 +6,27 @@ This folder contains all documentation related to Continuous Integration and Con
 
 ## 📚 Documentation Index
 
-### **🏷️ Image Tagging & Versioning**
+### **🎯 CI/CD Fundamentals**
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) | Parallel CI with reusable workflows | ✅ Complete |
+| [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
+| [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) | Complete CD pipeline theory & concepts | ✅ Complete |
+
+### **🏷️ CI Pipeline & Image Management**
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) | Parallel CI with matrix strategy | ✅ Complete |
 | [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | ✅ Complete |
 | [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md) | Quick command reference | ✅ Complete |
 | [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
 | [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md) | Automated releases & changelog | ✅ Complete |
-| [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
 
 **💡 Start Here:**
-- **Want faster CI builds?** → [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) (60-70% faster!)
 - **New to CI/CD?** → [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) (explains what each PBI does)
+- **Understanding CD?** → [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) (staging, smoke tests, deployment)
+- **Want faster CI builds?** → [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) (60-70% faster!)
 - **Setting up Docker builds?** → [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)
 - **Setting up releases?** → [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)
 - **Quick reference?** → [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)
@@ -84,10 +91,13 @@ docker images | Select-String "alpha"
 
 **New to CI/CD?** Read in this order:
 
-1. **[IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)** - Understand the complete strategy
-2. **[TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)** - Quick commands and workflows
-3. **[TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md)** - Test locally before implementing
-4. **[PHASE_2_COMPLETE.md](./PHASE_2_COMPLETE.md)** - See what's been accomplished
+1. **[PBIS_COMPARISON.md](./PBIS_COMPARISON.md)** - Understand what each PBI does (CI vs CD)
+2. **[CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md)** - Deep dive into CD concepts (staging, smoke tests)
+3. **[MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md)** - How the CI pipeline works (parallel builds)
+4. **[IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)** - Complete tagging strategy
+5. **[TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)** - Quick commands and workflows
+6. **[TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md)** - Test locally before implementing
+7. **[SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)** - Automated releases and changelogs
 
 ---
 
@@ -435,11 +445,15 @@ Production (main): ALWAYS published (all 3 tags)
 
 ## 🔗 Related Documentation
 
+- [CD Pipeline Guide](./CD_PIPELINE_GUIDE.md) - Complete CD theory (staging, smoke tests, deployment)
+- [PBIs Comparison](./PBIS_COMPARISON.md) - Understanding all CI/CD PBIs
+- [Modular CI Architecture](./MODULAR_CI_ARCHITECTURE.md) - Parallel CI pipeline design
 - [Image Tagging Strategy](./IMAGE_TAGGING_STRATEGY.md) - Complete specification with examples
 - [Testing Image Tagging](./TESTING_IMAGE_TAGGING.md) - How to test scripts locally
 - [Tagging Quick Reference](./TAGGING_QUICK_REFERENCE.md) - Command cheat sheet
+- [Semantic Release Guide](./SEMANTIC_RELEASE_GUIDE.md) - Automated versioning and releases
 - [Scripts README](../../scripts/README.md) - All automation scripts explained
-- [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - See Epic 6 (CI/CD Pipeline)
+- [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - See Epic 2 (CI/CD Pipeline)
 - [Tech Stack](../1-getting-started/TECH_STACK.md) - CI/CD technologies
 - [Dockerfile Guide](../10-tools-and-automation/DOCKERFILE_EXPLAINED.md) - Docker best practices
 
@@ -451,27 +465,34 @@ Production (main): ALWAYS published (all 3 tags)
 
 ```
 docs/6-ci-cd/
-├── README.md (this file)          ← Start here: Architecture & concepts
-├── IMAGE_TAGGING_STRATEGY.md      ← Deep dive: Tag formats, versioning rules
-├── TESTING_IMAGE_TAGGING.md       ← Hands-on: Test scripts locally
-└── TAGGING_QUICK_REFERENCE.md     ← Quick lookup: Commands & examples
+├── README.md (this file)            ← Start here: Overview & index
+├── PBIS_COMPARISON.md               ← Understanding: CI/CD PBIs explained
+├── CD_PIPELINE_GUIDE.md             ← Theory: Complete CD concepts
+├── MODULAR_CI_ARCHITECTURE.md       ← Architecture: Parallel CI design
+├── IMAGE_TAGGING_STRATEGY.md        ← Deep dive: Tag formats, versioning rules
+├── TAGGING_QUICK_REFERENCE.md       ← Quick lookup: Commands & examples
+├── TESTING_IMAGE_TAGGING.md         ← Hands-on: Test scripts locally
+└── SEMANTIC_RELEASE_GUIDE.md        ← Automation: Releases & changelog
 
 scripts/
-├── README.md                       ← Scripts explained: Why they exist
-├── get-next-version.ps1/.sh       ← Logic: Version calculation
-└── tag-images.ps1                 ← Logic: Image tagging
+├── README.md                         ← Scripts explained: Why they exist
+├── get-next-version.ps1/.sh         ← Logic: Version calculation
+└── tag-images.ps1                   ← Logic: Image tagging
 
 .github/workflows/
-└── ci.yml                          ← Executor: Calls scripts (when updated)
+├── ci.yml                           ← Executor: CI pipeline (parallel builds)
+└── cd-staging.yml (future)          ← Executor: CD pipeline (deployment)
 ```
 
 ### **Learning Path:**
 
-1. **Understand WHY** → Read this `README.md` (architecture & design)
-2. **Understand WHAT** → Read `IMAGE_TAGGING_STRATEGY.md` (complete specification)
-3. **Test LOCALLY** → Follow `TESTING_IMAGE_TAGGING.md` (hands-on)
-4. **Quick Reference** → Bookmark `TAGGING_QUICK_REFERENCE.md` (commands)
-5. **Scripts Details** → See `../../scripts/README.md` (implementation)
+1. **Understand CI/CD** → Read `PBIS_COMPARISON.md` (what's CI vs CD)
+2. **Understand CD** → Read `CD_PIPELINE_GUIDE.md` (staging, smoke tests, deployment)
+3. **Understand CI** → Read `MODULAR_CI_ARCHITECTURE.md` (parallel builds)
+4. **Understand Tagging** → Read `IMAGE_TAGGING_STRATEGY.md` (complete specification)
+5. **Test LOCALLY** → Follow `TESTING_IMAGE_TAGGING.md` (hands-on)
+6. **Quick Reference** → Bookmark `TAGGING_QUICK_REFERENCE.md` (commands)
+7. **Scripts Details** → See `../../scripts/README.md` (implementation)
 
 ---
 
