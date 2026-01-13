@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.1.0...v1.1.1) (2026-01-13)
+
+### 🐛 Bug Fixes
+
+* rewrite PROJECT_ROADMAP with correct epic numbering ([#94](https://github.com/RahulSharma2309/Electronic-Paradise/issues/94)) ([957669a](https://github.com/RahulSharma2309/Electronic-Paradise/commit/957669a8019eebeaeacd21c800886b0d662b314c))
+
 ## [1.1.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.0.0...v1.1.0) (2026-01-12)
 
 ### 🚀 Features
