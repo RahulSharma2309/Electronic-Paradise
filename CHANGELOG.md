@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.1.1...v1.2.0) (2026-01-14)
+
+### 🚀 Features
+
+* Add Kubernetes deployment configurations ([#95](https://github.com/RahulSharma2309/Electronic-Paradise/issues/95)) ([2e02d93](https://github.com/RahulSharma2309/Electronic-Paradise/commit/2e02d9376dc391928ec4aeae4572d9ebf9067df8))
+
 ## [1.1.1](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.1.0...v1.1.1) (2026-01-13)
 
 ### 🐛 Bug Fixes
