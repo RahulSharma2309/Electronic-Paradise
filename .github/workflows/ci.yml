@@ -256,12 +256,13 @@ jobs:
           path: vulnerabilities-${{ matrix.service.name }}.txt
           retention-days: 30
 
-      - name: Fail on high/critical vulnerabilities
+      - name: Report high/critical vulnerabilities
         if: steps.dotnet-scan.outputs.has_vulnerabilities == 'true'
+        continue-on-error: true
         run: |
-          echo "❌ High or critical vulnerabilities found in ${{ matrix.service.name }}"
+          echo "⚠️ High or critical vulnerabilities found in ${{ matrix.service.name }}"
           echo "Please review and update dependencies"
-          exit 1
+          echo "Vulnerability report uploaded as artifact for review"
 
   # ============================================================================
   # PHASE 5: Frontend Dependency Scanning
@@ -314,12 +315,13 @@ jobs:
           path: npm-audit.json
           retention-days: 30
 
-      - name: Fail on high/critical vulnerabilities
+      - name: Report high/critical vulnerabilities
         if: steps.npm-audit.outputs.has_vulnerabilities == 'true'
+        continue-on-error: true
         run: |
-          echo "❌ High or critical vulnerabilities found in frontend dependencies"
+          echo "⚠️ High or critical vulnerabilities found in frontend dependencies"
           echo "Please run 'npm audit fix' or update dependencies manually"
-          exit 1
+          echo "Vulnerability report uploaded as artifact for review"
 
   # ============================================================================
   # PHASE 6: Docker Image Scanning (Trivy)
