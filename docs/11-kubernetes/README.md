@@ -740,6 +740,60 @@ kubectl get secret <name> -n staging -o jsonpath='{.data.key}' | base64 -d
 
 ---
 
+## Documentation Guide
+
+### 📖 All Available Documents
+
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| **[LEARNING_PATH.md](./LEARNING_PATH.md)** | Complete learning guide | Start here! |
+| **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** | Real-world analogies | First read - easiest to understand |
+| **[CONCEPTS.md](./CONCEPTS.md)** | Deep dive into concepts | After analogies - detailed explanations |
+| **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** | Advanced topics | After basics - Ingress, LoadBalancer, etc. |
+| **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** | How we implemented | See real-world decisions |
+| **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** | Complete file reference | Reference guide for all files |
+| **[README.md](./README.md)** | Overview and quick start | Quick reference and commands |
+
+### 🗺️ Concept Coverage
+
+**Basic Concepts:**
+- Namespace → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#1-namespace) | [CONCEPTS.md](./CONCEPTS.md#namespace-deep-dive)
+- RBAC → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#2-serviceaccount) | [CONCEPTS.md](./CONCEPTS.md#rbac-deep-dive)
+- Deployment → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#7-deployment) | [CONCEPTS.md](./CONCEPTS.md#deployments-deep-dive)
+- Service → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#8-service) | [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#service-discovery)
+- ConfigMap → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#5-configmap) | [CONCEPTS.md](./CONCEPTS.md#configmaps-deep-dive)
+- Secret → [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md#6-secret) | [CONCEPTS.md](./CONCEPTS.md#secrets-deep-dive)
+
+**Advanced Concepts:**
+- Pods & Nodes → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#pods-vs-containers)
+- Service Discovery → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#service-discovery)
+- Ingress → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#ingress)
+- LoadBalancer → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#loadbalancer)
+- Health Checks → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#health-checks)
+- Resource Limits → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#resource-limits-and-requests)
+
+### 🎓 Learning Paths
+
+**Path 1: Complete Beginner**
+1. [LEARNING_PATH.md](./LEARNING_PATH.md) - Overview
+2. [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md) - Understand with analogies
+3. [CONCEPTS.md](./CONCEPTS.md) - Deep dive
+4. [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md) - Advanced topics
+5. [IMPLEMENTATION.md](./IMPLEMENTATION.md) - See how we did it
+6. [FILE_REFERENCE.md](./FILE_REFERENCE.md) - Reference guide
+
+**Path 2: Quick Understanding**
+1. [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md) - All concepts with analogies
+2. [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md) - Advanced topics
+3. [FILE_REFERENCE.md](./FILE_REFERENCE.md) - File reference
+
+**Path 3: Practical Implementation**
+1. [IMPLEMENTATION.md](./IMPLEMENTATION.md) - How we did it
+2. [FILE_REFERENCE.md](./FILE_REFERENCE.md) - File reference
+3. [README.md](./README.md) - Commands and usage
+
+---
+
 ## Summary
 
 This guide covers:

@@ -486,6 +486,16 @@ stringData:
 
 ---
 
+## 📚 Related Documents
+
+- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - Complete learning guide
+- **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** - Real-world analogies
+- **[CONCEPTS.md](./CONCEPTS.md)** - Deep dive into concepts
+- **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics
+- **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** - Complete file reference
+
+---
+
 ## Summary
 
 This document covered:

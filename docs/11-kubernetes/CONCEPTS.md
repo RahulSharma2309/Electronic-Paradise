@@ -779,6 +779,16 @@ readinessProbe:
 
 ---
 
+## 📚 Related Documents
+
+- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - Complete learning guide
+- **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** - Real-world analogies (easier to understand)
+- **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics (Ingress, LoadBalancer, Pods, Nodes)
+- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s
+- **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** - Complete file reference
+
+---
+
 ## Summary
 
 This deep dive covered:

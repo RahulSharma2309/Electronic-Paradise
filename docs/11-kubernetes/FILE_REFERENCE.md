@@ -509,6 +509,16 @@ kubectl apply -f infra/k8s/staging/deployments/
 
 ---
 
+## 📚 Related Documents
+
+- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - Complete learning guide
+- **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** - Real-world analogies
+- **[CONCEPTS.md](./CONCEPTS.md)** - Deep dive into concepts
+- **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics
+- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s
+
+---
+
 ## Summary
 
 This reference covers:
