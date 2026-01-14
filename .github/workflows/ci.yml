@@ -330,7 +330,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    if: github.event_name != 'pull_request' || env.PUBLISH_ALPHA == 'true'
+    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -504,7 +504,7 @@ jobs:
         with:
           context: .
           file: ${{ matrix.service.dockerfile }}
-          push: ${{ github.event_name != 'pull_request' || env.PUBLISH_ALPHA == 'true' }}
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
