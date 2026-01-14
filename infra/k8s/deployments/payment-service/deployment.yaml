@@ -1,0 +1,149 @@
+---
+# Payment Service Deployment for Staging
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: staging
+  labels:
+    app: payment-service
+    environment: staging
+    managed-by: electronic-paradise
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service
+      environment: staging
+  template:
+    metadata:
+      labels:
+        app: payment-service
+        environment: staging
+        managed-by: electronic-paradise
+    spec:
+      serviceAccountName: payment-service-sa
+      containers:
+      - name: payment-service
+        image: payment-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ASPNETCORE_URLS
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: ASPNETCORE_URLS
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-db-secret
+              key: ConnectionStrings__DefaultConnection
+        - name: ServiceUrls__UserService
+          value: "http://user-service:80"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+# Payment Service Deployment for Production
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: prod
+  labels:
+    app: payment-service
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payment-service
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: payment-service
+        environment: production
+        managed-by: electronic-paradise
+    spec:
+      serviceAccountName: payment-service-sa
+      containers:
+      - name: payment-service
+        image: payment-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ASPNETCORE_URLS
+          valueFrom:
+            configMapKeyRef:
+              name: payment-service-config
+              key: ASPNETCORE_URLS
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: payment-service-db-secret
+              key: ConnectionStrings__DefaultConnection
+        - name: ServiceUrls__UserService
+          value: "http://user-service:80"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"

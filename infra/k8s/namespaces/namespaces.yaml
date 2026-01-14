@@ -1,0 +1,29 @@
+---
+# Staging Namespace  
+# Purpose: Pre-production testing, mirrors production
+# Permissions: QA team and developers (limited)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+  labels:
+    environment: staging
+    managed-by: electronic-paradise
+    cost-center: qa
+  annotations:
+    description: "Staging environment for final testing before production"
+
+---
+# Production Namespace
+# Purpose: Live production environment serving real users
+# Permissions: DevOps only (restricted)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    environment: production
+    managed-by: electronic-paradise
+    cost-center: operations
+  annotations:
+    description: "Production environment - handle with care!"

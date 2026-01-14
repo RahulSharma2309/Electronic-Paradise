@@ -1,0 +1,43 @@
+---
+# Payment Service Kubernetes Service for Staging
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: staging
+  labels:
+    app: payment-service
+    environment: staging
+    managed-by: electronic-paradise
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: payment-service
+    environment: staging
+
+---
+# Payment Service Kubernetes Service for Production
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: prod
+  labels:
+    app: payment-service
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: payment-service
+    environment: production

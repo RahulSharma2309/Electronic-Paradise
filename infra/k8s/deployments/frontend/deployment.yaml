@@ -1,0 +1,128 @@
+---
+# Frontend Deployment for Staging
+# Frontend is a React SPA served by nginx
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: staging
+  labels:
+    app: frontend
+    environment: staging
+    managed-by: electronic-paradise
+spec:
+  replicas: 2  # Run 2 copies for high availability
+  selector:
+    matchLabels:
+      app: frontend
+      environment: staging
+  template:
+    metadata:
+      labels:
+        app: frontend
+        environment: staging
+        managed-by: electronic-paradise
+    spec:
+      containers:
+      - name: frontend
+        image: frontend:latest  # TODO: Replace with actual image from registry
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        # Note: REACT_APP_API_BASE is typically set at build time
+        # If your Dockerfile uses runtime env vars, uncomment below:
+        # env:
+        # - name: REACT_APP_API_BASE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: frontend-config
+        #       key: REACT_APP_API_BASE
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+
+---
+# Frontend Deployment for Production
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: prod
+  labels:
+    app: frontend
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  replicas: 3  # More replicas for production
+  selector:
+    matchLabels:
+      app: frontend
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: frontend
+        environment: production
+        managed-by: electronic-paradise
+    spec:
+      containers:
+      - name: frontend
+        image: frontend:latest  # TODO: Replace with actual image from registry
+        imagePullPolicy: Always  # Always pull latest in production
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        # Note: REACT_APP_API_BASE is typically set at build time
+        # If your Dockerfile uses runtime env vars, uncomment below:
+        # env:
+        # - name: REACT_APP_API_BASE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: frontend-config
+        #       key: REACT_APP_API_BASE
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

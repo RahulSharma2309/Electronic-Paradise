@@ -1,0 +1,256 @@
+---
+# ConfigMaps for Staging Environment
+# ConfigMaps store non-sensitive configuration data
+
+# Auth Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: staging
+  labels:
+    app: auth-service
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# User Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: staging
+  labels:
+    app: user-service
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# Product Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: staging
+  labels:
+    app: product-service
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# Order Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+  namespace: staging
+  labels:
+    app: order-service
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# Payment Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-service-config
+  namespace: staging
+  labels:
+    app: payment-service
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# Gateway ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: staging
+  labels:
+    app: gateway
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:80"
+  USE_DOCKER_NETWORK: "false"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft: "Warning"
+  Logging__LogLevel__System: "Warning"
+
+---
+# Frontend ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: staging
+  labels:
+    app: frontend
+    environment: staging
+    managed-by: electronic-paradise
+data:
+  # Note: REACT_APP_API_BASE is typically set at build time
+  # This is for reference - you may need to rebuild the image with this value
+  REACT_APP_API_BASE: "http://gateway:80"
+
+---
+# ============================================
+# ConfigMaps for Production Environment
+# ============================================
+
+# Auth Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: prod
+  labels:
+    app: auth-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# User Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: prod
+  labels:
+    app: user-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Product Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: prod
+  labels:
+    app: product-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Order Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+  namespace: prod
+  labels:
+    app: order-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Payment Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-service-config
+  namespace: prod
+  labels:
+    app: payment-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Gateway ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: prod
+  labels:
+    app: gateway
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  USE_DOCKER_NETWORK: "false"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Frontend ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: prod
+  labels:
+    app: frontend
+    environment: production
+    managed-by: electronic-paradise
+data:
+  # Note: REACT_APP_API_BASE is typically set at build time
+  # This is for reference - you may need to rebuild the image with this value
+  REACT_APP_API_BASE: "http://gateway:80"

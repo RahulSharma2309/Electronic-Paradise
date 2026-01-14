@@ -1,0 +1,248 @@
+---
+# RoleBindings for Staging Environment
+# RoleBindings connect ServiceAccounts to Roles (WHO gets WHAT permissions)
+
+# Auth Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auth-service-binding
+  namespace: staging
+  labels:
+    app: auth-service
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  # Who gets the permissions
+  - kind: ServiceAccount
+    name: auth-service-sa
+    namespace: staging
+roleRef:
+  # What permissions they get
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# User Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user-service-binding
+  namespace: staging
+  labels:
+    app: user-service
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: user-service-sa
+    namespace: staging
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Product Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: product-service-binding
+  namespace: staging
+  labels:
+    app: product-service
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: product-service-sa
+    namespace: staging
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Order Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: order-service-binding
+  namespace: staging
+  labels:
+    app: order-service
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: order-service-sa
+    namespace: staging
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Payment Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payment-service-binding
+  namespace: staging
+  labels:
+    app: payment-service
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: payment-service-sa
+    namespace: staging
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Gateway RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gateway-binding
+  namespace: staging
+  labels:
+    app: gateway
+    environment: staging
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: gateway-sa
+    namespace: staging
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ============================================
+# RoleBindings for Production Environment
+# ============================================
+
+# Auth Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auth-service-binding
+  namespace: prod
+  labels:
+    app: auth-service
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: auth-service-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# User Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user-service-binding
+  namespace: prod
+  labels:
+    app: user-service
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: user-service-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Product Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: product-service-binding
+  namespace: prod
+  labels:
+    app: product-service
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: product-service-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Order Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: order-service-binding
+  namespace: prod
+  labels:
+    app: order-service
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: order-service-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Payment Service RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payment-service-binding
+  namespace: prod
+  labels:
+    app: payment-service
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: payment-service-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Gateway RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gateway-binding
+  namespace: prod
+  labels:
+    app: gateway
+    environment: production
+    managed-by: electronic-paradise
+subjects:
+  - kind: ServiceAccount
+    name: gateway-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: service-role
+  apiGroup: rbac.authorization.k8s.io
