@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: varnex-enterprise-ingress
+  namespace: varnex-enterprise
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  # Frontend - app.varnex-enterprise.local
+  - host: app.varnex-enterprise.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: varnex-enterprise-frontend
+            port:
+              number: 80
+  
+  # API Gateway - api.varnex-enterprise.local
+  - host: api.varnex-enterprise.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: varnex-enterprise-gateway
+            port:
+              number: 80

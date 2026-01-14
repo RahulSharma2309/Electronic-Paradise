@@ -1,0 +1,6 @@
+# Varnex Enterprise - Add these lines to your Windows hosts file
+# Location: C:\Windows\System32\drivers\etc\hosts
+# (Open Notepad as Administrator to edit)
+
+127.0.0.1 app.varnex-enterprise.local
+127.0.0.1 api.varnex-enterprise.local

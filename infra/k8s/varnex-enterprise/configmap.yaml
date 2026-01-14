@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: varnex-enterprise-config
+  namespace: varnex-enterprise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://+:80"
+  
+  # Service URLs (internal cluster DNS)
+  AUTH_SERVICE_URL: "http://varnex-enterprise-auth:80"
+  USER_SERVICE_URL: "http://varnex-enterprise-user:80"
+  PRODUCT_SERVICE_URL: "http://varnex-enterprise-product:80"
+  ORDER_SERVICE_URL: "http://varnex-enterprise-order:80"
+  PAYMENT_SERVICE_URL: "http://varnex-enterprise-payment:80"
+  
+  # Gateway URLs
+  GATEWAY_URL: "http://varnex-enterprise-gateway:80"
+  
+  # Frontend URLs
+  REACT_APP_API_URL: "http://api.varnex-enterprise.local"
+  REACT_APP_GATEWAY_URL: "http://api.varnex-enterprise.local"
+  
+  # Application name
+  APP_NAME: "Varnex Enterprise"
+  COMPANY_NAME: "Varnex"
