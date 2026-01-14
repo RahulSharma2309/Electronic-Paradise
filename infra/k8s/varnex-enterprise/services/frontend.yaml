@@ -17,6 +17,7 @@ spec:
         app: varnex-enterprise-frontend
         service: frontend
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: frontend
         image: ghcr.io/rahulsharma2309/electronic-paradise-frontend:latest
@@ -43,9 +44,11 @@ spec:
           requests:
             memory: "128Mi"
             cpu: "50m"
+            ephemeral-storage: "500Mi"
           limits:
             memory: "256Mi"
             cpu: "200m"
+            ephemeral-storage: "1Gi"
         livenessProbe:
           httpGet:
             path: /

@@ -17,6 +17,7 @@ spec:
         app: varnex-enterprise-gateway
         service: gateway
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: gateway
         image: ghcr.io/rahulsharma2309/electronic-paradise-gateway:latest
@@ -69,9 +70,11 @@ spec:
           requests:
             memory: "256Mi"
             cpu: "100m"
+            ephemeral-storage: "1Gi"
           limits:
             memory: "512Mi"
             cpu: "500m"
+            ephemeral-storage: "2Gi"
         livenessProbe:
           httpGet:
             path: /health

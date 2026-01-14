@@ -17,6 +17,7 @@ spec:
         app: varnex-enterprise-payment
         service: payment
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: payment-service
         image: ghcr.io/rahulsharma2309/electronic-paradise-payment:latest
@@ -48,9 +49,11 @@ spec:
           requests:
             memory: "256Mi"
             cpu: "100m"
+            ephemeral-storage: "1Gi"
           limits:
             memory: "512Mi"
             cpu: "500m"
+            ephemeral-storage: "2Gi"
         livenessProbe:
           httpGet:
             path: /health

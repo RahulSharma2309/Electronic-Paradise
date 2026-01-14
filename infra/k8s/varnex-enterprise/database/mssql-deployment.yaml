@@ -13,6 +13,7 @@ spec:
       labels:
         app: varnex-enterprise-mssql
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: mssql
         image: mcr.microsoft.com/mssql/server:2019-latest
@@ -36,9 +37,11 @@ spec:
           requests:
             memory: "2Gi"
             cpu: "500m"
+            ephemeral-storage: "2Gi"
           limits:
             memory: "4Gi"
             cpu: "2000m"
+            ephemeral-storage: "5Gi"
       volumes:
       - name: mssql-data
         persistentVolumeClaim:
