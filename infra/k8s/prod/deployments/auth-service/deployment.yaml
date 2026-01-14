@@ -1,0 +1,75 @@
+﻿# Auth Service Deployment for Production
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: prod
+  labels:
+    app: auth-service
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  replicas: 3 # More replicas for production
+  selector:
+    matchLabels:
+      app: auth-service
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        environment: production
+        managed-by: electronic-paradise
+    spec:
+      serviceAccountName: auth-service-sa
+      containers:
+        - name: auth-service
+          # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-auth:v1.0.0
+          image: auth-service:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-service-config
+                  key: ASPNETCORE_URLS
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-db-secret
+                  key: ConnectionStrings__DefaultConnection
+            - name: ServiceUrls__UserService
+              value: "http://user-service:80"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          # Stateless container - no persistent storage needed
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
