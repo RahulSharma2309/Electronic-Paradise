@@ -72,6 +72,7 @@ rules:
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   
   # Full access to Pods (for debugging)
+  # Note: pods/exec removed for security - use kubectl exec directly if needed
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -80,11 +81,6 @@ rules:
   - apiGroups: [""]
     resources: ["pods/log"]
     verbs: ["get", "list"]
-  
-  # Access to Pod exec (for debugging)
-  - apiGroups: [""]
-    resources: ["pods/exec"]
-    verbs: ["create"]
 
 ---
 # ============================================

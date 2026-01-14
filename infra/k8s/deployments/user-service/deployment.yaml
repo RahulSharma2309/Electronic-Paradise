@@ -25,7 +25,8 @@ spec:
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        image: user-service:latest
+        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-user:v1.0.0
+        image: user-service:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
@@ -63,6 +64,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+        # Stateless container - no persistent storage needed
         resources:
           requests:
             memory: "256Mi"
@@ -98,7 +100,8 @@ spec:
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        image: user-service:latest
+        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-user:v1.0.0
+        image: user-service:v1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -136,6 +139,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+        # Stateless container - no persistent storage needed
         resources:
           requests:
             memory: "512Mi"

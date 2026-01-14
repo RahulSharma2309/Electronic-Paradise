@@ -1,0 +1,14 @@
+---
+# Production Namespace
+# Purpose: Live production environment serving real users
+# Permissions: DevOps only (restricted)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    environment: production
+    managed-by: electronic-paradise
+    cost-center: operations
+  annotations:
+    description: "Production environment - handle with care!"

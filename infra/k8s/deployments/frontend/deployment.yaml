@@ -23,9 +23,12 @@ spec:
         environment: staging
         managed-by: electronic-paradise
     spec:
+      # Frontend is a static SPA, doesn't need ServiceAccount access
+      automountServiceAccountToken: false
       containers:
       - name: frontend
-        image: frontend:latest  # TODO: Replace with actual image from registry
+        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-frontend:v1.0.0
+        image: frontend:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
@@ -55,6 +58,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+        # Stateless container - no persistent storage needed
         resources:
           requests:
             memory: "128Mi"
@@ -87,10 +91,13 @@ spec:
         environment: production
         managed-by: electronic-paradise
     spec:
+      # Frontend is a static SPA, doesn't need ServiceAccount access
+      automountServiceAccountToken: false
       containers:
       - name: frontend
-        image: frontend:latest  # TODO: Replace with actual image from registry
-        imagePullPolicy: Always  # Always pull latest in production
+        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-frontend:v1.0.0
+        image: frontend:v1.0.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
           name: http
@@ -119,6 +126,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+        # Stateless container - no persistent storage needed
         resources:
           requests:
             memory: "256Mi"

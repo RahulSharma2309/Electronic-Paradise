@@ -14,6 +14,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft: "Warning"
@@ -32,6 +34,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft: "Warning"
@@ -50,6 +54,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft: "Warning"
@@ -68,6 +74,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft: "Warning"
@@ -86,6 +94,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft: "Warning"
@@ -104,6 +114,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   USE_DOCKER_NETWORK: "false"
   Logging__LogLevel__Default: "Information"
@@ -143,6 +155,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Warning"
   Logging__LogLevel__Microsoft: "Error"
@@ -161,6 +175,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Warning"
   Logging__LogLevel__Microsoft: "Error"
@@ -179,6 +195,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Warning"
   Logging__LogLevel__Microsoft: "Error"
@@ -197,6 +215,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Warning"
   Logging__LogLevel__Microsoft: "Error"
@@ -215,6 +235,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   Logging__LogLevel__Default: "Warning"
   Logging__LogLevel__Microsoft: "Error"
@@ -233,6 +255,8 @@ metadata:
     managed-by: electronic-paradise
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
   ASPNETCORE_URLS: "http://+:80"
   USE_DOCKER_NETWORK: "false"
   Logging__LogLevel__Default: "Warning"
