@@ -162,7 +162,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm ci --ignore-scripts
+          npm install --ignore-scripts
 
       - name: Run tests
         run: |
@@ -286,7 +286,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm ci --ignore-scripts
+          npm install --ignore-scripts
 
       - name: Run npm audit
         id: npm-audit
