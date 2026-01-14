@@ -1,0 +1,68 @@
+---
+# Ingress for Production Environment
+# Routes external traffic to gateway and frontend services
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: electronic-paradise-ingress
+  namespace: prod
+  annotations:
+    # Use NGINX Ingress Controller
+    kubernetes.io/ingress.class: nginx
+    # Enable rate limiting (200 requests per minute per IP for production)
+    nginx.ingress.kubernetes.io/limit-rps: "200"
+    # Enable CORS for frontend
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+    # SSL redirect (when TLS is configured)
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Rewrite target for API paths
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Production-specific: Enable request body size limit
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+    # Frontend route - serves the React SPA
+    - host: electronic-paradise.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+    
+    # API Gateway route - routes all /api/* requests to gateway
+    - host: api.electronic-paradise.com
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+          
+          # Health check endpoint
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+  # TLS configuration (for production with cert-manager)
+  # Uncomment when cert-manager is set up:
+  # tls:
+  #   - hosts:
+  #       - electronic-paradise.com
+  #       - api.electronic-paradise.com
+  #     secretName: electronic-paradise-tls
+
+---
