@@ -18,6 +18,7 @@
 ### By Task
 - **Setup & Run** → [`1-getting-started/`](1-getting-started/) or [`../scripts/`](../scripts/)
 - **Docker Commands** → [`10-tools-and-automation/DOCKER_COMMANDS.md`](10-tools-and-automation/DOCKER_COMMANDS.md)
+- **Kubernetes Setup** → [`11-kubernetes/`](11-kubernetes/)
 - **CI/CD & Versioning** → [`6-ci-cd/`](6-ci-cd/)
 - **Understand a Flow** → [`5-user-flows/`](5-user-flows/)
 - **Work on Epic/PBI** → [`4-epics-and-pbis/`](4-epics-and-pbis/)
@@ -356,6 +357,8 @@ Follow the numbered folders in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 
 | See service architecture? | [`7-services/`](7-services/) (choose specific service) |
 | Use the Platform library? | [`8-platform/PLATFORM_GUIDE.md`](8-platform/PLATFORM_GUIDE.md) |
 | Import PBIs to GitHub? | [`10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md`](10-tools-and-automation/github-import/GITHUB_IMPORT_GUIDE.md) |
+| Understand Kubernetes setup? | [`11-kubernetes/README.md`](11-kubernetes/README.md) |
+| Deploy to Kubernetes? | [`11-kubernetes/FILE_REFERENCE.md`](11-kubernetes/FILE_REFERENCE.md) |
 | Understand product vision? | [`3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`](3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) |
 | See the complete roadmap? | [`9-roadmap-and-tracking/PROJECT_ROADMAP.md`](9-roadmap-and-tracking/PROJECT_ROADMAP.md) |
 

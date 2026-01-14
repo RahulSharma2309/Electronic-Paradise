@@ -1,0 +1,19 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: prod
+  labels:
+    app: user-service
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: user-service
+    environment: production

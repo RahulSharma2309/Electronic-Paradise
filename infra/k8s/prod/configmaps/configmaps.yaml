@@ -1,0 +1,138 @@
+﻿---
+# ConfigMaps for Production Environment
+
+# Auth Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: prod
+  labels:
+    app: auth-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# User Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: prod
+  labels:
+    app: user-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Product Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: prod
+  labels:
+    app: product-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Order Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+  namespace: prod
+  labels:
+    app: order-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Payment Service ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-service-config
+  namespace: prod
+  labels:
+    app: payment-service
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Gateway ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: prod
+  labels:
+    app: gateway
+    environment: production
+    managed-by: electronic-paradise
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  # Note: HTTP is safe for internal cluster communication
+  # External traffic should use HTTPS via Ingress/LoadBalancer
+  ASPNETCORE_URLS: "http://+:80"
+  USE_DOCKER_NETWORK: "false"
+  Logging__LogLevel__Default: "Warning"
+  Logging__LogLevel__Microsoft: "Error"
+  Logging__LogLevel__System: "Error"
+
+---
+# Frontend ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: prod
+  labels:
+    app: frontend
+    environment: production
+    managed-by: electronic-paradise
+data:
+  # Note: REACT_APP_API_BASE is typically set at build time
+  # This is for reference - you may need to rebuild the image with this value
+  REACT_APP_API_BASE: "http://gateway:80"

@@ -1,0 +1,66 @@
+﻿# Frontend Deployment for Production
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: prod
+  labels:
+    app: frontend
+    environment: production
+    managed-by: electronic-paradise
+spec:
+  replicas: 3  # More replicas for production
+  selector:
+    matchLabels:
+      app: frontend
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: frontend
+        environment: production
+        managed-by: electronic-paradise
+    spec:
+      # Frontend is a static SPA, doesn't need ServiceAccount access
+      automountServiceAccountToken: false
+      containers:
+      - name: frontend
+        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-frontend:v1.0.0
+        image: frontend:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        # Note: REACT_APP_API_BASE is typically set at build time
+        # If your Dockerfile uses runtime env vars, uncomment below:
+        # env:
+        # - name: REACT_APP_API_BASE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: frontend-config
+        #       key: REACT_APP_API_BASE
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        # Stateless container - no persistent storage needed
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
