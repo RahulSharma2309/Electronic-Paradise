@@ -21,11 +21,12 @@ spec:
         environment: production
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-user:v1.0.0
-        image: user-service:v1.0.0
+        image: ghcr.io/rahulsharma2309/electronic-paradise-user:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

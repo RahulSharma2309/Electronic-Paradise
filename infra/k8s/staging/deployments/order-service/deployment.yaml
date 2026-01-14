@@ -22,11 +22,12 @@ spec:
         environment: staging
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: order-service-sa
       containers:
       - name: order-service
-        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-order:v1.0.0
-        image: order-service:v1.0.0
+        image: ghcr.io/rahulsharma2309/electronic-paradise-order:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

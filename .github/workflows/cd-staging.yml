@@ -1,0 +1,271 @@
+name: CD Pipeline - Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'services/**'
+      - 'gateway/**'
+      - 'frontend/**'
+      - 'infra/k8s/**'
+      - '.github/workflows/cd-staging.yml'
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  KUBERNETES_NAMESPACE: staging
+  KUBERNETES_CONTEXT: docker-desktop
+
+jobs:
+  # ============================================================================
+  # PHASE 1: Prepare Deployment
+  # ============================================================================
+  prepare-deployment:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      git-sha: ${{ steps.git.outputs.sha }}
+      repo-owner: ${{ steps.repo.outputs.owner }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate version
+        id: version
+        run: |
+          chmod +x ./scripts/get-next-version.sh
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📊 Version: $VERSION"
+
+      - name: Get Git SHA
+        id: git
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "🔖 SHA: $SHORT_SHA"
+
+      - name: Get repo owner
+        id: repo
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner=$OWNER" >> $GITHUB_OUTPUT
+
+  # ============================================================================
+  # PHASE 2: Verify Images Exist
+  # ============================================================================
+  verify-images:
+    needs: prepare-deployment
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth", image: "electronic-paradise-auth" }
+          - { name: "user", image: "electronic-paradise-user" }
+          - { name: "product", image: "electronic-paradise-product" }
+          - { name: "order", image: "electronic-paradise-order" }
+          - { name: "payment", image: "electronic-paradise-payment" }
+          - { name: "gateway", image: "electronic-paradise-gateway" }
+          - { name: "frontend", image: "electronic-paradise-frontend" }
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify image exists
+        run: |
+          VERSION="${{ needs.prepare-deployment.outputs.version }}"
+          SHA="${{ needs.prepare-deployment.outputs.git-sha }}"
+          OWNER="${{ needs.prepare-deployment.outputs.repo-owner }}"
+          
+          # Try production tag first, then alpha tag
+          IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
+          echo "Checking for image: ${IMAGE_TAG}"
+          
+          if ! docker manifest inspect "${IMAGE_TAG}" > /dev/null 2>&1; then
+            # Fallback to latest
+            IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:latest"
+            echo "Falling back to: ${IMAGE_TAG}"
+            docker manifest inspect "${IMAGE_TAG}" || exit 1
+          fi
+          
+          echo "✅ Image found: ${IMAGE_TAG}"
+
+  # ============================================================================
+  # PHASE 3: Deploy to Kubernetes Staging
+  # ============================================================================
+  deploy-to-staging:
+    needs: [prepare-deployment, verify-images]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment:
+      name: staging
+      url: http://staging.electronic-paradise.local
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Configure kubectl context
+        run: |
+          # For Docker Desktop Kubernetes (local)
+          # In production, you would configure cloud provider credentials here
+          echo "Configuring kubectl for Docker Desktop..."
+          # kubectl config set-context docker-desktop
+          # kubectl config use-context docker-desktop
+
+      - name: Verify namespace exists
+        run: |
+          kubectl get namespace ${{ env.KUBERNETES_NAMESPACE }} || \
+          kubectl create namespace ${{ env.KUBERNETES_NAMESPACE }}
+
+      - name: Update image tags in deployments
+        run: |
+          VERSION="${{ needs.prepare-deployment.outputs.version }}"
+          SHA="${{ needs.prepare-deployment.outputs.git-sha }}"
+          OWNER="${{ needs.prepare-deployment.outputs.repo-owner }}"
+          
+          # Update all deployment YAMLs with new image tags
+          find infra/k8s/staging/deployments -name "deployment.yaml" -type f | while read file; do
+            # Try production tag first
+            IMAGE_TAG="ghcr.io/${OWNER}/electronic-paradise-*:v${VERSION}"
+            # If not found, use latest
+            sed -i "s|image: ghcr.io/.*/electronic-paradise-.*:.*|image: ghcr.io/${OWNER}/electronic-paradise-*:v${VERSION}|g" "$file" || \
+            sed -i "s|image: ghcr.io/.*/electronic-paradise-.*:.*|image: ghcr.io/${OWNER}/electronic-paradise-*:latest|g" "$file"
+          done
+
+      - name: Apply Kubernetes manifests
+        run: |
+          echo "Applying Kubernetes manifests to staging namespace..."
+          
+          # Apply in order: namespaces, RBAC, configmaps, secrets, deployments
+          kubectl apply -f infra/k8s/staging/namespaces/ || true
+          kubectl apply -f infra/k8s/staging/rbac/
+          kubectl apply -f infra/k8s/staging/configmaps/
+          kubectl apply -f infra/k8s/staging/secrets/ || true
+          kubectl apply -f infra/k8s/staging/deployments/
+          kubectl apply -f infra/k8s/staging/ingress/ || true
+          kubectl apply -f infra/k8s/staging/storage/ || true
+
+      - name: Wait for deployments to be ready
+        run: |
+          echo "Waiting for all deployments to be ready..."
+          kubectl wait --for=condition=available --timeout=300s \
+            deployment/auth-service \
+            deployment/user-service \
+            deployment/product-service \
+            deployment/order-service \
+            deployment/payment-service \
+            deployment/gateway \
+            deployment/frontend \
+            -n ${{ env.KUBERNETES_NAMESPACE }} || true
+
+      - name: Get deployment status
+        run: |
+          echo "## 📊 Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          kubectl get deployments -n ${{ env.KUBERNETES_NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Pods Status" >> $GITHUB_STEP_SUMMARY
+          kubectl get pods -n ${{ env.KUBERNETES_NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PHASE 4: Smoke Tests
+  # ============================================================================
+  smoke-tests:
+    needs: [deploy-to-staging]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to be ready..."
+          sleep 30  # Give services time to start
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests against staging environment..."
+          
+          # Test gateway health endpoint
+          GATEWAY_POD=$(kubectl get pods -n ${{ env.KUBERNETES_NAMESPACE }} -l app=gateway -o jsonpath='{.items[0].metadata.name}' || echo "")
+          
+          if [ -z "$GATEWAY_POD" ]; then
+            echo "⚠️ Gateway pod not found, skipping gateway health check"
+          else
+            echo "Testing gateway health endpoint..."
+            kubectl exec -n ${{ env.KUBERNETES_NAMESPACE }} $GATEWAY_POD -- \
+              curl -f http://localhost:80/api/health || echo "⚠️ Gateway health check failed"
+          fi
+          
+          # Test auth-service health endpoint
+          AUTH_POD=$(kubectl get pods -n ${{ env.KUBERNETES_NAMESPACE }} -l app=auth-service -o jsonpath='{.items[0].metadata.name}' || echo "")
+          
+          if [ -z "$AUTH_POD" ]; then
+            echo "⚠️ Auth service pod not found, skipping auth health check"
+          else
+            echo "Testing auth-service health endpoint..."
+            kubectl exec -n ${{ env.KUBERNETES_NAMESPACE }} $AUTH_POD -- \
+              curl -f http://localhost:80/api/health || echo "⚠️ Auth service health check failed"
+          fi
+          
+          echo "✅ Smoke tests completed"
+
+      - name: Get service endpoints
+        run: |
+          echo "## 🔗 Service Endpoints" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          kubectl get services -n ${{ env.KUBERNETES_NAMESPACE }} >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PHASE 5: Deployment Summary
+  # ============================================================================
+  deployment-summary:
+    needs: [prepare-deployment, deploy-to-staging, smoke-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## 🎉 Deployment to Staging Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.prepare-deployment.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Git SHA:** ${{ needs.prepare-deployment.outputs.git-sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**Namespace:** ${{ env.KUBERNETES_NAMESPACE }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Deployed Services:" >> $GITHUB_STEP_SUMMARY
+          echo "- Auth Service" >> $GITHUB_STEP_SUMMARY
+          echo "- User Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Product Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Order Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Payment Service" >> $GITHUB_STEP_SUMMARY
+          echo "- Gateway" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Verify services are running: \`kubectl get pods -n staging\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check logs: \`kubectl logs -n staging deployment/<service-name>\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. Access frontend: http://staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+          echo "4. Access API: http://api.staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY

@@ -21,10 +21,12 @@ spec:
         environment: production
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: gateway-sa
       containers:
       - name: gateway
-        image: gateway:latest
+        image: ghcr.io/rahulsharma2309/electronic-paradise-gateway:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

@@ -27,12 +27,12 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Logging">
-    <SerilogVersion>3.1.1</SerilogVersion>
+    <SerilogVersion>4.2.0</SerilogVersion>
     <SerilogAspNetCoreVersion>8.0.0</SerilogAspNetCoreVersion>
-    <SerilogSinksConsoleVersion>5.0.1</SerilogSinksConsoleVersion>
-    <SerilogSinksFileVersion>5.0.0</SerilogSinksFileVersion>
-    <SerilogEnrichersEnvironmentVersion>2.3.0</SerilogEnrichersEnvironmentVersion>
-    <SerilogEnrichersThreadVersion>3.1.0</SerilogEnrichersThreadVersion>
+    <SerilogSinksConsoleVersion>6.0.0</SerilogSinksConsoleVersion>
+    <SerilogSinksFileVersion>6.0.0</SerilogSinksFileVersion>
+    <SerilogEnrichersEnvironmentVersion>3.0.0</SerilogEnrichersEnvironmentVersion>
+    <SerilogEnrichersThreadVersion>4.0.0</SerilogEnrichersThreadVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Testing Packages">

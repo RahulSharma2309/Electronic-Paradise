@@ -21,12 +21,13 @@ spec:
         environment: production
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       # Frontend is a static SPA, doesn't need ServiceAccount access
       automountServiceAccountToken: false
       containers:
       - name: frontend
-        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-frontend:v1.0.0
-        image: frontend:v1.0.0
+        image: ghcr.io/rahulsharma2309/electronic-paradise-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

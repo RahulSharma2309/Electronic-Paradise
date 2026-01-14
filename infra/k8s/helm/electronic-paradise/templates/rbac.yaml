@@ -1,0 +1,41 @@
+{{- if .Values.rbac.enabled }}
+{{- range $serviceName, $service := .Values.services }}
+{{- if $service.enabled }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $serviceName }}-service-sa
+  namespace: {{ $.Values.global.environment }}
+  labels:
+    app: {{ $serviceName }}-service
+    environment: {{ $.Values.global.environment }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: service-role
+  namespace: {{ $.Values.global.environment }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets", "services", "endpoints", "pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $serviceName }}-service-binding
+  namespace: {{ $.Values.global.environment }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: service-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceName }}-service-sa
+    namespace: {{ $.Values.global.environment }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+---

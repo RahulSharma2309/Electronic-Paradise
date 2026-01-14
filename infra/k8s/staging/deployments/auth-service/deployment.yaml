@@ -22,11 +22,12 @@ spec:
         environment: staging
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: auth-service-sa # Use the ServiceAccount we created
       containers:
         - name: auth-service
-          # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-auth:v1.0.0
-          image: auth-service:v1.0.0
+          image: ghcr.io/rahulsharma2309/electronic-paradise-auth:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

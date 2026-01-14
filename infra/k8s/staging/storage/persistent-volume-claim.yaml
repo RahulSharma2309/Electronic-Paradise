@@ -1,0 +1,22 @@
+---
+# PersistentVolumeClaim for SQL Server Database
+# This provides persistent storage for the database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-data-pvc
+  namespace: staging
+  labels:
+    app: mssql
+    environment: staging
+    managed-by: electronic-paradise
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  # storageClassName: standard  # Use default storage class
+  # For Docker Desktop, the default storage class is "hostpath"
+
+---

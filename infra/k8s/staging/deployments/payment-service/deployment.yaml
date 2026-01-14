@@ -22,11 +22,12 @@ spec:
         environment: staging
         managed-by: electronic-paradise
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       serviceAccountName: payment-service-sa
       containers:
       - name: payment-service
-        # Replace with actual image from your registry, e.g., ghcr.io/your-org/electronic-paradise-payment:v1.0.0
-        image: payment-service:v1.0.0
+        image: ghcr.io/rahulsharma2309/electronic-paradise-payment:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
