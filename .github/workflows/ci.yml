@@ -2,9 +2,10 @@ name: CI Pipeline (Modular)
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
 
 env:
   DOTNET_VERSION: "8.0.x"
