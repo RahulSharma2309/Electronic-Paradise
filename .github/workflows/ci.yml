@@ -72,13 +72,33 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - { name: "auth-service", path: "services/auth-service", sln: "AuthService.sln" }
-          - { name: "user-service", path: "services/user-service", sln: "UserService.sln" }
-          - { name: "product-service", path: "services/product-service", sln: "ProductService.sln" }
-          - { name: "order-service", path: "services/order-service", sln: "OrderService.sln" }
-          - { name: "payment-service", path: "services/payment-service", sln: "PaymentService.sln" }
+          - {
+              name: "auth-service",
+              path: "services/auth-service",
+              sln: "AuthService.sln",
+            }
+          - {
+              name: "user-service",
+              path: "services/user-service",
+              sln: "UserService.sln",
+            }
+          - {
+              name: "product-service",
+              path: "services/product-service",
+              sln: "ProductService.sln",
+            }
+          - {
+              name: "order-service",
+              path: "services/order-service",
+              sln: "OrderService.sln",
+            }
+          - {
+              name: "payment-service",
+              path: "services/payment-service",
+              sln: "PaymentService.sln",
+            }
           - { name: "gateway", path: "gateway", sln: "Gateway.sln" }
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -162,13 +182,208 @@ jobs:
           retention-days: 5
 
   # ============================================================================
-  # PHASE 4: SonarCloud Analysis
+  # PHASE 4: Dependency Scanning
+  # ============================================================================
+  dependency-scanning:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - {
+              name: "auth-service",
+              path: "services/auth-service",
+              sln: "AuthService.sln",
+            }
+          - {
+              name: "user-service",
+              path: "services/user-service",
+              sln: "UserService.sln",
+            }
+          - {
+              name: "product-service",
+              path: "services/product-service",
+              sln: "ProductService.sln",
+            }
+          - {
+              name: "order-service",
+              path: "services/order-service",
+              sln: "OrderService.sln",
+            }
+          - {
+              name: "payment-service",
+              path: "services/payment-service",
+              sln: "PaymentService.sln",
+            }
+          - { name: "gateway", path: "gateway", sln: "Gateway.sln" }
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ matrix.service.path }}/${{ matrix.service.sln }}
+
+      - name: Scan .NET dependencies for vulnerabilities
+        id: dotnet-scan
+        continue-on-error: true
+        run: |
+          echo "Scanning ${{ matrix.service.name }} for vulnerabilities..."
+          dotnet list ${{ matrix.service.path }}/${{ matrix.service.sln }} package --vulnerable --include-transitive > vulnerabilities-${{ matrix.service.name }}.txt || true
+
+          if [ -s vulnerabilities-${{ matrix.service.name }}.txt ]; then
+            echo "⚠️ Vulnerabilities found in ${{ matrix.service.name }}:"
+            cat vulnerabilities-${{ matrix.service.name }}.txt
+            echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No vulnerabilities found in ${{ matrix.service.name }}"
+            echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload vulnerability report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vulnerabilities-${{ matrix.service.name }}
+          path: vulnerabilities-${{ matrix.service.name }}.txt
+          retention-days: 30
+
+      - name: Fail on high/critical vulnerabilities
+        if: steps.dotnet-scan.outputs.has_vulnerabilities == 'true'
+        run: |
+          echo "❌ High or critical vulnerabilities found in ${{ matrix.service.name }}"
+          echo "Please review and update dependencies"
+          exit 1
+
+  # ============================================================================
+  # PHASE 5: Frontend Dependency Scanning
+  # ============================================================================
+  frontend-dependency-scanning:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci --ignore-scripts
+
+      - name: Run npm audit
+        id: npm-audit
+        continue-on-error: true
+        run: |
+          cd frontend
+          npm audit --audit-level=moderate --json > ../npm-audit.json || true
+
+          # Check for high or critical vulnerabilities
+          VULN_COUNT=$(cat ../npm-audit.json | jq '.metadata.vulnerabilities.high + .metadata.vulnerabilities.critical' || echo "0")
+
+          if [ "$VULN_COUNT" -gt 0 ]; then
+            echo "⚠️ High or critical vulnerabilities found in frontend dependencies"
+            cat ../npm-audit.json | jq '.vulnerabilities[] | select(.severity == "high" or .severity == "critical")' || true
+            echo "has_vulnerabilities=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No high or critical vulnerabilities found in frontend"
+            echo "has_vulnerabilities=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload npm audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
+          retention-days: 30
+
+      - name: Fail on high/critical vulnerabilities
+        if: steps.npm-audit.outputs.has_vulnerabilities == 'true'
+        run: |
+          echo "❌ High or critical vulnerabilities found in frontend dependencies"
+          echo "Please run 'npm audit fix' or update dependencies manually"
+          exit 1
+
+  # ============================================================================
+  # PHASE 6: Docker Image Scanning (Trivy)
+  # ============================================================================
+  docker-scanning:
+    needs: [calculate-version, docker-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    if: github.event_name != 'pull_request' || env.PUBLISH_ALPHA == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - { name: "auth", image: "electronic-paradise-auth" }
+          - { name: "user", image: "electronic-paradise-user" }
+          - { name: "product", image: "electronic-paradise-product" }
+          - { name: "order", image: "electronic-paradise-order" }
+          - { name: "payment", image: "electronic-paradise-payment" }
+          - { name: "gateway", image: "electronic-paradise-gateway" }
+          - { name: "frontend", image: "electronic-paradise-frontend" }
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: image-tag
+        run: |
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          MODE="${{ needs.calculate-version.outputs.mode }}"
+          OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+
+          if [ "$MODE" == "production" ]; then
+            TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
+          else
+            TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:alpha-${VERSION}-${SHA}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.image-tag.outputs.tag }}
+          format: "sarif"
+          output: "trivy-results-${{ matrix.service.name }}.sarif"
+          severity: "CRITICAL,HIGH"
+          exit-code: "1"
+          fail-on: "CRITICAL,HIGH"
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: "trivy-results-${{ matrix.service.name }}.sarif"
+
+  # ============================================================================
+  # PHASE 7: SonarCloud Analysis
   # ============================================================================
   sonarcloud:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    continue-on-error: true  # Don't block pipeline if SonarCloud fails
+    continue-on-error: true # Don't block pipeline if SonarCloud fails
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -177,7 +392,7 @@ jobs:
 
       - name: SonarCloud Scan
         # checkov:skip=CKV_GHA_3: SonarCloud action frequently updates, SHA pinning causes breakage
-        uses: SonarSource/sonarcloud-github-action@master  # nosec
+        uses: SonarSource/sonarcloud-github-action@master # nosec
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -188,10 +403,18 @@ jobs:
             -Dsonar.organization=rahulsharma2309
 
   # ============================================================================
-  # PHASE 5: Docker Build & Push (PARALLEL via Matrix)
+  # PHASE 8: Docker Build & Push (PARALLEL via Matrix)
   # ============================================================================
   docker-build:
-    needs: [calculate-version, dotnet-services, frontend-build, sonarcloud]
+    needs:
+      [
+        calculate-version,
+        dotnet-services,
+        frontend-build,
+        dependency-scanning,
+        frontend-dependency-scanning,
+        sonarcloud,
+      ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -200,25 +423,53 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - { name: "auth", image: "electronic-paradise-auth", dockerfile: "./services/auth-service/src/Dockerfile" }
-          - { name: "user", image: "electronic-paradise-user", dockerfile: "./services/user-service/src/Dockerfile" }
-          - { name: "product", image: "electronic-paradise-product", dockerfile: "./services/product-service/src/Dockerfile" }
-          - { name: "order", image: "electronic-paradise-order", dockerfile: "./services/order-service/src/Dockerfile" }
-          - { name: "payment", image: "electronic-paradise-payment", dockerfile: "./services/payment-service/src/Dockerfile" }
-          - { name: "gateway", image: "electronic-paradise-gateway", dockerfile: "./gateway/src/Dockerfile" }
-          - { name: "frontend", image: "electronic-paradise-frontend", dockerfile: "./frontend/Dockerfile" }
-    
+          - {
+              name: "auth",
+              image: "electronic-paradise-auth",
+              dockerfile: "./services/auth-service/src/Dockerfile",
+            }
+          - {
+              name: "user",
+              image: "electronic-paradise-user",
+              dockerfile: "./services/user-service/src/Dockerfile",
+            }
+          - {
+              name: "product",
+              image: "electronic-paradise-product",
+              dockerfile: "./services/product-service/src/Dockerfile",
+            }
+          - {
+              name: "order",
+              image: "electronic-paradise-order",
+              dockerfile: "./services/order-service/src/Dockerfile",
+            }
+          - {
+              name: "payment",
+              image: "electronic-paradise-payment",
+              dockerfile: "./services/payment-service/src/Dockerfile",
+            }
+          - {
+              name: "gateway",
+              image: "electronic-paradise-gateway",
+              dockerfile: "./gateway/src/Dockerfile",
+            }
+          - {
+              name: "frontend",
+              image: "electronic-paradise-frontend",
+              dockerfile: "./frontend/Dockerfile",
+            }
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         # checkov:skip=CKV_GHA_3: Using semver tags for better maintainability
-        uses: docker/setup-buildx-action@v3  # nosec
+        uses: docker/setup-buildx-action@v3 # nosec
 
       - name: Log in to GitHub Container Registry
         # checkov:skip=CKV_GHA_3: Using semver tags for better maintainability
-        uses: docker/login-action@v3  # nosec
+        uses: docker/login-action@v3 # nosec
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -231,7 +482,7 @@ jobs:
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
           MODE="${{ needs.calculate-version.outputs.mode }}"
           OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
-          
+
           if [ "$MODE" == "production" ]; then
             # Production tags: v1.0.0, v1.0.0-abc123d, latest
             TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
@@ -243,12 +494,12 @@ jobs:
             TAG1="ghcr.io/${OWNER}/${{ matrix.service.image }}:alpha-${VERSION}-${SHA}"
             echo "tags=${TAG1}" >> $GITHUB_OUTPUT
           fi
-          
+
           echo "🏷️ Tags for ${{ matrix.service.name }}: ${TAG1}"
 
       - name: Build and push
         # checkov:skip=CKV_GHA_3: Using semver tags for better maintainability
-        uses: docker/build-push-action@v5  # nosec
+        uses: docker/build-push-action@v5 # nosec
         with:
           context: .
           file: ${{ matrix.service.dockerfile }}
@@ -258,10 +509,10 @@ jobs:
           cache-to: type=gha,mode=max
 
   # ============================================================================
-  # PHASE 6: Summary
+  # PHASE 9: Summary
   # ============================================================================
   pipeline-summary:
-    needs: [calculate-version, docker-build]
+    needs: [calculate-version, docker-build, docker-scanning]
     runs-on: ubuntu-latest
     if: always()
     steps:

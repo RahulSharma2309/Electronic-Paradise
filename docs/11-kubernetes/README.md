@@ -40,6 +40,7 @@ This directory contains comprehensive documentation about Kubernetes implementat
 - **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics (Ingress, LoadBalancer, etc.)
 - **[HELM_GUIDE.md](./HELM_GUIDE.md)** - Complete Helm charts guide
 - **[STORAGE_GUIDE.md](./STORAGE_GUIDE.md)** - Persistent storage explained
+- **[CI_CD_INTEGRATION.md](./CI_CD_INTEGRATION.md)** - How CI/CD deploys to K8s
 - **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s
 - **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** - Complete file reference
 
