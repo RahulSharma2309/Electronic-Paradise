@@ -4,7 +4,7 @@ metadata:
   name: varnex-enterprise-config
   namespace: varnex-enterprise
 data:
-  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_ENVIRONMENT: "Development"
   ASPNETCORE_URLS: "http://+:80"
   
   # Service URLs (internal cluster DNS)

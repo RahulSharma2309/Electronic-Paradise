@@ -34,15 +34,21 @@ This directory contains comprehensive documentation about Kubernetes implementat
 
 ### Quick Links
 
-- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - ⭐ **START HERE!** Complete learning guide
+#### 🚀 Getting Started
+- **[LOCAL_DEPLOYMENT_GUIDE.md](./LOCAL_DEPLOYMENT_GUIDE.md)** - 🎯 **NEW USERS START HERE!** Complete step-by-step guide to run Varnex Enterprise on your local machine
+
+#### 📖 Learning Resources
+- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - Complete learning guide for Kubernetes concepts
 - **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** - Real-world analogies for all concepts
 - **[CONCEPTS.md](./CONCEPTS.md)** - Deep dive into core concepts
 - **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics (Ingress, LoadBalancer, etc.)
-- **[HELM_GUIDE.md](./HELM_GUIDE.md)** - Complete Helm charts guide
-- **[STORAGE_GUIDE.md](./STORAGE_GUIDE.md)** - Persistent storage explained
-- **[CI_CD_INTEGRATION.md](./CI_CD_INTEGRATION.md)** - How CI/CD deploys to K8s
-- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s
+
+#### 🔧 Implementation Details
+- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s in this project
 - **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** - Complete file reference
+- **[STORAGE_GUIDE.md](./STORAGE_GUIDE.md)** - Persistent storage explained
+- **[HELM_GUIDE.md](./HELM_GUIDE.md)** - Complete Helm charts guide
+- **[CI_CD_INTEGRATION.md](./CI_CD_INTEGRATION.md)** - How CI/CD deploys to K8s
 
 ---
 
