@@ -1,0 +1,22 @@
+---
+# PersistentVolumeClaim for SQL Server Database (Production)
+# This provides persistent storage for the database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-data-pvc
+  namespace: prod
+  labels:
+    app: mssql
+    environment: prod
+    managed-by: electronic-paradise
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi  # Larger storage for production
+  # storageClassName: standard  # Use default storage class
+  # For cloud providers, specify appropriate storage class
+
+---

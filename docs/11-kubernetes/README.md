@@ -34,10 +34,14 @@ This directory contains comprehensive documentation about Kubernetes implementat
 
 ### Quick Links
 
-- [Getting Started Guide](./GETTING_STARTED.md)
-- [Concepts Deep Dive](./CONCEPTS.md)
-- [Implementation Details](./IMPLEMENTATION.md)
-- [File Reference](./FILE_REFERENCE.md)
+- **[LEARNING_PATH.md](./LEARNING_PATH.md)** - ⭐ **START HERE!** Complete learning guide
+- **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** - Real-world analogies for all concepts
+- **[CONCEPTS.md](./CONCEPTS.md)** - Deep dive into core concepts
+- **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** - Advanced topics (Ingress, LoadBalancer, etc.)
+- **[HELM_GUIDE.md](./HELM_GUIDE.md)** - Complete Helm charts guide
+- **[STORAGE_GUIDE.md](./STORAGE_GUIDE.md)** - Persistent storage explained
+- **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - How we implemented K8s
+- **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** - Complete file reference
 
 ---
 
@@ -750,6 +754,8 @@ kubectl get secret <name> -n staging -o jsonpath='{.data.key}' | base64 -d
 | **[LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md)** | Real-world analogies | First read - easiest to understand |
 | **[CONCEPTS.md](./CONCEPTS.md)** | Deep dive into concepts | After analogies - detailed explanations |
 | **[ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md)** | Advanced topics | After basics - Ingress, LoadBalancer, etc. |
+| **[HELM_GUIDE.md](./HELM_GUIDE.md)** | Helm charts explained | Package management and templating |
+| **[STORAGE_GUIDE.md](./STORAGE_GUIDE.md)** | Persistent storage | Databases and data persistence |
 | **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** | How we implemented | See real-world decisions |
 | **[FILE_REFERENCE.md](./FILE_REFERENCE.md)** | Complete file reference | Reference guide for all files |
 | **[README.md](./README.md)** | Overview and quick start | Quick reference and commands |
@@ -772,6 +778,10 @@ kubectl get secret <name> -n staging -o jsonpath='{.data.key}' | base64 -d
 - Health Checks → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#health-checks)
 - Resource Limits → [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md#resource-limits-and-requests)
 
+**Package Management & Storage:**
+- Helm Charts → [HELM_GUIDE.md](./HELM_GUIDE.md) - Complete Helm guide
+- Persistent Storage → [STORAGE_GUIDE.md](./STORAGE_GUIDE.md) - PVCs, PVs, StorageClasses
+
 ### 🎓 Learning Paths
 
 **Path 1: Complete Beginner**
@@ -779,8 +789,10 @@ kubectl get secret <name> -n staging -o jsonpath='{.data.key}' | base64 -d
 2. [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md) - Understand with analogies
 3. [CONCEPTS.md](./CONCEPTS.md) - Deep dive
 4. [ADVANCED_CONCEPTS.md](./ADVANCED_CONCEPTS.md) - Advanced topics
-5. [IMPLEMENTATION.md](./IMPLEMENTATION.md) - See how we did it
-6. [FILE_REFERENCE.md](./FILE_REFERENCE.md) - Reference guide
+5. [HELM_GUIDE.md](./HELM_GUIDE.md) - Package management
+6. [STORAGE_GUIDE.md](./STORAGE_GUIDE.md) - Persistent storage
+7. [IMPLEMENTATION.md](./IMPLEMENTATION.md) - See how we did it
+8. [FILE_REFERENCE.md](./FILE_REFERENCE.md) - Reference guide
 
 **Path 2: Quick Understanding**
 1. [LAYMAN_ANALOGY.md](./LAYMAN_ANALOGY.md) - All concepts with analogies
