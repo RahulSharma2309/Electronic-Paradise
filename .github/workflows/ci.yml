@@ -513,7 +513,7 @@ jobs:
   # PHASE 9: Summary
   # ============================================================================
   pipeline-summary:
-    needs: [calculate-version, docker-build, docker-scanning]
+    needs: [calculate-version, docker-build]
     runs-on: ubuntu-latest
     if: always()
     steps:
