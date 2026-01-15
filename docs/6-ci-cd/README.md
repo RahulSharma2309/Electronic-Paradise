@@ -10,6 +10,7 @@ This folder contains all documentation related to Continuous Integration and Con
 
 | Document | Purpose | Status |
 |----------|---------|--------|
+| [COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md) | 🌟 **Complete journey from code to production** | ✅ Complete |
 | [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
 | [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) | Complete CD pipeline theory & concepts | ✅ Complete |
 
@@ -23,12 +24,22 @@ This folder contains all documentation related to Continuous Integration and Con
 | [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
 | [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md) | Automated releases & changelog | ✅ Complete |
 
+### **🔒 Security & Code Quality**
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md) | Dependabot, Trivy, automated security | ✅ Complete |
+| [SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md) | Code quality & security analysis | ✅ Complete |
+
 **💡 Start Here:**
+- **🌟 Complete Overview?** → [COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md) (code to production journey)
 - **New to CI/CD?** → [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) (explains what each PBI does)
 - **Understanding CD?** → [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) (staging, smoke tests, deployment)
 - **Want faster CI builds?** → [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) (60-70% faster!)
 - **Setting up Docker builds?** → [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)
 - **Setting up releases?** → [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)
+- **Security scanning?** → [DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md) (Dependabot + Trivy)
+- **Code quality?** → [SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md) (SonarCloud setup)
 - **Quick reference?** → [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)
 
 ### **🔧 Scripts** (in `/scripts` folder)
@@ -91,13 +102,16 @@ docker images | Select-String "alpha"
 
 **New to CI/CD?** Read in this order:
 
-1. **[PBIS_COMPARISON.md](./PBIS_COMPARISON.md)** - Understand what each PBI does (CI vs CD)
-2. **[CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md)** - Deep dive into CD concepts (staging, smoke tests)
-3. **[MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md)** - How the CI pipeline works (parallel builds)
-4. **[IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)** - Complete tagging strategy
-5. **[TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)** - Quick commands and workflows
-6. **[TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md)** - Test locally before implementing
-7. **[SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)** - Automated releases and changelogs
+1. **[COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md)** 🌟 - Complete journey from code to production (START HERE!)
+2. **[PBIS_COMPARISON.md](./PBIS_COMPARISON.md)** - Understand what each PBI does (CI vs CD)
+3. **[CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md)** - Deep dive into CD concepts (staging, smoke tests)
+4. **[MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md)** - How the CI pipeline works (parallel builds)
+5. **[IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)** - Complete tagging strategy
+6. **[TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)** - Quick commands and workflows
+7. **[TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md)** - Test locally before implementing
+8. **[SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)** - Automated releases and changelogs
+9. **[DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md)** - Security scanning (Dependabot, Trivy)
+10. **[SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md)** - Code quality and security analysis
 
 ---
 
@@ -445,6 +459,8 @@ Production (main): ALWAYS published (all 3 tags)
 
 ## 🔗 Related Documentation
 
+### **Epic 2 Documentation (CI/CD):**
+- [Complete DevOps Flow](./COMPLETE_DEVOPS_FLOW.md) 🌟 - Complete journey from code to production
 - [CD Pipeline Guide](./CD_PIPELINE_GUIDE.md) - Complete CD theory (staging, smoke tests, deployment)
 - [PBIs Comparison](./PBIS_COMPARISON.md) - Understanding all CI/CD PBIs
 - [Modular CI Architecture](./MODULAR_CI_ARCHITECTURE.md) - Parallel CI pipeline design
@@ -452,9 +468,19 @@ Production (main): ALWAYS published (all 3 tags)
 - [Testing Image Tagging](./TESTING_IMAGE_TAGGING.md) - How to test scripts locally
 - [Tagging Quick Reference](./TAGGING_QUICK_REFERENCE.md) - Command cheat sheet
 - [Semantic Release Guide](./SEMANTIC_RELEASE_GUIDE.md) - Automated versioning and releases
+- [Dependency Scanning Guide](./DEPENDENCY_SCANNING_GUIDE.md) - Dependabot, Trivy, automated security
+- [SonarCloud Setup Guide](./SONARCLOUD_SETUP_GUIDE.md) - Code quality and security analysis
+
+### **Epic 3 Documentation (Kubernetes):**
+- [Kubernetes README](../11-kubernetes/README.md) - Overview and quick start
+- [CI/CD Integration](../11-kubernetes/CI_CD_INTEGRATION.md) - How CI/CD deploys to K8s
+- [Learning Path](../11-kubernetes/LEARNING_PATH.md) - Complete K8s learning guide
+- [Layman Analogy](../11-kubernetes/LAYMAN_ANALOGY.md) - Real-world analogies
+
+### **Project Documentation:**
 - [Scripts README](../../scripts/README.md) - All automation scripts explained
-- [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - See Epic 2 (CI/CD Pipeline)
-- [Tech Stack](../1-getting-started/TECH_STACK.md) - CI/CD technologies
+- [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - See Epic 2 & Epic 3 status
+- [Tech Stack](../1-getting-started/TECH_STACK.md) - CI/CD and Kubernetes technologies
 - [Dockerfile Guide](../10-tools-and-automation/DOCKERFILE_EXPLAINED.md) - Docker best practices
 
 ---
@@ -465,34 +491,44 @@ Production (main): ALWAYS published (all 3 tags)
 
 ```
 docs/6-ci-cd/
-├── README.md (this file)            ← Start here: Overview & index
-├── PBIS_COMPARISON.md               ← Understanding: CI/CD PBIs explained
-├── CD_PIPELINE_GUIDE.md             ← Theory: Complete CD concepts
-├── MODULAR_CI_ARCHITECTURE.md       ← Architecture: Parallel CI design
-├── IMAGE_TAGGING_STRATEGY.md        ← Deep dive: Tag formats, versioning rules
-├── TAGGING_QUICK_REFERENCE.md       ← Quick lookup: Commands & examples
-├── TESTING_IMAGE_TAGGING.md         ← Hands-on: Test scripts locally
-└── SEMANTIC_RELEASE_GUIDE.md        ← Automation: Releases & changelog
+├── README.md (this file)                 ← Start here: Overview & index
+├── COMPLETE_DEVOPS_FLOW.md          🌟  ← The BIG picture: Code to production
+├── PBIS_COMPARISON.md                    ← Understanding: CI/CD PBIs explained
+├── CD_PIPELINE_GUIDE.md                  ← Theory: Complete CD concepts
+├── MODULAR_CI_ARCHITECTURE.md            ← Architecture: Parallel CI design
+├── IMAGE_TAGGING_STRATEGY.md             ← Deep dive: Tag formats, versioning rules
+├── TAGGING_QUICK_REFERENCE.md            ← Quick lookup: Commands & examples
+├── TESTING_IMAGE_TAGGING.md              ← Hands-on: Test scripts locally
+├── SEMANTIC_RELEASE_GUIDE.md             ← Automation: Releases & changelog
+├── DEPENDENCY_SCANNING_GUIDE.md          ← Security: Dependabot, Trivy scanning
+└── SONARCLOUD_SETUP_GUIDE.md             ← Quality: Code quality & security
 
 scripts/
-├── README.md                         ← Scripts explained: Why they exist
-├── get-next-version.ps1/.sh         ← Logic: Version calculation
-└── tag-images.ps1                   ← Logic: Image tagging
+├── README.md                              ← Scripts explained: Why they exist
+├── get-next-version.ps1/.sh              ← Logic: Version calculation
+└── tag-images.ps1                        ← Logic: Image tagging
 
 .github/workflows/
-├── ci.yml                           ← Executor: CI pipeline (parallel builds)
-└── cd-staging.yml (future)          ← Executor: CD pipeline (deployment)
+├── ci.yml                                ← Executor: CI pipeline (parallel builds)
+├── cd-staging.yml                        ← Executor: CD pipeline (deployment)
+└── release.yml                           ← Automation: Semantic release
+
+docs/11-kubernetes/
+└── (See Kubernetes docs for Epic 3)     ← How CI/CD deploys to K8s
 ```
 
 ### **Learning Path:**
 
-1. **Understand CI/CD** → Read `PBIS_COMPARISON.md` (what's CI vs CD)
-2. **Understand CD** → Read `CD_PIPELINE_GUIDE.md` (staging, smoke tests, deployment)
-3. **Understand CI** → Read `MODULAR_CI_ARCHITECTURE.md` (parallel builds)
-4. **Understand Tagging** → Read `IMAGE_TAGGING_STRATEGY.md` (complete specification)
-5. **Test LOCALLY** → Follow `TESTING_IMAGE_TAGGING.md` (hands-on)
-6. **Quick Reference** → Bookmark `TAGGING_QUICK_REFERENCE.md` (commands)
-7. **Scripts Details** → See `../../scripts/README.md` (implementation)
+1. **The Big Picture** → Read `COMPLETE_DEVOPS_FLOW.md` 🌟 (complete journey)
+2. **Understand CI/CD** → Read `PBIS_COMPARISON.md` (what's CI vs CD)
+3. **Understand CD** → Read `CD_PIPELINE_GUIDE.md` (staging, smoke tests, deployment)
+4. **Understand CI** → Read `MODULAR_CI_ARCHITECTURE.md` (parallel builds)
+5. **Understand Tagging** → Read `IMAGE_TAGGING_STRATEGY.md` (complete specification)
+6. **Test LOCALLY** → Follow `TESTING_IMAGE_TAGGING.md` (hands-on)
+7. **Quick Reference** → Bookmark `TAGGING_QUICK_REFERENCE.md` (commands)
+8. **Scripts Details** → See `../../scripts/README.md` (implementation)
+9. **Security** → Read `DEPENDENCY_SCANNING_GUIDE.md` (Dependabot, Trivy)
+10. **Quality** → Read `SONARCLOUD_SETUP_GUIDE.md` (SonarCloud setup)
 
 ---
 

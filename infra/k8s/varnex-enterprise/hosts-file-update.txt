@@ -1,0 +1,14 @@
+# Varnex Enterprise - DNS Configuration
+# Add these lines to your Windows hosts file: C:\Windows\System32\drivers\etc\hosts
+# Right-click Notepad -> Run as Administrator -> Open the hosts file
+
+# Frontend & Gateway
+127.0.0.1 app.varnex-enterprise.local
+127.0.0.1 api.varnex-enterprise.local
+
+# Individual Microservices (for Swagger access)
+127.0.0.1 auth.varnex-enterprise.local
+127.0.0.1 user.varnex-enterprise.local
+127.0.0.1 product.varnex-enterprise.local
+127.0.0.1 order.varnex-enterprise.local
+127.0.0.1 payment.varnex-enterprise.local
