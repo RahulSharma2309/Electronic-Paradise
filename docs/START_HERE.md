@@ -9,7 +9,8 @@
 | Role | Start Here | Then Go To | Time |
 |------|-----------|-----------|------|
 | **🎓 Learning Developer** | [`2-learning-guide/LEARNING_GUIDE.md`](2-learning-guide/LEARNING_GUIDE.md) | [`5-user-flows/`](5-user-flows/) → [`7-services/`](7-services/) | 4-6 hrs |
-| **📊 Product Owner/PM** | [`3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`](3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) | [`4-epics-and-pbis/`](4-epics-and-pbis/) → [`9-roadmap-and-tracking/`](9-roadmap-and-tracking/) | 2-3 hrs |
+| **📊 Product Owner/PM** | [`0-product-owner-onboarding/`](0-product-owner-onboarding/) ⭐ **NEW PO?** | [`3-product-owner/`](3-product-owner/) → [`4-epics-and-pbis/`](4-epics-and-pbis/) | 2-3 hrs |
+| **📊 Experienced PO/PM** | [`3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`](3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) | [`4-epics-and-pbis/`](4-epics-and-pbis/) → [`9-roadmap-and-tracking/`](9-roadmap-and-tracking/) | 2-3 hrs |
 | **🔍 QA/Tester** | [`5-user-flows/`](5-user-flows/) | [`7-services/`](7-services/) → Swagger UIs | 1-2 hrs |
 | **💻 Frontend Developer** | [`5-user-flows/`](5-user-flows/) | [`7-services/API_GATEWAY.md`](7-services/API_GATEWAY.md) → API endpoints | 1-2 hrs |
 | **🚀 DevOps Engineer** | [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md#getting-started) | [`6-architecture/SYSTEM_ARCHITECTURE.md`](6-architecture/SYSTEM_ARCHITECTURE.md) | 1 hr |
@@ -49,9 +50,11 @@ If some terms feel "too enterprise", open: [`2-learning-guide/GLOSSARY.md`](2-le
 
 ### If you are a **PO / PM** (understand the product)
 
-Read in this order:
+**New Product Owner?** Start here: [`0-product-owner-onboarding/`](0-product-owner-onboarding/) ⭐
 
-1. **Project overview**: [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md)
+**For all POs/PMs, read in this order:**
+
+1. **Product overview** (new POs): [`0-product-owner-onboarding/PRODUCT_OVERVIEW_FOR_PO.md`](0-product-owner-onboarding/PRODUCT_OVERVIEW_FOR_PO.md) OR **Project overview** (experienced): [`1-getting-started/PROJECT_OVERVIEW.md`](1-getting-started/PROJECT_OVERVIEW.md)
 2. **User journeys (MVP flows)**: [`5-user-flows/README.md`](5-user-flows/README.md)
 3. **Product thinking** (vision/strategy/roadmap): [`3-product-owner/`](3-product-owner/)
 
@@ -60,6 +63,7 @@ What you should get at the end:
 - What the MVP includes and excludes
 - Why this product category and what's next
 - How the user journeys map to services
+- How to plan and execute sprints (new POs)
 
 ---
 

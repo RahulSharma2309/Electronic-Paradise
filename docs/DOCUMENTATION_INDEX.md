@@ -10,6 +10,7 @@
 
 ### By Role
 - **New to the Project?** → [`START_HERE.md`](START_HERE.md)
+- **New Product Owner?** → [`0-product-owner-onboarding/`](0-product-owner-onboarding/) ⭐ **START HERE**
 - **Learning Developer?** → [`2-learning-guide/`](2-learning-guide/)
 - **Product Owner/PM?** → [`3-product-owner/`](3-product-owner/)
 - **Need Service Info?** → [`7-services/`](7-services/)
@@ -36,6 +37,27 @@
 | [`START_HERE.md`](START_HERE.md) | Main navigation hub for all roles | Everyone |
 | [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) | This file - complete catalog | Everyone |
 | [`DOCUMENTATION_RESTRUCTURING_PLAN.md`](DOCUMENTATION_RESTRUCTURING_PLAN.md) | Restructuring details (historical) | Maintainers |
+
+---
+
+### 0️⃣ Product Owner Onboarding (NEW!)
+
+**Location:** [`0-product-owner-onboarding/`](0-product-owner-onboarding/)
+
+> **Specifically designed for new Product Owners/Managers with no prior experience**
+
+| File | Purpose | Read Time |
+|------|---------|-----------|
+| [`README.md`](0-product-owner-onboarding/README.md) | Folder index and navigation | 10 min |
+| [`PRODUCT_OVERVIEW_FOR_PO.md`](0-product-owner-onboarding/PRODUCT_OVERVIEW_FOR_PO.md) | Complete product overview in layman's language | 45 min |
+| [`QUICK_START_GUIDE.md`](0-product-owner-onboarding/QUICK_START_GUIDE.md) | Step-by-step getting started guide | 20 min |
+| [`SPRINT_BY_SPRINT_GUIDE.md`](0-product-owner-onboarding/SPRINT_BY_SPRINT_GUIDE.md) | Detailed sprint-by-sprint progression | 30 min |
+
+**When to Read:**
+- First day as Product Owner
+- Need to understand the product quickly
+- Preparing for sprint planning
+- Learning the Product Owner role
 
 ---
 
@@ -311,7 +333,8 @@
 | Roadmap & Tracking | 2 | ✅ Complete |
 | Tools & Automation | 7 | ✅ Complete |
 | **Automation Scripts** | **5** | **✅ Complete** |
-| **Total Documentation** | **60** | **✅ 100% MVP** |
+| **Product Owner Onboarding** | **4** | **✅ Complete** |
+| **Total Documentation** | **64** | **✅ 100% MVP** |
 
 ---
 
@@ -333,9 +356,10 @@
 
 ### Path 3: Product Owner (2 hours)
 1. [`START_HERE.md`](START_HERE.md)
-2. All files in [`3-product-owner/`](3-product-owner/)
-3. [`4-epics-and-pbis/EPIC_1/EPIC_1.md`](4-epics-and-pbis/EPIC_1/EPIC_1.md)
-4. [`9-roadmap-and-tracking/PROJECT_ROADMAP.md`](9-roadmap-and-tracking/PROJECT_ROADMAP.md)
+2. **All files in [`0-product-owner-onboarding/`](0-product-owner-onboarding/)** ⭐ **NEW - Start here!**
+3. All files in [`3-product-owner/`](3-product-owner/)
+4. [`4-epics-and-pbis/EPIC_1/EPIC_1.md`](4-epics-and-pbis/EPIC_1/EPIC_1.md)
+5. [`9-roadmap-and-tracking/PROJECT_ROADMAP.md`](9-roadmap-and-tracking/PROJECT_ROADMAP.md)
 
 ### Path 4: Learning Journey (Full)
 Follow the numbered folders in order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
