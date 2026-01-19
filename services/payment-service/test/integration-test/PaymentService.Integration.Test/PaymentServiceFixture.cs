@@ -24,7 +24,7 @@ public class PaymentServiceFixture : IAsyncLifetime
         {
             builder.ConfigureAppConfiguration((context, conf) =>
             {
-                conf.AddInMemoryCollection(new Dictionary<string, string>
+                conf.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "ConnectionStrings:DefaultConnection", "Server=(localdb)\\MSSQLLocalDB;Database=PaymentServiceTestDb;Trusted_Connection=True;MultipleActiveResultSets=true" },
                     { "ServiceUrls:UserService", "http://user-service-mock:3001" }
