@@ -1,11 +1,14 @@
 ---
 # Ingress for Staging Environment
-# Routes external traffic to gateway and frontend services
+# Routes external traffic to all services for production-like access
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: electronic-paradise-ingress
   namespace: staging
+  labels:
+    managed-by: electronic-paradise
+    environment: staging
   annotations:
     # Use NGINX Ingress Controller
     kubernetes.io/ingress.class: nginx
@@ -53,6 +56,66 @@ spec:
             backend:
               service:
                 name: gateway
+                port:
+                  number: 80
+    
+    # Auth Service - Direct Swagger Access
+    - host: auth.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 80
+    
+    # User Service - Direct Swagger Access
+    - host: user.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 80
+    
+    # Product Service - Direct Swagger Access
+    - host: product.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: product-service
+                port:
+                  number: 80
+    
+    # Order Service - Direct Swagger Access
+    - host: order.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: order-service
+                port:
+                  number: 80
+    
+    # Payment Service - Direct Swagger Access
+    - host: payment.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-service
                 port:
                   number: 80
 
