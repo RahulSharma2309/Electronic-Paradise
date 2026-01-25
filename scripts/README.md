@@ -8,14 +8,19 @@
 
 ### 🐳 Docker & Local Development
 
-| Script | Purpose | When to Use |
-|--------|---------|-------------|
-| [`docker-build-start.ps1`](./docker-build-start.ps1) | Build and start all Docker services | Daily development |
+**Recommended: Use VS Code Tasks**
 
-**Usage:**
+1. Press `Ctrl+Shift+P` in VS Code
+2. Type "Tasks: Run Task"
+3. Select "Docker: Build & Start All Services"
+
+**Or use manual commands:**
 ```powershell
-# From repository root
-.\scripts\docker-build-start.ps1
+cd infra
+$env:DOCKER_BUILDKIT='0'
+docker-compose down -v
+docker-compose build
+docker-compose up -d
 ```
 
 **What it does:**
@@ -23,7 +28,6 @@
 - Cleans existing containers
 - Builds all 7 services
 - Starts all services
-- Shows status and URLs
 
 ---
 
@@ -128,8 +132,14 @@ Generates `md-files-list.txt` at repository root.
 
 ### For Local Development:
 ```powershell
-# 1. Start development environment
-.\scripts\docker-build-start.ps1
+# 1. Start development environment (use VS Code task or manual commands)
+# VS Code: Ctrl+Shift+P -> "Tasks: Run Task" -> "Docker: Build & Start All Services"
+# OR manually:
+cd infra
+$env:DOCKER_BUILDKIT='0'
+docker-compose down -v
+docker-compose build
+docker-compose up -d
 
 # 2. Make code changes...
 
@@ -178,7 +188,7 @@ docker-compose logs -f auth-service
 ## ⚠️ Important Notes
 
 ### For Local Development:
-- ✅ **Use:** `docker-build-start.ps1`
+- ✅ **Use:** VS Code tasks (recommended) or manual docker-compose commands
 - ❌ **Don't use:** `tag-images.ps1` (that's for CI)
 
 ### For CI/CD:
@@ -188,7 +198,7 @@ docker-compose logs -f auth-service
 
 ### BuildKit:
 - Must be disabled for builds (`$env:DOCKER_BUILDKIT=0`)
-- `docker-build-start.ps1` handles this automatically
+- VS Code tasks handle this automatically
 
 ---
 
@@ -196,9 +206,11 @@ docker-compose logs -f auth-service
 
 ### Script Not Found
 ```powershell
-# Ensure you're in repository root
-cd C:\path\to\Electronic-Paradise
-.\scripts\docker-build-start.ps1
+# Use VS Code tasks instead, or run manually:
+cd C:\path\to\Electronic-Paradise\infra
+$env:DOCKER_BUILDKIT='0'
+docker-compose build
+docker-compose up -d
 ```
 
 ### Permission Denied (Linux/Mac)

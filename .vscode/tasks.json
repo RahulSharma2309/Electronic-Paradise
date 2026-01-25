@@ -4,7 +4,12 @@
     {
       "label": "Docker: Build All Services",
       "type": "shell",
-      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose build",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:DOCKER_BUILDKIT='0'; cd ${workspaceFolder}/infra; docker-compose build"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -22,7 +27,12 @@
     {
       "label": "Docker: Start All Services",
       "type": "shell",
-      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose up -d",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:DOCKER_BUILDKIT='0'; cd ${workspaceFolder}/infra; docker-compose up -d"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -36,7 +46,12 @@
     {
       "label": "Docker: Build & Start All Services",
       "type": "shell",
-      "command": "${workspaceFolder}/scripts/docker-build-start.ps1",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:DOCKER_BUILDKIT='0'; cd ${workspaceFolder}/infra; docker-compose down -v; docker-compose build; docker-compose up -d"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -54,7 +69,12 @@
     {
       "label": "Docker: Stop All Services",
       "type": "shell",
-      "command": "cd infra; docker-compose down",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "cd ${workspaceFolder}/infra; docker-compose down"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -68,7 +88,12 @@
     {
       "label": "Docker: Stop & Remove Volumes",
       "type": "shell",
-      "command": "cd infra; docker-compose down -v",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "cd ${workspaceFolder}/infra; docker-compose down -v"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -82,7 +107,12 @@
     {
       "label": "Docker: View Service Status",
       "type": "shell",
-      "command": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,
@@ -96,7 +126,12 @@
     {
       "label": "Docker: View Logs (All Services)",
       "type": "shell",
-      "command": "cd infra; docker-compose logs -f --tail=100",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "cd ${workspaceFolder}/infra; docker-compose logs -f --tail=100"
+      ],
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
@@ -111,7 +146,12 @@
     {
       "label": "Docker: Clean All (Restart Fresh)",
       "type": "shell",
-      "command": "$env:DOCKER_BUILDKIT=0; cd infra; docker-compose down -v; docker-compose build; docker-compose up -d",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "$env:DOCKER_BUILDKIT='0'; cd ${workspaceFolder}/infra; docker-compose down -v; docker-compose build; docker-compose up -d"
+      ],
       "problemMatcher": [],
       "presentation": {
         "echo": true,

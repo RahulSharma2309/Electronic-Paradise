@@ -17,20 +17,6 @@ COPY ["services/product-service/src/Directory.Build.props", "services/product-se
 # Copy nuget.config
 COPY ["services/product-service/nuget.config", "services/product-service/"]
 
-# Accept GitHub token as build argument
-ARG GITHUB_TOKEN
-# Handle GitHub token and remove local source (not available in Docker)
-RUN sed -i '/<add key="local"/d' services/product-service/nuget.config && \
-    if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
-      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" services/product-service/nuget.config; \
-      echo "GitHub token provided, using GitHub Packages source."; \
-    else \
-      echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
-      sed -i '/<add key="github"/d' services/product-service/nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' services/product-service/nuget.config; \
-      echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
-    fi
-
 # Restore dependencies
 WORKDIR /src/services/product-service/src
 RUN dotnet restore "ProductService.API/ProductService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true

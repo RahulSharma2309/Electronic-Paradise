@@ -17,20 +17,6 @@ COPY ["services/payment-service/src/Directory.Build.props", "services/payment-se
 # Copy nuget.config
 COPY ["services/payment-service/nuget.config", "services/payment-service/"]
 
-# Accept GitHub token as build argument
-ARG GITHUB_TOKEN
-# Handle GitHub token and remove local source (not available in Docker)
-RUN sed -i '/<add key="local"/d' services/payment-service/nuget.config && \
-    if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
-      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" services/payment-service/nuget.config; \
-      echo "GitHub token provided, using GitHub Packages source."; \
-    else \
-      echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
-      sed -i '/<add key="github"/d' services/payment-service/nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' services/payment-service/nuget.config; \
-      echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
-    fi
-
 # Restore dependencies
 WORKDIR /src/services/payment-service/src
 RUN dotnet restore "PaymentService.API/PaymentService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true

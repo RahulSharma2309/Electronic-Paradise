@@ -4,19 +4,19 @@
 
 ---
 
-## 🚀 Recommended: Automated Script
+## 🚀 Recommended: VS Code Tasks
 
-```powershell
-# Run from repository root
-.\scripts\docker-build-start.ps1
-```
+**Easiest way to run everything:**
 
-**What it does:**
+1. Press `Ctrl+Shift+P` in VS Code
+2. Type "Tasks: Run Task"
+3. Select "Docker: Build & Start All Services"
+
+This automatically:
 1. Disables BuildKit (fixes ordering issues)
 2. Cleans existing containers
 3. Builds all services
 4. Starts all services
-5. Shows service status and access URLs
 
 ---
 
