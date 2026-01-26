@@ -772,38 +772,44 @@ jobs:
             ENV_CAPITALIZED=$(echo "${ENV}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
             
             if [ "${{ steps.determine-env.outputs.has_k8s_changes }}" == "true" ]; then
-              git commit -m "🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
-
-- Updated image tags to v${VERSION}
-- Includes k8s infrastructure changes
-- Git SHA: ${SHA}
-
-**Images:**
-- Auth Service: v${VERSION}
-- User Service: v${VERSION}
-- Product Service: v${VERSION}
-- Order Service: v${VERSION}
-- Payment Service: v${VERSION}
-- Gateway: v${VERSION}
-- Frontend: v${VERSION}
-
-**Target Environment:** ${ENV_CAPITALIZED}"
+              git commit -m "$(cat <<EOF
+          🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
+          
+          - Updated image tags to v${VERSION}
+          - Includes k8s infrastructure changes
+          - Git SHA: ${SHA}
+          
+          **Images:**
+          - Auth Service: v${VERSION}
+          - User Service: v${VERSION}
+          - Product Service: v${VERSION}
+          - Order Service: v${VERSION}
+          - Payment Service: v${VERSION}
+          - Gateway: v${VERSION}
+          - Frontend: v${VERSION}
+          
+          **Target Environment:** ${ENV_CAPITALIZED}
+          EOF
+          )"
             else
-              git commit -m "🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
-
-- Updated image tags to v${VERSION}
-- Git SHA: ${SHA}
-
-**Images:**
-- Auth Service: v${VERSION}
-- User Service: v${VERSION}
-- Product Service: v${VERSION}
-- Order Service: v${VERSION}
-- Payment Service: v${VERSION}
-- Gateway: v${VERSION}
-- Frontend: v${VERSION}
-
-**Target Environment:** ${ENV_CAPITALIZED}"
+              git commit -m "$(cat <<EOF
+          🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
+          
+          - Updated image tags to v${VERSION}
+          - Git SHA: ${SHA}
+          
+          **Images:**
+          - Auth Service: v${VERSION}
+          - User Service: v${VERSION}
+          - Product Service: v${VERSION}
+          - Order Service: v${VERSION}
+          - Payment Service: v${VERSION}
+          - Gateway: v${VERSION}
+          - Frontend: v${VERSION}
+          
+          **Target Environment:** ${ENV_CAPITALIZED}
+          EOF
+          )"
             fi
           fi
 
