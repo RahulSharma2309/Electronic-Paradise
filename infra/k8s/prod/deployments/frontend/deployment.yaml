@@ -1,4 +1,4 @@
-﻿# Frontend Deployment for Production
+# Frontend Deployment for Production
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,7 +27,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: frontend
-        image: ghcr.io/rahulsharma2309/electronic-paradise-frontend:latest
+        image: ghcr.io/rahulsharma2309/electronic-paradise-frontend:v1.2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80
