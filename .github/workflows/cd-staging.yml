@@ -25,7 +25,14 @@ jobs:
   # ============================================================================
   determine-environment:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    # Only run if:
+    # 1. PR was merged AND has 'deploy-to-staging' or 'deploy-to-prod' label (deployment PRs created by CI)
+    # 2. OR manually triggered via workflow_dispatch
+    if: |
+      (github.event.pull_request.merged == true && 
+       (contains(github.event.pull_request.labels.*.name, 'deploy-to-staging') || 
+        contains(github.event.pull_request.labels.*.name, 'deploy-to-prod'))) ||
+      github.event_name == 'workflow_dispatch'
     outputs:
       environment: ${{ steps.env.outputs.environment }}
       namespace: ${{ steps.env.outputs.namespace }}

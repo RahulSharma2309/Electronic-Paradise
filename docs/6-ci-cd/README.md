@@ -1,552 +1,271 @@
 # 🚀 CI/CD Documentation
 
-This folder contains all documentation related to Continuous Integration and Continuous Deployment (CI/CD) for Electronic Paradise.
+Complete documentation for the Continuous Integration and Continuous Deployment (CI/CD) pipeline for Electronic Paradise.
 
 ---
 
-## 📚 Documentation Index
+## 📚 Essential Documents
 
-### **🎯 CI/CD Fundamentals**
+### 1. **PIPELINE_EXECUTION_ORDER.md** 
+**Complete Pipeline Flow & Architecture**
 
-| Document | Purpose | Status |
-|----------|---------|--------|
-| [COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md) | 🌟 **Complete journey from code to production** | ✅ Complete |
-| [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) | Understanding CI/CD PBIs | ✅ Complete |
-| [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) | Complete CD pipeline theory & concepts | ✅ Complete |
+- How pipelines trigger (CI, CD, Release)
+- Sequential execution order
+- Deployment PR workflow
+- Environment detection (staging vs production)
+- Complete flow examples from code to deployment
 
-### **🏷️ CI Pipeline & Image Management**
-
-| Document | Purpose | Status |
-|----------|---------|--------|
-| [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) | Parallel CI with matrix strategy | ✅ Complete |
-| [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md) | Complete tagging specification | ✅ Complete |
-| [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md) | Quick command reference | ✅ Complete |
-| [TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md) | Testing guide | ✅ Complete |
-| [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md) | Automated releases & changelog | ✅ Complete |
-
-### **🔒 Security & Code Quality**
-
-| Document | Purpose | Status |
-|----------|---------|--------|
-| [DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md) | Dependabot, Trivy, automated security | ✅ Complete |
-| [SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md) | Code quality & security analysis | ✅ Complete |
-
-**💡 Start Here:**
-- **🌟 Complete Overview?** → [COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md) (code to production journey)
-- **New to CI/CD?** → [PBIS_COMPARISON.md](./PBIS_COMPARISON.md) (explains what each PBI does)
-- **Understanding CD?** → [CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md) (staging, smoke tests, deployment)
-- **Want faster CI builds?** → [MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md) (60-70% faster!)
-- **Setting up Docker builds?** → [IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)
-- **Setting up releases?** → [SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)
-- **Security scanning?** → [DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md) (Dependabot + Trivy)
-- **Code quality?** → [SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md) (SonarCloud setup)
-- **Quick reference?** → [TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)
-
-### **🔧 Scripts** (in `/scripts` folder)
-
-| Script | Purpose | Platform |
-|--------|---------|----------|
-| `get-next-version.ps1` | Calculate next version from branch | Windows |
-| `get-next-version.sh` | Calculate next version from branch | Linux/Mac/CI |
-| `tag-images.ps1` | Tag Docker images | Windows |
+**Use this to understand:** How the entire CI/CD system works together.
 
 ---
 
-## 🎯 Quick Start
+### 2. **SECURITY_SCANNING.md**
+**Trivy Vulnerability Scanning**
 
-### **Test Locally (Before CI):**
+- Current Trivy configuration
+- Severity levels (CRITICAL, HIGH, MEDIUM, LOW)
+- Why we use `exit-code: "0"` (report-only mode)
+- How to view scan results in GitHub Security tab
+- Common vulnerabilities and fixes
+- Local testing with Trivy
 
-```powershell
-# 1. Calculate version for your branch
-.\scripts\get-next-version.ps1 -BranchName "feat/add-2fa" -Verbose
-
-# Output shows:
-#   Branch: feat/add-2fa
-#   Latest version: 1.0.0
-#   Bump type: minor
-#   Next version: 1.1.0
-
-# 2. Tag images locally (no push)
-.\scripts\tag-images.ps1 -Alpha -Verbose
-
-# Output: Tags all 7 services with alpha-1.1.0-abc123d
-
-# 3. Verify tags
-docker images | Select-String "alpha"
-```
-
-### **How CI Will Use Scripts (Automated):**
-
-```yaml
-# When implemented in .github/workflows/ci.yml:
-- name: Calculate Version
-  run: ./scripts/get-next-version.sh "$BRANCH"  # ← Calls script
-  
-- name: Build Images
-  run: docker build -t app:alpha-$VERSION-$SHA .  # ← Uses output
-```
-
-### **Key Difference:**
-
-| Aspect | Local Testing | CI Automation |
-|--------|---------------|---------------|
-| **Who runs it** | You manually | GitHub Actions automatically |
-| **When** | Before pushing code | After pushing code |
-| **Script used** | `.ps1` (Windows) | `.sh` (Linux) |
-| **Purpose** | Validate logic | Build & publish |
-| **Push images** | No (test only) | Yes (when configured) |
+**Use this to understand:** How security scanning works and how to handle vulnerabilities.
 
 ---
 
-## 📖 Learning Path
+### 3. **FIXES_APPLIED.md**
+**Recent Pipeline Fixes & Changes**
 
-**New to CI/CD?** Read in this order:
+- CD pipeline trigger fix (no longer runs on every PR)
+- Release pipeline sequencing (runs after CI)
+- Trivy deprecated parameter fixes
+- Before/after pipeline comparison
+- Verification checklist
 
-1. **[COMPLETE_DEVOPS_FLOW.md](./COMPLETE_DEVOPS_FLOW.md)** 🌟 - Complete journey from code to production (START HERE!)
-2. **[PBIS_COMPARISON.md](./PBIS_COMPARISON.md)** - Understand what each PBI does (CI vs CD)
-3. **[CD_PIPELINE_GUIDE.md](./CD_PIPELINE_GUIDE.md)** - Deep dive into CD concepts (staging, smoke tests)
-4. **[MODULAR_CI_ARCHITECTURE.md](./MODULAR_CI_ARCHITECTURE.md)** - How the CI pipeline works (parallel builds)
-5. **[IMAGE_TAGGING_STRATEGY.md](./IMAGE_TAGGING_STRATEGY.md)** - Complete tagging strategy
-6. **[TAGGING_QUICK_REFERENCE.md](./TAGGING_QUICK_REFERENCE.md)** - Quick commands and workflows
-7. **[TESTING_IMAGE_TAGGING.md](./TESTING_IMAGE_TAGGING.md)** - Test locally before implementing
-8. **[SEMANTIC_RELEASE_GUIDE.md](./SEMANTIC_RELEASE_GUIDE.md)** - Automated releases and changelogs
-9. **[DEPENDENCY_SCANNING_GUIDE.md](./DEPENDENCY_SCANNING_GUIDE.md)** - Security scanning (Dependabot, Trivy)
-10. **[SONARCLOUD_SETUP_GUIDE.md](./SONARCLOUD_SETUP_GUIDE.md)** - Code quality and security analysis
+**Use this to understand:** What was recently fixed and why.
 
 ---
 
-## 🏗️ Architecture: How Scripts & CI Work Together
+## 🎯 Quick Reference
 
-### **The Design Philosophy**
+### Pipeline Triggers
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              Scripts (Single Source of Truth)           │
-│  - Version calculation logic                            │
-│  - Image tagging logic                                  │
-│  - Reusable, testable, platform-specific               │
-└─────────────────────────────────────────────────────────┘
-                            ↓
-                    Called by (not duplicated in)
-                            ↓
-┌─────────────────────────────────────────────────────────┐
-│              GitHub Actions CI Workflow                 │
-│  - Executes scripts                                     │
-│  - Provides inputs (branch name, etc.)                  │
-│  - Uses outputs (version, tags)                         │
-└─────────────────────────────────────────────────────────┘
-```
+| Event | Pipelines That Run | Purpose |
+|-------|-------------------|---------|
+| **Push to feature branch** | CI (builds alpha images, no push) | Validate build works |
+| **Create PR to main** | CI (builds alpha images, no push) | Ensure PR is buildable |
+| **Merge PR to main** | CI → Release (sequential) | Build, push, tag, create deployment PR |
+| **Merge deployment PR** | CD (deploy to K8s) | Deploy to staging or prod |
+| **Manual CI with PublishBuild=true** | CI (builds alpha, pushes) | Test deployment before merge |
 
----
-
-## 📊 CI vs CD: Understanding the Boundary
-
-### **The Debate: Is Pushing to Registry CI or CD?**
-
-This is commonly debated, but **industry standard says: Pushing to Registry is CI** ✅
-
-### **The Clear Boundary:**
+### Key Files & Locations
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    CI (Continuous Integration)          │
-│  "Is the code correct? Can it be packaged?"             │
-├─────────────────────────────────────────────────────────┤
-│  1. Checkout code                                       │
-│  2. Run linters/static analysis                         │
-│  3. Build code                                          │
-│  4. Run unit tests                                      │
-│  5. Run integration tests                               │
-│  6. Code quality checks (SonarCloud)                    │
-│  7. Build Docker images                                 │
-│  8. Push to Registry (GHCR)          ← WE ARE HERE      │
-└─────────────────────────────────────────────────────────┘
-                         ↓
-        IMAGE STORED BUT NOT RUNNING YET
-                         ↓
-┌─────────────────────────────────────────────────────────┐
-│              CD (Continuous Deployment/Delivery)        │
-│  "Get the code to users in production"                  │
-├─────────────────────────────────────────────────────────┤
-│  1. Pull image from registry                            │
-│  2. Deploy to staging environment                       │
-│  3. Run smoke tests on staging                          │
-│  4. (Manual approval for prod?)                         │
-│  5. Deploy to production                                │
-│  6. Health checks                                       │
-│  7. Rollback if issues                                  │
-│  8. Notify team (Slack, email)                          │
-└─────────────────────────────────────────────────────────┘
-                         ↓
-              USERS CAN ACCESS IT NOW!
-```
-
-### **Key Differences:**
-
-| Aspect | CI (What We Have) | CD (Future) |
-|--------|-------------------|-------------|
-| **Purpose** | Verify code quality | Deliver to users |
-| **Output** | Build artifact (image in registry) | Running service in production |
-| **Trigger** | Every commit/PR | Merge to main (or manual) |
-| **Risk** | Low (just building) | High (affecting real users) |
-| **Rollback** | Delete bad image | Rollback K8s deployment |
-| **User Impact** | None (they don't see it) | Direct (they access it) |
-
-### **Why Push to Registry is CI, Not CD:**
-
-1. **Image in registry ≠ Deployed**
-   - Just because it's in GHCR doesn't mean users can access it
-   - It's a **build artifact**, like a .jar or .exe file
-
-2. **CD = Deployment Actions**
-   - Updating Kubernetes deployments
-   - Rolling out to servers
-   - Making code accessible to end users
-
-3. **Industry Analogy:**
-   ```
-   Java:     Build → Test → Push to Maven  ← CI stops here
-   .NET:     Build → Test → Push to NuGet  ← CI stops here
-   Docker:   Build → Test → Push to GHCR   ← CI stops here
-   
-   Then CD:  Pull from registry → Deploy to K8s → Users access it
-   ```
-
-### **Current Implementation Status:**
-
-**✅ CI Pipeline (Complete):**
-```yaml
-.github/workflows/ci.yml:
-  ├─ Job 1: dotnet-analysis (build, test, SonarCloud)
-  ├─ Job 2: frontend-build (React build)
-  └─ Job 3: docker-build (build images, push to GHCR)
-```
-
-**Result:** 7 Docker images in GitHub Container Registry
-**User Impact:** None (images stored, not deployed)
-
-**❌ CD Pipeline (Not Built Yet):**
-```yaml
-.github/workflows/cd.yml (future):
-  ├─ Job 1: deploy-staging (pull images, deploy to K8s staging)
-  ├─ Job 2: smoke-tests (validate staging deployment)
-  └─ Job 3: deploy-production (deploy to K8s production)
-```
-
-**Result:** Running services accessible to users
-**User Impact:** Direct (they can use the application)
-
-### **Real-World Example:**
-
-**Scenario 1: Push to Feature Branch**
-```bash
-# You push code to feat/add-2fa
-git push origin feat/add-2fa
-
-# CI Pipeline runs:
-✅ Code builds
-✅ Tests pass
-✅ Image created: alpha-0.1.0-abc123d
-✅ Image pushed to GHCR
-
-# Question: Can users access your new feature?
-# Answer: ❌ NO! It's just sitting in the registry.
-#         Users are still using the old production version.
-```
-
-**Scenario 2: Merge to Main (CI only)**
-```bash
-# You merge to main
-git checkout main
-git merge feat/add-2fa
-
-# CI Pipeline runs:
-✅ Code builds
-✅ Tests pass
-✅ Image created: v1.1.0
-✅ Image pushed to GHCR
-
-# Question: Can users access your new feature?
-# Answer: ❌ STILL NO! Image is in GHCR but not deployed.
-#         Production is still running v1.0.0
-```
-
-**Scenario 3: Full CI/CD (Future State)**
-```bash
-# You merge to main
-git checkout main
-git merge feat/add-2fa
-
-# CI Pipeline runs:
-✅ Image v1.1.0 pushed to GHCR
-
-# CD Pipeline triggers:
-✅ Pulls v1.1.0 from GHCR
-✅ Deploys to K8s staging
-✅ Smoke tests pass
-✅ Deploys to K8s production
-
-# Question: Can users access your new feature?
-# Answer: ✅ YES! Now they can use it!
-```
-
----
-
-### **Why Separate Scripts Instead of Inline CI Logic?**
-
-**❌ BAD: Logic Embedded in CI**
-```yaml
-# All logic directly in workflow
-- name: Calculate version
-  run: |
-    LATEST_TAG=$(git describe --tags...)
-    if [[ "$BRANCH" == breaking/* ]]; then
-      MAJOR=$((MAJOR + 1))
-      # ... 50 more lines of bash ...
-    fi
-```
-
-**Problems:**
-- Can't test locally before pushing
-- Hard to read/maintain
-- Not reusable
-- Platform-specific (bash only)
-
-**✅ GOOD: Separate Scripts Called by CI**
-```yaml
-# CI calls centralized script
-- name: Calculate version
-  run: |
-    VERSION=$(./scripts/get-next-version.sh "$BRANCH")
-    echo "version=$VERSION" >> $GITHUB_OUTPUT
-```
-
-**Benefits:**
-- ✅ Test locally instantly: `.\scripts\get-next-version.ps1 -Verbose`
-- ✅ Single source of truth (change once, works everywhere)
-- ✅ Clean, readable CI workflow
-- ✅ Cross-platform (PS1 for Windows, SH for Linux/CI)
-- ✅ Reusable in multiple workflows
-
-### **How CI Uses the Scripts**
-
-**Example Flow:**
-```yaml
-# In .github/workflows/ci.yml (when implemented)
-jobs:
-  docker-build:
-    runs-on: ubuntu-latest
-    steps:
-      # Step 1: CI executes the script
-      - name: Calculate next version
-        id: version
-        run: |
-          chmod +x ./scripts/get-next-version.sh
-          BRANCH_NAME="${GITHUB_HEAD_REF}"
-          VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-      
-      # Step 2: CI uses the script's output
-      - name: Build Docker image
-        run: |
-          docker build -t myapp:alpha-${{ steps.version.outputs.version }}-$SHA .
-      
-      # Step 3: CI pushes to registry
-      - name: Push image
-        run: docker push myapp:alpha-${{ steps.version.outputs.version }}-$SHA
-```
-
-**The workflow CALLS the scripts, it doesn't replace them!**
-
-### **Individual Service Images (Microservices)**
-
-Each service gets its own Docker image:
-
-```
-7 Independent Images Created:
-├── ghcr.io/user/electronic-paradise-auth:v1.0.0
-├── ghcr.io/user/electronic-paradise-user:v1.0.0
-├── ghcr.io/user/electronic-paradise-product:v1.0.0
-├── ghcr.io/user/electronic-paradise-order:v1.0.0
-├── ghcr.io/user/electronic-paradise-payment:v1.0.0
-├── ghcr.io/user/electronic-paradise-gateway:v1.0.0
-└── ghcr.io/user/electronic-paradise-frontend:v1.0.0
-```
-
-**Why Individual Images?**
-
-✅ **Independent Deployment:**
-```bash
-# Update only auth service
-kubectl set image deployment/auth-service \
-  auth=ghcr.io/user/electronic-paradise-auth:v1.0.1
-
-# Other services keep running on v1.0.0 (zero downtime!)
-```
-
-✅ **Independent Scaling:**
-```yaml
-# Auth service: 5 replicas (high traffic)
-# Product service: 3 replicas (moderate traffic)
-# Payment service: 2 replicas (low traffic)
-```
-
-✅ **Resource Optimization:**
-```yaml
-# Each service gets appropriate resources
-auth-service:      cpu: 500m, memory: 512Mi
-product-service:   cpu: 250m, memory: 1Gi (needs more memory for caching)
-```
-
-✅ **Team Autonomy:**
-```bash
-# Team A updates product service
-# Team B updates payment service
-# Both deploy independently without conflicts
-```
-
----
-
-## 🎓 Key Concepts
-
-### **CI/CD Definitions:**
-
-**CI (Continuous Integration):**
-- Purpose: Verify code integrates correctly
-- Actions: Build, test, package (create Docker images)
-- Output: Build artifacts (images in registry)
-- When: Every commit, every PR
-- Risk: Low (no user impact)
-
-**CD (Continuous Deployment/Delivery):**
-- Purpose: Deliver code to users
-- Actions: Deploy, release, monitor
-- Output: Running services in production
-- When: Merge to main (automated or manual approval)
-- Risk: High (direct user impact)
-
-**Registry (The Middle Ground):**
-- Not CI output: It's just storage
-- Not CD yet: Code not running/accessible
-- Think of it as: A warehouse between factory (CI) and store (CD)
-
-### **Tag Format:**
-```
-Alpha:       alpha-1.1.0-abc123d
-Production:  v1.0.0, v1.0.0-abc123d, latest
-```
-
-### **Version Bumping:**
-```
-fix/* or chore/*  → Patch  (1.0.0 → 1.0.1)
-feat/*            → Minor  (1.0.0 → 1.1.0)
-breaking/*        → Major  (1.0.0 → 2.0.0)
-```
-
-### **Publishing Strategy:**
-```
-Alpha (PR):        NOT published by default
-Production (main): ALWAYS published (all 3 tags)
-```
-
-### **Where We Are:**
-```
-✅ CI Complete:    Images in GHCR
-❌ CD Not Built:   Not deployed to K8s yet
-```
-
----
-
-## 🔗 Related Documentation
-
-### **Epic 2 Documentation (CI/CD):**
-- [Complete DevOps Flow](./COMPLETE_DEVOPS_FLOW.md) 🌟 - Complete journey from code to production
-- [CD Pipeline Guide](./CD_PIPELINE_GUIDE.md) - Complete CD theory (staging, smoke tests, deployment)
-- [PBIs Comparison](./PBIS_COMPARISON.md) - Understanding all CI/CD PBIs
-- [Modular CI Architecture](./MODULAR_CI_ARCHITECTURE.md) - Parallel CI pipeline design
-- [Image Tagging Strategy](./IMAGE_TAGGING_STRATEGY.md) - Complete specification with examples
-- [Testing Image Tagging](./TESTING_IMAGE_TAGGING.md) - How to test scripts locally
-- [Tagging Quick Reference](./TAGGING_QUICK_REFERENCE.md) - Command cheat sheet
-- [Semantic Release Guide](./SEMANTIC_RELEASE_GUIDE.md) - Automated versioning and releases
-- [Dependency Scanning Guide](./DEPENDENCY_SCANNING_GUIDE.md) - Dependabot, Trivy, automated security
-- [SonarCloud Setup Guide](./SONARCLOUD_SETUP_GUIDE.md) - Code quality and security analysis
-
-### **Epic 3 Documentation (Kubernetes):**
-- [Kubernetes README](../11-kubernetes/README.md) - Overview and quick start
-- [CI/CD Integration](../11-kubernetes/CI_CD_INTEGRATION.md) - How CI/CD deploys to K8s
-- [Learning Path](../11-kubernetes/LEARNING_PATH.md) - Complete K8s learning guide
-- [Layman Analogy](../11-kubernetes/LAYMAN_ANALOGY.md) - Real-world analogies
-
-### **Project Documentation:**
-- [Scripts README](../../scripts/README.md) - All automation scripts explained
-- [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - See Epic 2 & Epic 3 status
-- [Tech Stack](../1-getting-started/TECH_STACK.md) - CI/CD and Kubernetes technologies
-- [Dockerfile Guide](../10-tools-and-automation/DOCKERFILE_EXPLAINED.md) - Docker best practices
-
----
-
-## 🎓 Understanding the Complete Picture
-
-### **Documentation Structure:**
-
-```
-docs/6-ci-cd/
-├── README.md (this file)                 ← Start here: Overview & index
-├── COMPLETE_DEVOPS_FLOW.md          🌟  ← The BIG picture: Code to production
-├── PBIS_COMPARISON.md                    ← Understanding: CI/CD PBIs explained
-├── CD_PIPELINE_GUIDE.md                  ← Theory: Complete CD concepts
-├── MODULAR_CI_ARCHITECTURE.md            ← Architecture: Parallel CI design
-├── IMAGE_TAGGING_STRATEGY.md             ← Deep dive: Tag formats, versioning rules
-├── TAGGING_QUICK_REFERENCE.md            ← Quick lookup: Commands & examples
-├── TESTING_IMAGE_TAGGING.md              ← Hands-on: Test scripts locally
-├── SEMANTIC_RELEASE_GUIDE.md             ← Automation: Releases & changelog
-├── DEPENDENCY_SCANNING_GUIDE.md          ← Security: Dependabot, Trivy scanning
-└── SONARCLOUD_SETUP_GUIDE.md             ← Quality: Code quality & security
+.github/workflows/
+├── ci.yml              # Main CI pipeline (build, push, scan)
+├── cd-staging.yml      # CD pipeline (deploy to K8s)
+├── release.yml         # Semantic release (tags, changelog)
+└── test-runner.yml     # Runner environment test
 
 scripts/
-├── README.md                              ← Scripts explained: Why they exist
-├── get-next-version.ps1/.sh              ← Logic: Version calculation
-└── tag-images.ps1                        ← Logic: Image tagging
+├── get-next-version.sh # Version calculation from commits
+└── get-next-version.ps1
 
-.github/workflows/
-├── ci.yml                                ← Executor: CI pipeline (parallel builds)
-├── cd-staging.yml                        ← Executor: CD pipeline (deployment)
-└── release.yml                           ← Automation: Semantic release
-
-docs/11-kubernetes/
-└── (See Kubernetes docs for Epic 3)     ← How CI/CD deploys to K8s
+infra/
+├── docker-compose.yml  # Local Docker setup
+└── k8s/
+    ├── staging/        # Staging K8s manifests
+    └── prod/           # Production K8s manifests
 ```
 
-### **Learning Path:**
+### Image Naming Convention
 
-1. **The Big Picture** → Read `COMPLETE_DEVOPS_FLOW.md` 🌟 (complete journey)
-2. **Understand CI/CD** → Read `PBIS_COMPARISON.md` (what's CI vs CD)
-3. **Understand CD** → Read `CD_PIPELINE_GUIDE.md` (staging, smoke tests, deployment)
-4. **Understand CI** → Read `MODULAR_CI_ARCHITECTURE.md` (parallel builds)
-5. **Understand Tagging** → Read `IMAGE_TAGGING_STRATEGY.md` (complete specification)
-6. **Test LOCALLY** → Follow `TESTING_IMAGE_TAGGING.md` (hands-on)
-7. **Quick Reference** → Bookmark `TAGGING_QUICK_REFERENCE.md` (commands)
-8. **Scripts Details** → See `../../scripts/README.md` (implementation)
-9. **Security** → Read `DEPENDENCY_SCANNING_GUIDE.md` (Dependabot, Trivy)
-10. **Quality** → Read `SONARCLOUD_SETUP_GUIDE.md` (SonarCloud setup)
+**Production images (merge to main):**
+```
+ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3
+ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3-abc1234
+ghcr.io/rahulsharma2309/electronic-paradise-auth:latest
+```
 
----
+**Alpha images (feature branches with PublishBuild=true):**
+```
+ghcr.io/rahulsharma2309/electronic-paradise-auth:alpha-1.2.3-abc1234
+```
 
-## 💡 Tips
+### Version Calculation
 
-✅ **DO:**
-- Test scripts locally before CI
-- Use specific versions in K8s (`v1.0.0`)
-- Keep 5-10 versions for rollback
-- Tag before merging to main
-
-❌ **DON'T:**
-- Use `latest` in production
-- Overwrite semantic version tags
-- Publish all alpha images (cost!)
-- Skip version numbers
+Based on commit messages:
+- `feat:` → Minor version bump (1.2.0 → 1.3.0)
+- `fix:` → Patch version bump (1.2.0 → 1.2.1)
+- `BREAKING CHANGE:` → Major version bump (1.2.0 → 2.0.0)
 
 ---
 
-**Last Updated:** January 10, 2026  
-**Maintained by:** Engineering Team
+## 🔄 Complete Flow
+
+### Code Change to Production
+
+```
+1. Developer creates feature branch
+   └─ feat/add-user-profile
+
+2. Push to branch
+   └─ CI runs (builds alpha, doesn't push)
+
+3. Create PR to main
+   └─ CI runs again (validates build)
+
+4. Merge PR to main
+   ├─ CI Pipeline runs
+   │  ├─ Builds production images (v1.2.3)
+   │  ├─ Pushes to GHCR
+   │  ├─ Scans with Trivy
+   │  └─ Creates deployment PR with label
+   │
+   └─ Release Pipeline runs (after CI succeeds)
+      ├─ Creates Git tag (v1.2.3)
+      ├─ Updates CHANGELOG.md
+      └─ Creates GitHub Release
+
+5. Review deployment PR
+   ├─ Check image versions
+   ├─ Verify label (deploy-to-staging or deploy-to-prod)
+   └─ Approve & merge
+
+6. Merge deployment PR
+   └─ CD Pipeline runs
+      ├─ Verifies images exist in GHCR
+      ├─ Applies K8s manifests
+      ├─ Waits for pods to be ready
+      └─ Runs smoke tests
+
+7. Deployment complete! ✅
+```
+
+---
+
+## 🛡️ Security
+
+### Trivy Scanning
+- **Mode:** Report-only (`exit-code: "0"`)
+- **Severity:** CRITICAL, HIGH
+- **Location:** GitHub Security tab → Code scanning
+- **Action Required:** Regular review of findings
+
+### Branch Protection (Recommended)
+1. Go to Settings → Branches → Add rule
+2. Branch name pattern: `main`
+3. Enable:
+   - ✅ Require pull request before merging (1 approval)
+   - ✅ Require status checks to pass (CI pipeline)
+   - ✅ Do not allow bypassing the above settings
+
+---
+
+## 🐛 Troubleshooting
+
+### Issue: CI not running on PR
+**Solution:** Check that PR is targeting `main` branch.
+
+### Issue: CD running on code PR merge
+**Solution:** Check deployment PR has `deploy-to-staging` or `deploy-to-prod` label.
+
+### Issue: Release not creating tags
+**Solution:** Ensure commit messages follow conventional commits format (`feat:`, `fix:`, etc.)
+
+### Issue: Trivy scan failing
+**Solution:** Check `SECURITY_SCANNING.md` for configuration details.
+
+### Issue: Images not found during CD
+**Solution:** Verify images were pushed to GHCR (check CI logs, `docker-build` job).
+
+---
+
+## 📝 Common Tasks
+
+### Deploy alpha version to staging
+```bash
+# Trigger CI manually with PublishBuild=true
+# Go to Actions → CI Pipeline → Run workflow
+# Set PublishBuild = true
+# This will:
+# 1. Build and push alpha images
+# 2. Create deployment PR for staging
+# 3. Merge PR to deploy to staging
+```
+
+### Deploy to production
+```bash
+# 1. Merge code PR to main (creates deployment PR for staging)
+# 2. Test in staging
+# 3. Create new branch to update prod K8s manifests:
+git checkout -b chore/promote-to-prod
+# Update image tags in infra/k8s/prod/deployments/*/deployment.yaml
+git commit -m "chore: promote v1.2.3 to production"
+git push
+# 4. Create PR to main
+# 5. Merge PR - CI creates deployment PR with 'deploy-to-prod' label
+# 6. Merge deployment PR to deploy to production
+```
+
+### View Trivy vulnerability findings
+```bash
+# Go to: GitHub → Security tab → Code scanning
+# Filter by: Trivy
+# Review CRITICAL and HIGH severity items
+```
+
+### Update base Docker images
+```dockerfile
+# In services/*/src/Dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
+# Update to:
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.20
+```
+
+---
+
+## 🎓 Learning Resources
+
+### External Documentation
+- [GitHub Actions](https://docs.github.com/en/actions)
+- [Docker Build Push Action](https://github.com/docker/build-push-action)
+- [Trivy](https://trivy.dev/)
+- [Semantic Release](https://semantic-release.gitbook.io/)
+- [Kubernetes](https://kubernetes.io/docs/home/)
+
+### Internal Scripts
+- `/scripts/get-next-version.sh` - Version calculation logic
+- `/scripts/get-next-version.ps1` - Windows version
+- `.github/workflows/ci.yml` - Main CI pipeline
+- `.github/workflows/cd-staging.yml` - CD deployment
+- `.github/workflows/release.yml` - Release automation
+
+---
+
+## 📊 Diagrams
+
+### Pipeline Flow Diagram
+```
+docs/6-ci-cd/diagrams/ci-pipeline-comparison.mmd
+```
+
+View in VS Code with Mermaid extension or online at [Mermaid Live](https://mermaid.live/).
+
+---
+
+## ✅ Summary
+
+**Essential Files:**
+1. `PIPELINE_EXECUTION_ORDER.md` - Complete flow & architecture
+2. `SECURITY_SCANNING.md` - Trivy configuration & usage
+3. `FIXES_APPLIED.md` - Recent changes & fixes
+4. `README.md` - This file (quick reference)
+
+**Total:** 4 core documents + 1 diagram
+
+**Everything else has been consolidated or removed to keep documentation minimal and maintainable.**
+
+---
+
+**Need Help?** Check the relevant document above or review the workflow files in `.github/workflows/`.
