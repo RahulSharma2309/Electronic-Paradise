@@ -535,3 +535,173 @@ jobs:
           echo "- Payment Service" >> $GITHUB_STEP_SUMMARY
           echo "- Gateway" >> $GITHUB_STEP_SUMMARY
           echo "- Frontend" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PHASE 10: Create Deployment PR (Hybrid Approach)
+  # ============================================================================
+  create-deployment-pr:
+    needs: [calculate-version, docker-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.docker-build.result == 'success'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create deployment branch
+        run: |
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          BRANCH_NAME="deploy/staging-v${VERSION}-${SHA}"
+          git checkout -b "${BRANCH_NAME}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+      - name: Update image tags in staging deployments
+        run: |
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+          
+          # Service name to image name mapping
+          declare -A SERVICE_MAP=(
+            ["auth-service"]="electronic-paradise-auth"
+            ["user-service"]="electronic-paradise-user"
+            ["product-service"]="electronic-paradise-product"
+            ["order-service"]="electronic-paradise-order"
+            ["payment-service"]="electronic-paradise-payment"
+            ["gateway"]="electronic-paradise-gateway"
+            ["frontend"]="electronic-paradise-frontend"
+          )
+          
+          # Update each deployment file
+          for service_dir in infra/k8s/staging/deployments/*/; do
+            service_name=$(basename "$service_dir")
+            if [ -f "${service_dir}deployment.yaml" ]; then
+              image_name="${SERVICE_MAP[$service_name]}"
+              if [ -n "$image_name" ]; then
+                NEW_IMAGE="ghcr.io/${OWNER}/${image_name}:v${VERSION}"
+                echo "Updating ${service_name} to ${NEW_IMAGE}"
+                # Use sed to update image tag (works on both Linux and macOS)
+                if [[ "$OSTYPE" == "darwin"* ]]; then
+                  sed -i '' "s|image: ghcr.io/.*/${image_name}:.*|image: ${NEW_IMAGE}|g" "${service_dir}deployment.yaml"
+                else
+                  sed -i "s|image: ghcr.io/.*/${image_name}:.*|image: ${NEW_IMAGE}|g" "${service_dir}deployment.yaml"
+                fi
+              fi
+            fi
+          done
+
+      - name: Check for k8s changes in main
+        id: k8s-changes
+        run: |
+          # Check if there are any k8s changes in the merge
+          if git diff main --name-only | grep -q "^infra/k8s/"; then
+            echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+            echo "📋 K8s changes detected - will be included in deployment PR"
+            git diff main --name-only | grep "^infra/k8s/" || true
+          else
+            echo "has_k8s_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ No k8s changes - only image updates"
+          fi
+
+      - name: Commit changes
+        run: |
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          
+          git add infra/k8s/staging/deployments/
+          
+          # Include k8s changes if they exist
+          if [ "${{ steps.k8s-changes.outputs.has_k8s_changes }}" == "true" ]; then
+            git add infra/k8s/staging/ || true
+            git commit -m "🚀 Deploy v${VERSION} to staging
+
+- Updated image tags to v${VERSION}
+- Includes k8s infrastructure changes
+- Git SHA: ${SHA}
+
+**Images:**
+- Auth Service: v${VERSION}
+- User Service: v${VERSION}
+- Product Service: v${VERSION}
+- Order Service: v${VERSION}
+- Payment Service: v${VERSION}
+- Gateway: v${VERSION}
+- Frontend: v${VERSION}
+
+**To deploy to production:** Add label \`deploy-to-prod\` to this PR"
+          else
+            git commit -m "🚀 Deploy v${VERSION} to staging
+
+- Updated image tags to v${VERSION}
+- Git SHA: ${SHA}
+
+**Images:**
+- Auth Service: v${VERSION}
+- User Service: v${VERSION}
+- Product Service: v${VERSION}
+- Order Service: v${VERSION}
+- Payment Service: v${VERSION}
+- Gateway: v${VERSION}
+- Frontend: v${VERSION}
+
+**To deploy to production:** Add label \`deploy-to-prod\` to this PR"
+          fi
+
+      - name: Push branch
+        run: |
+          git push origin "${BRANCH_NAME}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.BRANCH_NAME }}
+          base: main
+          title: "🚀 Deploy v${{ needs.calculate-version.outputs.version }} to Staging"
+          body: |
+            ## 🚀 Deployment PR - v${{ needs.calculate-version.outputs.version }}
+            
+            **Git SHA:** ${{ needs.calculate-version.outputs.git-sha }}
+            
+            ### 📦 What's being deployed:
+            - ✅ All service images updated to **v${{ needs.calculate-version.outputs.version }}**
+            ${{ steps.k8s-changes.outputs.has_k8s_changes == 'true' && '- ✅ Kubernetes infrastructure changes included' || '' }}
+            
+            ### 🎯 Deployment Target:
+            - **Default:** Staging environment
+            - **To deploy to Production:** Add the label `deploy-to-prod` to this PR
+            
+            ### 📋 Services:
+            - Auth Service
+            - User Service
+            - Product Service
+            - Order Service
+            - Payment Service
+            - Gateway
+            - Frontend
+            
+            ### ✅ Next Steps:
+            1. Review the changes
+            2. Merge this PR to deploy to **staging**
+            3. Or add `deploy-to-prod` label to deploy to **production**
+            
+            ---
+            *This PR was automatically created by the CI pipeline*
+          labels: |
+            deployment
+            staging
+            automated
+          draft: false
