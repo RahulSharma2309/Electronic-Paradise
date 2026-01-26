@@ -2,10 +2,12 @@ name: CI Pipeline (Modular)
 
 on:
   push:
-    branches: ['**']  # Run on all branches
+    branches:
+      - '**'  # Run on all branches
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: ['**']  # Run on PRs to any branch
+    branches:
+      - '**'  # Run on PRs to any branch
   workflow_dispatch:  # Allow manual trigger
     inputs:
       PublishBuild:
@@ -573,10 +575,7 @@ jobs:
     # 1. Images were pushed: (main push) OR (PublishBuild=true)
     # 2. docker-build job succeeded
     # 3. All images verified in GHCR (checked in verification step)
-    if: |
-      ((github.event_name == 'push' && github.ref == 'refs/heads/main') || 
-       (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')) &&
-      needs.docker-build.result == 'success'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.docker-build.result == 'success') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true' && needs.docker-build.result == 'success')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
