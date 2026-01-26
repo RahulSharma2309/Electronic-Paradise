@@ -640,7 +640,7 @@ jobs:
           
           # Commit the changes
           echo "📝 Committing updated deployment files..."
-          git commit -m "$(cat <<EOF
+          git commit -m "$(cat <<'EOF'
 ci: update staging deployments to v${VERSION}
 
 Automated image tag update by CI pipeline
