@@ -27,7 +27,7 @@ spec:
       serviceAccountName: order-service-sa
       containers:
       - name: order-service
-        image: ghcr.io/rahulsharma2309/electronic-paradise-order:v1.2.0
+        image: ghcr.io/rahulsharma2309/electronic-paradise-order:v1.2.1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
