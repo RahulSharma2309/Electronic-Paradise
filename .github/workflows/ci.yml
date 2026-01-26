@@ -640,25 +640,9 @@ jobs:
           
           # Commit the changes
           echo "📝 Committing updated deployment files..."
-          git commit -m "$(cat <<'EOF'
-ci: update staging deployments to v${VERSION}
-
-Automated image tag update by CI pipeline
-
-Updated services to v${VERSION}:
-- Auth Service
-- User Service
-- Product Service
-- Order Service
-- Payment Service
-- Gateway
-- Frontend
-
-Git SHA: ${SHA}
-
-[skip ci]
-EOF
-)"
+          git commit -m "ci: update staging deployments to v${VERSION} [skip ci]" \
+                     -m "Automated image tag update by CI pipeline" \
+                     -m "Git SHA: ${SHA}"
           
           # Push directly to main
           echo "🚀 Pushing to main..."
