@@ -346,7 +346,7 @@ jobs:
       contents: read
       security-events: write
     # Only scan if images were actually pushed to registry
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event.inputs.PublishBuild == 'true')
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')
     strategy:
       fail-fast: false
       matrix:
@@ -526,7 +526,7 @@ jobs:
           # - On main push: ALWAYS push (production images)
           # - On PR/other branches: DON'T push UNLESS PublishBuild=true (manual trigger)
           # - Build always happens (for validation), push is conditional
-          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event.inputs.PublishBuild == 'true') }}
+          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true') }}
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -575,7 +575,7 @@ jobs:
     # 3. All images verified in GHCR (checked in verification step)
     if: |
       ((github.event_name == 'push' && github.ref == 'refs/heads/main') || 
-       (github.event.inputs.PublishBuild == 'true')) &&
+       (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')) &&
       needs.docker-build.result == 'success'
     steps:
       - name: Checkout code
