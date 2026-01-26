@@ -24,7 +24,7 @@ public class OrderServiceFixture : IAsyncLifetime
         {
             builder.ConfigureAppConfiguration((context, conf) =>
             {
-                conf.AddInMemoryCollection(new Dictionary<string, string>
+                conf.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "ConnectionStrings:DefaultConnection", "Server=(localdb)\\MSSQLLocalDB;Database=OrderServiceTestDb;Trusted_Connection=True;MultipleActiveResultSets=true" },
                     { "ServiceUrls:UserService", "http://dependency-mock:3001" },

@@ -261,6 +261,11 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Configure kubectl context
+        run: |
+          echo "Configuring kubectl for Docker Desktop..."
+          # kubectl config use-context docker-desktop
+
       - name: Wait for services to be ready
         run: |
           echo "Waiting for services to be ready..."

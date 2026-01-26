@@ -2,10 +2,23 @@ name: CI Pipeline (Modular)
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main  # Only run on push to main (merge events)
+      # For feature branches, use pull_request trigger instead
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [main]
+    branches:
+      - '**'  # Run on PRs to any branch
+  workflow_dispatch:  # Allow manual trigger
+    inputs:
+      PublishBuild:
+        description: 'Push images to registry (default: false for PRs, true for main)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   DOTNET_VERSION: "8.0.x"
@@ -138,7 +151,10 @@ jobs:
         if: always()
         with:
           name: coverage-${{ matrix.service.name }}
-          path: "**/${{ matrix.service.name }}/**/coverage.opencover.xml"
+          path: |
+            ${{ matrix.service.path }}/**/coverage.opencover.xml
+            **/coverage.opencover.xml
+          if-no-files-found: warn
           retention-days: 5
 
   # ============================================================================
@@ -332,7 +348,8 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    if: github.event_name != 'pull_request'
+    # Only scan if images were actually pushed to registry
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')
     strategy:
       fail-fast: false
       matrix:
@@ -394,16 +411,18 @@ jobs:
           fetch-depth: 0
 
       - name: SonarCloud Scan
-        # checkov:skip=CKV_GHA_3: SonarCloud action frequently updates, SHA pinning causes breakage
-        uses: SonarSource/sonarcloud-github-action@master # nosec
+        # Using specific version to avoid deprecation warnings
+        uses: SonarSource/sonarcloud-github-action@v2.1.0
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          projectBaseDir: .
           args: >
             -Dsonar.projectKey=RahulSharma2309_Electronic-Paradise
             -Dsonar.organization=rahulsharma2309
+            -Dsonar.cs.opencover.reportsPaths=**/coverage.opencover.xml
 
   # ============================================================================
   # PHASE 8: Docker Build & Push (PARALLEL via Matrix)
@@ -506,7 +525,11 @@ jobs:
         with:
           context: .
           file: ${{ matrix.service.dockerfile }}
-          push: ${{ github.event_name != 'pull_request' }}
+          # Push logic:
+          # - On main push: ALWAYS push (production images)
+          # - On PR/other branches: DON'T push UNLESS PublishBuild=true (manual trigger)
+          # - Build always happens (for validation), push is conditional
+          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true') }}
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -545,10 +568,15 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    if: |
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      needs.docker-build.result == 'success'
+      packages: read
+    # Create deployment PR when images are ACTUALLY PUSHED to registry:
+    # Case 1: Merge to main (automatic push) - creates production deployment PR
+    # Case 2: Manual trigger with PublishBuild=true (alpha push) - creates staging deployment PR
+    # All conditions:
+    # 1. Images were pushed: (main push) OR (PublishBuild=true)
+    # 2. docker-build job succeeded
+    # 3. All images verified in GHCR (checked in verification step)
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.docker-build.result == 'success') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true' && needs.docker-build.result == 'success')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -556,23 +584,136 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Verify all Docker builds succeeded
+        id: verify-builds
+        run: |
+          # Expected services: 7 total
+          EXPECTED_SERVICES=7
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+          
+          # List of expected images
+          declare -a EXPECTED_IMAGES=(
+            "ghcr.io/${OWNER}/electronic-paradise-auth:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-user:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-product:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-order:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-payment:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-gateway:v${VERSION}"
+            "ghcr.io/${OWNER}/electronic-paradise-frontend:v${VERSION}"
+          )
+          
+          echo "🔍 Verifying all images were built and pushed..."
+          
+          # Login to GHCR to verify images exist
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
+          MISSING_IMAGES=0
+          for image in "${EXPECTED_IMAGES[@]}"; do
+            if docker manifest inspect "${image}" > /dev/null 2>&1; then
+              echo "✅ Found: ${image}"
+            else
+              echo "❌ Missing: ${image}"
+              MISSING_IMAGES=$((MISSING_IMAGES + 1))
+            fi
+          done
+          
+          if [ $MISSING_IMAGES -gt 0 ]; then
+            echo "❌ ERROR: $MISSING_IMAGES out of $EXPECTED_SERVICES images are missing from GHCR"
+            echo "Cannot create deployment PR - not all images were pushed successfully"
+            echo "all_images_pushed=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ All $EXPECTED_SERVICES images verified in GHCR"
+            echo "all_images_pushed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Determine deployment environment from k8s changes
+        id: determine-env
+        run: |
+          # Deployment Environment Detection Logic:
+          # - Code-only changes (no k8s changes) → STAGING (automatic deployment PR)
+          # - Changes in infra/k8s/staging/ → STAGING (automatic deployment PR)
+          # - Changes in infra/k8s/prod/ → PROD (manual deployment PR - when you update prod k8s files)
+          #
+          # Workflow:
+          # 1. Code changes → merge to main → CI creates STAGING PR automatically
+          # 2. Test in staging
+          # 3. When ready for prod: Create branch → update image tags in infra/k8s/prod/ → 
+          #    commit → PR to main → merge → CI detects prod changes → creates PROD PR
+          #
+          # Check if there are any k8s changes in the current commit vs previous commit
+          if git rev-parse --verify HEAD~1 > /dev/null 2>&1; then
+            # Priority 1: Check for prod changes (highest priority - explicit prod intent)
+            if git diff HEAD~1 HEAD --name-only | grep -q "^infra/k8s/prod/"; then
+              echo "target_env=prod" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+              echo "📋 K8s prod changes detected - will deploy to PROD"
+              git diff HEAD~1 HEAD --name-only | grep "^infra/k8s/prod/" || true
+            # Priority 2: Check for staging changes
+            elif git diff HEAD~1 HEAD --name-only | grep -q "^infra/k8s/staging/"; then
+              echo "target_env=staging" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+              echo "📋 K8s staging changes detected - will deploy to staging"
+              git diff HEAD~1 HEAD --name-only | grep "^infra/k8s/staging/" || true
+            # Priority 3: Check for any other k8s changes (default to staging)
+            elif git diff HEAD~1 HEAD --name-only | grep -q "^infra/k8s/"; then
+              echo "target_env=staging" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+              echo "📋 K8s changes detected (defaulting to staging)"
+              git diff HEAD~1 HEAD --name-only | grep "^infra/k8s/" || true
+            # Priority 4: No k8s changes - default to STAGING (automatic deployment)
+            else
+              echo "target_env=staging" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=false" >> $GITHUB_OUTPUT
+              echo "✅ No k8s changes - defaulting to STAGING (automatic deployment PR)"
+            fi
+          else
+            # First commit scenario - check which environment folders exist
+            # Default to staging unless prod files are explicitly present
+            if git ls-tree -r HEAD --name-only | grep -q "^infra/k8s/prod/"; then
+              echo "target_env=prod" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+              echo "📋 K8s prod files present in repository - will deploy to PROD"
+            elif git ls-tree -r HEAD --name-only | grep -q "^infra/k8s/staging/"; then
+              echo "target_env=staging" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
+              echo "📋 K8s staging files present in repository - will deploy to staging"
+            else
+              echo "target_env=staging" >> $GITHUB_OUTPUT
+              echo "has_k8s_changes=false" >> $GITHUB_OUTPUT
+              echo "✅ No k8s changes - defaulting to STAGING (automatic deployment PR)"
+            fi
+          fi
+
       - name: Create deployment branch
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
-          BRANCH_NAME="deploy/staging-v${VERSION}-${SHA}"
+          ENV="${{ steps.determine-env.outputs.target_env }}"
+          BRANCH_NAME="deploy/${ENV}-v${VERSION}-${SHA}"
           git checkout -b "${BRANCH_NAME}"
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          echo "TARGET_ENV=${ENV}" >> $GITHUB_ENV
+          
+          # Set PR title based on environment
+          if [ "${ENV}" == "prod" ]; then
+            ENV_DISPLAY="Production"
+          else
+            ENV_DISPLAY="Staging"
+          fi
+          echo "PR_TITLE=🚀 Deploy v${VERSION} to ${ENV_DISPLAY}" >> $GITHUB_ENV
 
-      - name: Update image tags in staging deployments
+      - name: Update image tags in deployments
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           OWNER="${{ needs.calculate-version.outputs.repo-owner }}"
+          ENV="${{ steps.determine-env.outputs.target_env }}"
           
           # Service name to image name mapping
           declare -A SERVICE_MAP=(
@@ -585,8 +726,10 @@ jobs:
             ["frontend"]="electronic-paradise-frontend"
           )
           
-          # Update each deployment file
-          for service_dir in infra/k8s/staging/deployments/*/; do
+          echo "📝 Updating image tags in ${ENV} environment..."
+          
+          # Update each deployment file in the determined environment
+          for service_dir in infra/k8s/${ENV}/deployments/*/; do
             service_name=$(basename "$service_dir")
             if [ -f "${service_dir}deployment.yaml" ]; then
               image_name="${SERVICE_MAP[$service_name]}"
@@ -603,86 +746,119 @@ jobs:
             fi
           done
 
-      - name: Check for k8s changes in main
-        id: k8s-changes
-        run: |
-          # Check if there are any k8s changes in the merge
-          if git diff main --name-only | grep -q "^infra/k8s/"; then
-            echo "has_k8s_changes=true" >> $GITHUB_OUTPUT
-            echo "📋 K8s changes detected - will be included in deployment PR"
-            git diff main --name-only | grep "^infra/k8s/" || true
-          else
-            echo "has_k8s_changes=false" >> $GITHUB_OUTPUT
-            echo "✅ No k8s changes - only image updates"
-          fi
-
       - name: Commit changes
+        id: commit
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          ENV="${{ steps.determine-env.outputs.target_env }}"
           
-          git add infra/k8s/staging/deployments/
+          git add infra/k8s/${ENV}/deployments/
           
-          # Include k8s changes if they exist
-          if [ "${{ steps.k8s-changes.outputs.has_k8s_changes }}" == "true" ]; then
-            git add infra/k8s/staging/ || true
-            git commit -m "🚀 Deploy v${VERSION} to staging
-
-- Updated image tags to v${VERSION}
-- Includes k8s infrastructure changes
-- Git SHA: ${SHA}
-
-**Images:**
-- Auth Service: v${VERSION}
-- User Service: v${VERSION}
-- Product Service: v${VERSION}
-- Order Service: v${VERSION}
-- Payment Service: v${VERSION}
-- Gateway: v${VERSION}
-- Frontend: v${VERSION}
-
-**To deploy to production:** Add label \`deploy-to-prod\` to this PR"
+          # Include k8s changes if they exist in the target environment
+          if [ "${{ steps.determine-env.outputs.has_k8s_changes }}" == "true" ]; then
+            git add infra/k8s/${ENV}/ || true
+          fi
+          
+          # Check if there are any changes to commit
+          if git diff --staged --quiet; then
+            echo "⚠️ No changes to commit - image tags may already be up to date"
+            echo "Skipping commit, but will still create PR"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> $GITHUB_ENV
           else
-            git commit -m "🚀 Deploy v${VERSION} to staging
-
-- Updated image tags to v${VERSION}
-- Git SHA: ${SHA}
-
-**Images:**
-- Auth Service: v${VERSION}
-- User Service: v${VERSION}
-- Product Service: v${VERSION}
-- Order Service: v${VERSION}
-- Payment Service: v${VERSION}
-- Gateway: v${VERSION}
-- Frontend: v${VERSION}
-
-**To deploy to production:** Add label \`deploy-to-prod\` to this PR"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "has_changes=true" >> $GITHUB_ENV
+            
+            ENV_CAPITALIZED=$(echo "${ENV}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
+            
+            if [ "${{ steps.determine-env.outputs.has_k8s_changes }}" == "true" ]; then
+              git commit -m "$(cat <<EOF
+          🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
+          
+          - Updated image tags to v${VERSION}
+          - Includes k8s infrastructure changes
+          - Git SHA: ${SHA}
+          
+          **Images:**
+          - Auth Service: v${VERSION}
+          - User Service: v${VERSION}
+          - Product Service: v${VERSION}
+          - Order Service: v${VERSION}
+          - Payment Service: v${VERSION}
+          - Gateway: v${VERSION}
+          - Frontend: v${VERSION}
+          
+          **Target Environment:** ${ENV_CAPITALIZED}
+          EOF
+          )"
+            else
+              git commit -m "$(cat <<EOF
+          🚀 Deploy v${VERSION} to ${ENV_CAPITALIZED}
+          
+          - Updated image tags to v${VERSION}
+          - Git SHA: ${SHA}
+          
+          **Images:**
+          - Auth Service: v${VERSION}
+          - User Service: v${VERSION}
+          - Product Service: v${VERSION}
+          - Order Service: v${VERSION}
+          - Payment Service: v${VERSION}
+          - Gateway: v${VERSION}
+          - Frontend: v${VERSION}
+          
+          **Target Environment:** ${ENV_CAPITALIZED}
+          EOF
+          )"
+            fi
           fi
 
       - name: Push branch
         run: |
-          git push origin "${BRANCH_NAME}"
+          BRANCH_NAME="${{ env.BRANCH_NAME }}"
+          VERSION="${{ needs.calculate-version.outputs.version }}"
+          echo "Pushing branch: ${BRANCH_NAME}"
+          
+          # Only push if there are changes, or if branch doesn't exist yet
+          if [ "${{ steps.commit.outputs.has_changes }}" == "true" ]; then
+            git push origin "${BRANCH_NAME}" || {
+              echo "⚠️ Failed to push branch"
+              exit 1
+            }
+          else
+            # Check if branch exists remotely
+            if git ls-remote --heads origin "${BRANCH_NAME}" | grep -q "${BRANCH_NAME}"; then
+              echo "✅ Branch already exists remotely, skipping push"
+            else
+              # Create empty commit to ensure branch exists
+              git commit --allow-empty -m "Deployment PR for v${VERSION} (no changes needed)"
+              git push origin "${BRANCH_NAME}"
+            fi
+          fi
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
+        id: create-pr
+        continue-on-error: true
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ env.BRANCH_NAME }}
           base: main
-          title: "🚀 Deploy v${{ needs.calculate-version.outputs.version }} to Staging"
+          title: ${{ env.PR_TITLE }}
           body: |
             ## 🚀 Deployment PR - v${{ needs.calculate-version.outputs.version }}
             
             **Git SHA:** ${{ needs.calculate-version.outputs.git-sha }}
+            **Target Environment:** ${{ steps.determine-env.outputs.target_env == 'prod' && '**Production** 🚨' || '**Staging**' }}
             
             ### 📦 What's being deployed:
             - ✅ All service images updated to **v${{ needs.calculate-version.outputs.version }}**
-            ${{ steps.k8s-changes.outputs.has_k8s_changes == 'true' && '- ✅ Kubernetes infrastructure changes included' || '' }}
+            ${{ steps.determine-env.outputs.has_k8s_changes == 'true' && '- ✅ Kubernetes infrastructure changes included' || '' }}
             
             ### 🎯 Deployment Target:
-            - **Default:** Staging environment
-            - **To deploy to Production:** Add the label `deploy-to-prod` to this PR
+            ${{ steps.determine-env.outputs.target_env == 'prod' && '- **Target:** Production environment 🚨' || '- **Target:** Staging environment' }}
+            ${{ steps.determine-env.outputs.target_env == 'staging' && '- **To deploy to Production:** Add the label `deploy-to-prod` to this PR' || '- **⚠️ This will deploy to PRODUCTION - review carefully!**' }}
             
             ### 📋 Services:
             - Auth Service
@@ -694,14 +870,54 @@ jobs:
             - Frontend
             
             ### ✅ Next Steps:
-            1. Review the changes
-            2. Merge this PR to deploy to **staging**
-            3. Or add `deploy-to-prod` label to deploy to **production**
+            
+            **If merge conflicts exist (GitHub will show this):**
+            1. Checkout this branch locally:
+               ```bash
+               git fetch origin
+               git checkout ${{ env.BRANCH_NAME }}
+               ```
+            2. Pull latest main:
+               ```bash
+               git checkout main
+               git pull origin main
+               ```
+            3. Merge main into this branch (downmerge):
+               ```bash
+               git checkout ${{ env.BRANCH_NAME }}
+               git merge main
+               ```
+            4. Resolve conflicts manually:
+               - **Keep the image tag updates** (the `v${{ needs.calculate-version.outputs.version }}` tags)
+               - Accept changes from main for other files
+               - For deployment YAML files, ensure image tags are `v${{ needs.calculate-version.outputs.version }}`
+            5. Commit and push:
+               ```bash
+               git add .
+               git commit -m "Resolve merge conflicts with main"
+               git push origin ${{ env.BRANCH_NAME }}
+               ```
+            
+            **After conflicts are resolved (or if no conflicts):**
+            1. Review the changes carefully
+            2. Merge this PR to deploy to **${{ steps.determine-env.outputs.target_env }}**
+            ${{ steps.determine-env.outputs.target_env == 'staging' && '3. Or add `deploy-to-prod` label to deploy to **production**' || '' }}
             
             ---
             *This PR was automatically created by the CI pipeline*
+            *⚠️ Conflicts must be resolved manually before merging*
+            ${{ steps.determine-env.outputs.target_env == 'prod' && '*🚨 PRODUCTION DEPLOYMENT - Review all changes carefully!*' || '' }}
           labels: |
             deployment
-            staging
+            ${{ steps.determine-env.outputs.target_env == 'prod' && 'production' || 'staging' }}
             automated
           draft: false
+
+      - name: Check PR creation result
+        run: |
+          if [ "${{ steps.create-pr.outcome }}" != "success" ]; then
+            echo "⚠️ PR creation may have failed or PR already exists"
+            echo "Check if PR already exists for branch ${{ env.BRANCH_NAME }}"
+          else
+            echo "✅ PR created successfully"
+          fi

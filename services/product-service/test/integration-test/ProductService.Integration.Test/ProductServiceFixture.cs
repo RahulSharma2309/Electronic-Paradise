@@ -24,7 +24,7 @@ public class ProductServiceFixture : IAsyncLifetime
         {
             builder.ConfigureAppConfiguration((context, conf) =>
             {
-                conf.AddInMemoryCollection(new Dictionary<string, string>
+                conf.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "ConnectionStrings:DefaultConnection", "Server=(localdb)\\MSSQLLocalDB;Database=ProductServiceTestDb;Trusted_Connection=True;MultipleActiveResultSets=true" }
                 });

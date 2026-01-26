@@ -1,0 +1,114 @@
+name: Test Self-Hosted Runner
+
+# This workflow tests if the self-hosted runner is working correctly
+on:
+  workflow_dispatch:  # Manual trigger only
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/test-runner.yml'
+
+jobs:
+  test-runner:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test Runner Environment
+        shell: pwsh
+        run: |
+          Write-Host "🧪 Testing Self-Hosted Runner Environment" -ForegroundColor Green
+          Write-Host "========================================`n" -ForegroundColor Green
+          
+          # Test OS
+          Write-Host "Operating System:" -ForegroundColor Cyan
+          $os = Get-CimInstance Win32_OperatingSystem
+          Write-Host "  Name: $($os.Caption)" -ForegroundColor Yellow
+          Write-Host "  Version: $($os.Version)" -ForegroundColor Yellow
+          Write-Host ""
+          
+          # Test Docker
+          Write-Host "Docker:" -ForegroundColor Cyan
+          try {
+            $dockerVersion = docker --version
+            Write-Host "  ✅ $dockerVersion" -ForegroundColor Green
+          } catch {
+            Write-Host "  ❌ Docker not found" -ForegroundColor Red
+          }
+          Write-Host ""
+          
+          # Test kubectl
+          Write-Host "kubectl:" -ForegroundColor Cyan
+          try {
+            $kubectlVersion = kubectl version --client --short 2>&1
+            Write-Host "  ✅ kubectl installed" -ForegroundColor Green
+            Write-Host "  $kubectlVersion" -ForegroundColor Gray
+          } catch {
+            Write-Host "  ❌ kubectl not found" -ForegroundColor Red
+          }
+          Write-Host ""
+          
+          # Test Kubernetes context
+          Write-Host "Kubernetes Context:" -ForegroundColor Cyan
+          try {
+            $context = kubectl config current-context
+            Write-Host "  ✅ Current context: $context" -ForegroundColor Green
+            
+            # Test cluster access
+            $nodes = kubectl get nodes --no-headers 2>&1
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "  ✅ Can access Kubernetes cluster" -ForegroundColor Green
+            } else {
+              Write-Host "  ⚠️ Cannot access Kubernetes cluster" -ForegroundColor Yellow
+            }
+          } catch {
+            Write-Host "  ❌ kubectl not configured" -ForegroundColor Red
+          }
+          Write-Host ""
+          
+          # Test Git
+          Write-Host "Git:" -ForegroundColor Cyan
+          try {
+            $gitVersion = git --version
+            Write-Host "  ✅ $gitVersion" -ForegroundColor Green
+          } catch {
+            Write-Host "  ❌ Git not found" -ForegroundColor Red
+          }
+          Write-Host ""
+          
+          # Test PowerShell
+          Write-Host "PowerShell:" -ForegroundColor Cyan
+          Write-Host "  ✅ Version: $($PSVersionTable.PSVersion)" -ForegroundColor Green
+          Write-Host ""
+          
+          Write-Host "✅ Runner environment test complete!" -ForegroundColor Green
+
+      - name: Test kubectl Commands
+        shell: pwsh
+        run: |
+          Write-Host "`n🔧 Testing kubectl Commands" -ForegroundColor Green
+          Write-Host "==========================`n" -ForegroundColor Green
+          
+          # Switch to docker-desktop context
+          Write-Host "Switching to docker-desktop context..." -ForegroundColor Yellow
+          kubectl config use-context docker-desktop
+          
+          # List namespaces
+          Write-Host "`nNamespaces:" -ForegroundColor Cyan
+          kubectl get namespaces
+          
+          # List nodes
+          Write-Host "`nNodes:" -ForegroundColor Cyan
+          kubectl get nodes
+          
+          Write-Host "`n✅ kubectl commands working!" -ForegroundColor Green
+
+      - name: Summary
+        shell: pwsh
+        run: |
+          Write-Host "`n📊 Test Summary" -ForegroundColor Green
+          Write-Host "===============" -ForegroundColor Green
+          Write-Host "✅ Self-hosted runner is working correctly!" -ForegroundColor Green
+          Write-Host "✅ Ready to run CD pipeline" -ForegroundColor Green

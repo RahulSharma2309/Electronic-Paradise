@@ -431,10 +431,56 @@ Start-Process "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/serv
 
 ## Accessing Services
 
-### 🌐 Web Interfaces
+You have **two options** to access services: **Ingress (Recommended)** or **Port-Forward (Quick Testing)**.
+
+### Option 1: Ingress (Recommended - Production-like) ✅
+
+This is the **recommended approach** as it mirrors production setup. All services are accessible via domain names through Ingress.
+
+#### Step 1: Update Hosts File
+
+**Open Notepad as Administrator** and add these entries to `C:\Windows\System32\drivers\etc\hosts`:
+
+```
+# Electronic Paradise - Staging
+127.0.0.1 staging.electronic-paradise.local
+127.0.0.1 api.staging.electronic-paradise.local
+127.0.0.1 auth.staging.electronic-paradise.local
+127.0.0.1 user.staging.electronic-paradise.local
+127.0.0.1 product.staging.electronic-paradise.local
+127.0.0.1 order.staging.electronic-paradise.local
+127.0.0.1 payment.staging.electronic-paradise.local
+```
+
+**Or for varnex-enterprise namespace:**
+
+```
+# Varnex Enterprise
+127.0.0.1 app.varnex-enterprise.local
+127.0.0.1 api.varnex-enterprise.local
+127.0.0.1 auth.varnex-enterprise.local
+127.0.0.1 user.varnex-enterprise.local
+127.0.0.1 product.varnex-enterprise.local
+127.0.0.1 order.varnex-enterprise.local
+127.0.0.1 payment.varnex-enterprise.local
+```
+
+#### Step 2: Access Services via Ingress
 
 All services are accessible via your browser:
 
+**For Staging Namespace:**
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://staging.electronic-paradise.local | React application UI |
+| **API Gateway** | http://api.staging.electronic-paradise.local/swagger | Gateway Swagger docs |
+| **Auth Service** | http://auth.staging.electronic-paradise.local/swagger | Authentication APIs |
+| **User Service** | http://user.staging.electronic-paradise.local/swagger | User management APIs |
+| **Product Service** | http://product.staging.electronic-paradise.local/swagger | Product catalog APIs |
+| **Order Service** | http://order.staging.electronic-paradise.local/swagger | Order management APIs |
+| **Payment Service** | http://payment.staging.electronic-paradise.local/swagger | Payment APIs |
+
+**For Varnex Enterprise Namespace:**
 | Service | URL | Description |
 |---------|-----|-------------|
 | **Frontend (Main App)** | http://app.varnex-enterprise.local | React application UI |
@@ -445,12 +491,133 @@ All services are accessible via your browser:
 | **Order Service** | http://order.varnex-enterprise.local/swagger/index.html | Order management APIs |
 | **Payment Service** | http://payment.varnex-enterprise.local/swagger/index.html | Payment APIs |
 
-**Note:** Add `/swagger/index.html` to backend service URLs to see Swagger documentation.
+**Note:** 
+- For staging namespace, use `/swagger` (e.g., `http://auth.staging.electronic-paradise.local/swagger`)
+- For varnex-enterprise namespace, use `/swagger/index.html` (e.g., `http://auth.varnex-enterprise.local/swagger/index.html`)
 
-### 🎯 Quick Test Script
+#### Advantages of Ingress:
+- ✅ Production-like setup
+- ✅ No need to run port-forward commands
+- ✅ Always available (no manual commands)
+- ✅ Domain-based routing
+- ✅ Easy to remember URLs
+- ✅ Can add SSL/TLS easily in future
+
+---
+
+### Option 2: Port-Forward (Quick Testing) 🔧
+
+Use this for **quick testing** or when you don't want to configure Ingress. This creates a temporary tunnel to access services directly.
+
+#### How to Use Port-Forward
 
 ```powershell
-# Test all services
+# Auth Service
+kubectl port-forward svc/auth-service 5001:80 -n staging
+# Access at: http://localhost:5001/swagger
+
+# User Service
+kubectl port-forward svc/user-service 5002:80 -n staging
+# Access at: http://localhost:5002/swagger
+
+# Product Service
+kubectl port-forward svc/product-service 5003:80 -n staging
+# Access at: http://localhost:5003/swagger
+
+# Order Service
+kubectl port-forward svc/order-service 5004:80 -n staging
+# Access at: http://localhost:5004/swagger
+
+# Payment Service
+kubectl port-forward svc/payment-service 5005:80 -n staging
+# Access at: http://localhost:5005/swagger
+
+# Gateway
+kubectl port-forward svc/gateway 5000:80 -n staging
+# Access at: http://localhost:5000/swagger
+```
+
+**For varnex-enterprise namespace:**
+
+```powershell
+# Auth Service
+kubectl port-forward svc/varnex-enterprise-auth 5001:80 -n varnex-enterprise
+# Access at: http://localhost:5001/swagger
+
+# User Service
+kubectl port-forward svc/varnex-enterprise-user 5002:80 -n varnex-enterprise
+# Access at: http://localhost:5002/swagger
+
+# Product Service
+kubectl port-forward svc/varnex-enterprise-product 5003:80 -n varnex-enterprise
+# Access at: http://localhost:5003/swagger
+
+# Order Service
+kubectl port-forward svc/varnex-enterprise-order 5004:80 -n varnex-enterprise
+# Access at: http://localhost:5004/swagger
+
+# Payment Service
+kubectl port-forward svc/varnex-enterprise-payment 5005:80 -n varnex-enterprise
+# Access at: http://localhost:5005/swagger
+
+# Gateway
+kubectl port-forward svc/varnex-enterprise-gateway 5000:80 -n varnex-enterprise
+# Access at: http://localhost:5000/swagger
+```
+
+#### Port-Forward Service URLs
+
+| Service | Port-Forward Command | URL |
+|---------|---------------------|-----|
+| **Auth Service** | `kubectl port-forward svc/auth-service 5001:80 -n staging` | http://localhost:5001/swagger |
+| **User Service** | `kubectl port-forward svc/user-service 5002:80 -n staging` | http://localhost:5002/swagger |
+| **Product Service** | `kubectl port-forward svc/product-service 5003:80 -n staging` | http://localhost:5003/swagger |
+| **Order Service** | `kubectl port-forward svc/order-service 5004:80 -n staging` | http://localhost:5004/swagger |
+| **Payment Service** | `kubectl port-forward svc/payment-service 5005:80 -n staging` | http://localhost:5005/swagger |
+| **Gateway** | `kubectl port-forward svc/gateway 5000:80 -n staging` | http://localhost:5000/swagger |
+
+#### Advantages of Port-Forward:
+- ✅ Quick setup (no hosts file needed)
+- ✅ Good for quick testing
+- ✅ No Ingress configuration required
+
+#### Disadvantages of Port-Forward:
+- ❌ Temporary (stops when terminal closes)
+- ❌ Need to run command for each service
+- ❌ Multiple terminal windows needed
+- ❌ Not production-like
+- ❌ Manual port management
+
+---
+
+### 🎯 Quick Test Script (Ingress)
+
+```powershell
+# Test all services via Ingress (Staging)
+$services = @(
+    @{Name="Frontend"; Url="http://staging.electronic-paradise.local"},
+    @{Name="Gateway"; Url="http://api.staging.electronic-paradise.local/swagger"},
+    @{Name="Auth"; Url="http://auth.staging.electronic-paradise.local/swagger"},
+    @{Name="User"; Url="http://user.staging.electronic-paradise.local/swagger"},
+    @{Name="Product"; Url="http://product.staging.electronic-paradise.local/swagger"},
+    @{Name="Order"; Url="http://order.staging.electronic-paradise.local/swagger"},
+    @{Name="Payment"; Url="http://payment.staging.electronic-paradise.local/swagger"}
+)
+
+foreach ($svc in $services) {
+    try {
+        $response = Invoke-WebRequest -Uri $svc.Url -Method Head -TimeoutSec 5 -UseBasicParsing
+        Write-Host "✅ $($svc.Name) - OK" -ForegroundColor Green
+    } catch {
+        Write-Host "❌ $($svc.Name) - Failed" -ForegroundColor Red
+    }
+}
+```
+
+### 🎯 Quick Test Script (Varnex Enterprise)
+
+```powershell
+# Test all services via Ingress (Varnex Enterprise)
 $services = @(
     @{Name="Frontend"; Url="http://app.varnex-enterprise.local"},
     @{Name="Gateway"; Url="http://api.varnex-enterprise.local/swagger/index.html"},
@@ -470,6 +637,20 @@ foreach ($svc in $services) {
     }
 }
 ```
+
+### 📊 Comparison: Ingress vs Port-Forward
+
+| Feature | Ingress | Port-Forward |
+|---------|---------|--------------|
+| **Setup** | One-time (hosts file) | Per service (command) |
+| **Persistence** | Always available | Temporary (until terminal closes) |
+| **Production-like** | ✅ Yes | ❌ No |
+| **Multiple Services** | ✅ All at once | ❌ One per terminal |
+| **Domain Names** | ✅ Yes | ❌ No (localhost only) |
+| **SSL/TLS Ready** | ✅ Yes | ❌ No |
+| **Best For** | Development & Production | Quick testing |
+
+**Recommendation:** Use **Ingress** for regular development work. Use **Port-Forward** only for quick debugging or when Ingress is not configured.
 
 ---
 
@@ -710,8 +891,16 @@ kubectl logs -f <pod-name> -n varnex-enterprise  # Follow logs
 # Execute commands in pod
 kubectl exec -it <pod-name> -n varnex-enterprise -- /bin/bash
 
-# Port forward (temporary access)
+# Port forward (temporary access - Option 2)
+# For staging namespace:
+kubectl port-forward svc/auth-service 5001:80 -n staging
+# Access at: http://localhost:5001/swagger
+
+# For varnex-enterprise namespace:
 kubectl port-forward svc/varnex-enterprise-auth 8080:80 -n varnex-enterprise
+# Access at: http://localhost:8080/swagger
+
+# Note: Use Ingress (Option 1) for production-like access instead
 
 # Restart a deployment
 kubectl rollout restart deployment <deployment-name> -n varnex-enterprise

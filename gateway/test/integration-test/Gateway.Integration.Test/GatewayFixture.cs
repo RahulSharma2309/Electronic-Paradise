@@ -22,7 +22,7 @@ public class GatewayFixture : IAsyncLifetime
             builder.ConfigureAppConfiguration((context, conf) =>
             {
                 // Override YARP config for testing with mocks
-                conf.AddInMemoryCollection(new Dictionary<string, string>
+                conf.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "ReverseProxy:Clusters:authCluster:Destinations:auth1:Address", "http://dependency-mock:3001" },
                     { "ReverseProxy:Clusters:userCluster:Destinations:user1:Address", "http://dependency-mock:3001" },
