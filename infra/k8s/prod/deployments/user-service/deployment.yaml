@@ -1,4 +1,4 @@
-﻿# User Service Deployment for Production
+# User Service Deployment for Production
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,7 +26,7 @@ spec:
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        image: ghcr.io/rahulsharma2309/electronic-paradise-user:latest
+        image: ghcr.io/rahulsharma2309/electronic-paradise-user:v1.2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80

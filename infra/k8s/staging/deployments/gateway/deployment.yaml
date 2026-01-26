@@ -1,4 +1,4 @@
-﻿---
+---
 # Gateway Deployment for Staging
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +27,7 @@ spec:
       serviceAccountName: gateway-sa
       containers:
       - name: gateway
-        image: ghcr.io/rahulsharma2309/electronic-paradise-gateway:latest
+        image: ghcr.io/rahulsharma2309/electronic-paradise-gateway:v1.2.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

@@ -1,4 +1,4 @@
-﻿# Payment Service Deployment for Production
+# Payment Service Deployment for Production
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,7 +26,7 @@ spec:
       serviceAccountName: payment-service-sa
       containers:
       - name: payment-service
-        image: ghcr.io/rahulsharma2309/electronic-paradise-payment:latest
+        image: ghcr.io/rahulsharma2309/electronic-paradise-payment:v1.2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80
