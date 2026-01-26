@@ -1,6 +1,6 @@
 # 🌐 Modern API Gateway Architecture with YARP
 
-**Concepts + Implementation Guide**
+**Concepts + Implementation Guide - API Gateway**
 
 ---
 
