@@ -17,20 +17,6 @@ COPY ["services/user-service/src/Directory.Build.props", "services/user-service/
 # Copy nuget.config
 COPY ["services/user-service/nuget.config", "services/user-service/"]
 
-# Accept GitHub token as build argument
-ARG GITHUB_TOKEN
-# Handle GitHub token and remove local source (not available in Docker)
-RUN sed -i '/<add key="local"/d' services/user-service/nuget.config && \
-    if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
-      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" services/user-service/nuget.config; \
-      echo "GitHub token provided, using GitHub Packages source."; \
-    else \
-      echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
-      sed -i '/<add key="github"/d' services/user-service/nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' services/user-service/nuget.config; \
-      echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
-    fi
-
 # Restore dependencies
 WORKDIR /src/services/user-service/src
 RUN dotnet restore "UserService.API/UserService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true

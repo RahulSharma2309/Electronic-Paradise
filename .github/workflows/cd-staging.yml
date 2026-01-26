@@ -1,45 +1,97 @@
-name: CD Pipeline - Deploy to Staging
+name: CD Pipeline - Deploy to Kubernetes
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-    paths:
-      - 'services/**'
-      - 'gateway/**'
-      - 'frontend/**'
-      - 'infra/k8s/**'
-      - '.github/workflows/cd-staging.yml'
   workflow_dispatch: # Allow manual trigger
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - prod
 
 env:
-  KUBERNETES_NAMESPACE: staging
   KUBERNETES_CONTEXT: docker-desktop
 
 jobs:
   # ============================================================================
-  # PHASE 1: Prepare Deployment
+  # PHASE 1: Determine Deployment Environment
+  # ============================================================================
+  determine-environment:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+      namespace: ${{ steps.env.outputs.namespace }}
+    steps:
+      - name: Determine environment from PR labels or input
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+          else
+            # Check PR labels for deploy-to-prod
+            PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+            if echo "$PR_LABELS" | grep -q "deploy-to-prod"; then
+              ENV="prod"
+            else
+              ENV="staging"
+            fi
+          fi
+          
+          if [ "$ENV" == "prod" ]; then
+            NAMESPACE="prod"
+          else
+            NAMESPACE="staging"
+          fi
+          
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "namespace=${NAMESPACE}" >> $GITHUB_OUTPUT
+          echo "🎯 Deploying to: ${ENV} (namespace: ${NAMESPACE})"
+
+  # ============================================================================
+  # PHASE 2: Prepare Deployment
   # ============================================================================
   prepare-deployment:
+    needs: determine-environment
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       git-sha: ${{ steps.git.outputs.sha }}
       repo-owner: ${{ steps.repo.outputs.owner }}
+      environment: ${{ needs.determine-environment.outputs.environment }}
+      namespace: ${{ needs.determine-environment.outputs.namespace }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Calculate version
+      - name: Extract version from deployment files
         id: version
         run: |
-          chmod +x ./scripts/get-next-version.sh
-          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📊 Version: $VERSION"
+          # Extract version from deployment YAML files
+          DEPLOYMENT_FILE="infra/k8s/${{ needs.determine-environment.outputs.namespace }}/deployments/auth-service/deployment.yaml"
+          if [ -f "$DEPLOYMENT_FILE" ]; then
+            IMAGE_TAG=$(grep -E "image:.*:v[0-9]" "$DEPLOYMENT_FILE" | head -1 | sed -E 's/.*:v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+            if [ -n "$IMAGE_TAG" ]; then
+              echo "version=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+              echo "📊 Version: ${IMAGE_TAG}"
+            else
+              # Fallback to latest
+              echo "version=latest" >> $GITHUB_OUTPUT
+              echo "📊 Version: latest (fallback)"
+            fi
+          else
+            echo "version=latest" >> $GITHUB_OUTPUT
+            echo "📊 Version: latest (fallback)"
+          fi
 
       - name: Get Git SHA
         id: git
@@ -58,7 +110,7 @@ jobs:
   # PHASE 2: Verify Images Exist
   # ============================================================================
   verify-images:
-    needs: prepare-deployment
+    needs: [determine-environment, prepare-deployment]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -88,30 +140,33 @@ jobs:
           SHA="${{ needs.prepare-deployment.outputs.git-sha }}"
           OWNER="${{ needs.prepare-deployment.outputs.repo-owner }}"
           
-          # Try production tag first, then alpha tag
-          IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
-          echo "Checking for image: ${IMAGE_TAG}"
-          
-          if ! docker manifest inspect "${IMAGE_TAG}" > /dev/null 2>&1; then
-            # Fallback to latest
-            IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:latest"
-            echo "Falling back to: ${IMAGE_TAG}"
-            docker manifest inspect "${IMAGE_TAG}" || exit 1
+          # Try versioned tag first
+          if [ "$VERSION" != "latest" ]; then
+            IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:v${VERSION}"
+            echo "Checking for image: ${IMAGE_TAG}"
+            if docker manifest inspect "${IMAGE_TAG}" > /dev/null 2>&1; then
+              echo "✅ Image found: ${IMAGE_TAG}"
+              exit 0
+            fi
           fi
           
+          # Fallback to latest
+          IMAGE_TAG="ghcr.io/${OWNER}/${{ matrix.service.image }}:latest"
+          echo "Falling back to: ${IMAGE_TAG}"
+          docker manifest inspect "${IMAGE_TAG}" || exit 1
           echo "✅ Image found: ${IMAGE_TAG}"
 
   # ============================================================================
-  # PHASE 3: Deploy to Kubernetes Staging
+  # PHASE 3: Deploy to Kubernetes
   # ============================================================================
-  deploy-to-staging:
+  deploy-to-kubernetes:
     needs: [prepare-deployment, verify-images]
-    runs-on: self-hosted  # Uses self-hosted runner on local machine
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     environment:
-      name: staging
-      url: http://staging.electronic-paradise.local
+      name: ${{ needs.prepare-deployment.outputs.environment }}
+      url: ${{ needs.prepare-deployment.outputs.environment == 'prod' && 'http://api.electronic-paradise.local' || 'http://staging.electronic-paradise.local' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -122,173 +177,81 @@ jobs:
           version: 'latest'
 
       - name: Configure kubectl context
-        shell: pwsh
         run: |
-          Write-Host "Configuring kubectl for Docker Desktop..." -ForegroundColor Green
-          
-          # Verify kubectl is available
-          kubectl version --client
-          
-          # Check current context
-          $currentContext = kubectl config current-context
-          Write-Host "Current context: $currentContext" -ForegroundColor Yellow
-          
-          # Switch to docker-desktop context
-          kubectl config use-context docker-desktop
-          
-          # Verify context switch
-          $newContext = kubectl config current-context
-          Write-Host "New context: $newContext" -ForegroundColor Green
-          
-          # Verify cluster access
-          kubectl cluster-info
-          kubectl get nodes
+          # For Docker Desktop Kubernetes (local)
+          # In production, you would configure cloud provider credentials here
+          echo "Configuring kubectl for Docker Desktop..."
+          # kubectl config set-context docker-desktop
+          # kubectl config use-context docker-desktop
 
       - name: Verify namespace exists
-        shell: pwsh
         run: |
-          $namespace = "${{ env.KUBERNETES_NAMESPACE }}"
-          Write-Host "Checking namespace: $namespace" -ForegroundColor Yellow
-          
-          $exists = kubectl get namespace $namespace 2>&1
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "Namespace does not exist, creating..." -ForegroundColor Yellow
-            kubectl create namespace $namespace
-          } else {
-            Write-Host "Namespace already exists" -ForegroundColor Green
-          }
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          kubectl get namespace "${NAMESPACE}" || \
+          kubectl create namespace "${NAMESPACE}"
 
-      - name: Update image tags in deployments
-        shell: pwsh
+      - name: Create image pull secret (if needed)
         run: |
-          $VERSION = "${{ needs.prepare-deployment.outputs.version }}"
-          $OWNER = "${{ needs.prepare-deployment.outputs.repo-owner }}"
-          
-          Write-Host "Updating image tags to version: v$VERSION" -ForegroundColor Green
-          Write-Host "Repository owner: $OWNER" -ForegroundColor Yellow
-          
-          # Find all deployment.yaml files
-          $deploymentFiles = Get-ChildItem -Path "infra/k8s/staging/deployments" -Recurse -Filter "deployment.yaml"
-          
-          foreach ($file in $deploymentFiles) {
-            Write-Host "Processing: $($file.FullName)" -ForegroundColor Cyan
-            
-            $content = Get-Content $file.FullName -Raw
-            
-            # Determine service name from file path
-            $serviceName = $file.Directory.Name
-            
-            # Map service names to image names
-            $imageMap = @{
-              "auth-service" = "electronic-paradise-auth"
-              "user-service" = "electronic-paradise-user"
-              "product-service" = "electronic-paradise-product"
-              "order-service" = "electronic-paradise-order"
-              "payment-service" = "electronic-paradise-payment"
-              "gateway" = "electronic-paradise-gateway"
-              "frontend" = "electronic-paradise-frontend"
-            }
-            
-            $imageName = $imageMap[$serviceName]
-            if (-not $imageName) {
-              Write-Host "⚠️ Unknown service: $serviceName, skipping..." -ForegroundColor Yellow
-              continue
-            }
-            
-            # Build new image tag
-            $newImageTag = "ghcr.io/$OWNER/$imageName`:$VERSION"
-            
-            # Replace image tag (handles various formats)
-            $content = $content -replace "image:\s*ghcr\.io/[^/]+/$imageName:[^\s`"]+", "image: $newImageTag"
-            
-            # Save updated content
-            Set-Content -Path $file.FullName -Value $content -NoNewline
-            
-            Write-Host "✅ Updated $serviceName to $newImageTag" -ForegroundColor Green
-          }
-          
-          Write-Host "`nAll deployment files updated!" -ForegroundColor Green
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          # Check if secret already exists
+          if ! kubectl get secret ghcr-secret -n "${NAMESPACE}" > /dev/null 2>&1; then
+            echo "⚠️ ghcr-secret not found in ${NAMESPACE} namespace"
+            echo "Please create it manually:"
+            echo "kubectl create secret docker-registry ghcr-secret \\"
+            echo "  --docker-server=ghcr.io \\"
+            echo "  --docker-username=YOUR_USERNAME \\"
+            echo "  --docker-password=YOUR_TOKEN \\"
+            echo "  --namespace=${NAMESPACE}"
+          else
+            echo "✅ Image pull secret exists"
+          fi
 
       - name: Apply Kubernetes manifests
-        shell: pwsh
         run: |
-          Write-Host "Applying Kubernetes manifests to staging namespace..." -ForegroundColor Green
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+          echo "🚀 Applying Kubernetes manifests to ${ENV} (namespace: ${NAMESPACE})..."
           
           # Apply in order: namespaces, RBAC, configmaps, secrets, deployments
-          Write-Host "Applying namespaces..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/namespaces/ 2>&1 | Out-Null
-          
-          Write-Host "Applying RBAC..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/rbac/
-          
-          Write-Host "Applying ConfigMaps..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/configmaps/
-          
-          Write-Host "Applying Secrets..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/secrets/ 2>&1 | Out-Null
-          
-          Write-Host "Applying Deployments..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/deployments/
-          
-          Write-Host "Applying Ingress..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/ingress/ 2>&1 | Out-Null
-          
-          Write-Host "Applying Storage..." -ForegroundColor Yellow
-          kubectl apply -f infra/k8s/staging/storage/ 2>&1 | Out-Null
-          
-          Write-Host "✅ All manifests applied!" -ForegroundColor Green
+          kubectl apply -f infra/k8s/${NAMESPACE}/namespaces/ || true
+          kubectl apply -f infra/k8s/${NAMESPACE}/rbac/
+          kubectl apply -f infra/k8s/${NAMESPACE}/configmaps/
+          kubectl apply -f infra/k8s/${NAMESPACE}/secrets/ || true
+          kubectl apply -f infra/k8s/${NAMESPACE}/deployments/
+          kubectl apply -f infra/k8s/${NAMESPACE}/ingress/ || true
+          kubectl apply -f infra/k8s/${NAMESPACE}/storage/ || true
 
       - name: Wait for deployments to be ready
-        shell: pwsh
         run: |
-          Write-Host "Waiting for all deployments to be ready..." -ForegroundColor Yellow
-          $namespace = "${{ env.KUBERNETES_NAMESPACE }}"
-          
-          $deployments = @(
-            "auth-service",
-            "user-service",
-            "product-service",
-            "order-service",
-            "payment-service",
-            "gateway",
-            "frontend"
-          )
-          
-          foreach ($deployment in $deployments) {
-            Write-Host "Waiting for $deployment..." -ForegroundColor Cyan
-            kubectl wait --for=condition=available --timeout=300s `
-              deployment/$deployment `
-              -n $namespace 2>&1 | Out-Null
-            
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "✅ $deployment is ready" -ForegroundColor Green
-            } else {
-              Write-Host "⚠️ $deployment may not be ready yet" -ForegroundColor Yellow
-            }
-          }
-          
-          Write-Host "`nAll deployments processed!" -ForegroundColor Green
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          echo "⏳ Waiting for all deployments to be ready in ${NAMESPACE}..."
+          kubectl wait --for=condition=available --timeout=300s \
+            deployment/auth-service \
+            deployment/user-service \
+            deployment/product-service \
+            deployment/order-service \
+            deployment/payment-service \
+            deployment/gateway \
+            deployment/frontend \
+            -n "${NAMESPACE}" || true
 
       - name: Get deployment status
-        shell: pwsh
         run: |
-          $namespace = "${{ env.KUBERNETES_NAMESPACE }}"
-          
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## 📊 Deployment Status`n"
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
-          kubectl get deployments -n $namespace | Add-Content -Path $env:GITHUB_STEP_SUMMARY
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "`n## 🚀 Pods Status`n"
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
-          kubectl get pods -n $namespace | Add-Content -Path $env:GITHUB_STEP_SUMMARY
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+          echo "## 📊 Deployment Status - ${ENV}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          kubectl get deployments -n "${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Pods Status" >> $GITHUB_STEP_SUMMARY
+          kubectl get pods -n "${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
   # PHASE 4: Smoke Tests
   # ============================================================================
   smoke-tests:
-    needs: [deploy-to-staging]
-    runs-on: self-hosted  # Uses self-hosted runner on local machine
+    needs: [deploy-to-kubernetes]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -299,89 +262,70 @@ jobs:
           version: 'latest'
 
       - name: Configure kubectl context
-        shell: pwsh
         run: |
-          kubectl config use-context docker-desktop
+          echo "Configuring kubectl for Docker Desktop..."
+          # kubectl config use-context docker-desktop
 
       - name: Wait for services to be ready
-        shell: pwsh
         run: |
-          Write-Host "Waiting for services to be ready..." -ForegroundColor Yellow
-          Start-Sleep -Seconds 30
+          echo "Waiting for services to be ready..."
+          sleep 30  # Give services time to start
 
       - name: Run smoke tests
-        shell: pwsh
         run: |
-          Write-Host "Running smoke tests against staging environment..." -ForegroundColor Green
-          $namespace = "${{ env.KUBERNETES_NAMESPACE }}"
-          $testPassed = $true
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+          echo "🧪 Running smoke tests against ${ENV} environment..."
           
           # Test gateway health endpoint
-          Write-Host "`nTesting gateway health endpoint..." -ForegroundColor Cyan
-          $gatewayPod = kubectl get pods -n $namespace -l app=gateway -o jsonpath='{.items[0].metadata.name}' 2>&1
+          GATEWAY_POD=$(kubectl get pods -n "${NAMESPACE}" -l app=gateway -o jsonpath='{.items[0].metadata.name}' || echo "")
           
-          if ([string]::IsNullOrWhiteSpace($gatewayPod) -or $gatewayPod -match "error") {
-            Write-Host "⚠️ Gateway pod not found, skipping gateway health check" -ForegroundColor Yellow
-          } else {
-            Write-Host "Gateway pod: $gatewayPod" -ForegroundColor Yellow
-            $result = kubectl exec -n $namespace $gatewayPod -- curl -f http://localhost:80/api/health 2>&1
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "✅ Gateway health check passed" -ForegroundColor Green
-            } else {
-              Write-Host "⚠️ Gateway health check failed" -ForegroundColor Yellow
-              $testPassed = $false
-            }
-          }
+          if [ -z "$GATEWAY_POD" ]; then
+            echo "⚠️ Gateway pod not found, skipping gateway health check"
+          else
+            echo "Testing gateway health endpoint..."
+            kubectl exec -n "${NAMESPACE}" "$GATEWAY_POD" -- \
+              curl -f http://localhost:80/api/health || echo "⚠️ Gateway health check failed"
+          fi
           
           # Test auth-service health endpoint
-          Write-Host "`nTesting auth-service health endpoint..." -ForegroundColor Cyan
-          $authPod = kubectl get pods -n $namespace -l app=auth-service -o jsonpath='{.items[0].metadata.name}' 2>&1
+          AUTH_POD=$(kubectl get pods -n "${NAMESPACE}" -l app=auth-service -o jsonpath='{.items[0].metadata.name}' || echo "")
           
-          if ([string]::IsNullOrWhiteSpace($authPod) -or $authPod -match "error") {
-            Write-Host "⚠️ Auth service pod not found, skipping auth health check" -ForegroundColor Yellow
-          } else {
-            Write-Host "Auth pod: $authPod" -ForegroundColor Yellow
-            $result = kubectl exec -n $namespace $authPod -- curl -f http://localhost:80/api/health 2>&1
-            if ($LASTEXITCODE -eq 0) {
-              Write-Host "✅ Auth service health check passed" -ForegroundColor Green
-            } else {
-              Write-Host "⚠️ Auth service health check failed" -ForegroundColor Yellow
-              $testPassed = $false
-            }
-          }
+          if [ -z "$AUTH_POD" ]; then
+            echo "⚠️ Auth service pod not found, skipping auth health check"
+          else
+            echo "Testing auth-service health endpoint..."
+            kubectl exec -n "${NAMESPACE}" "$AUTH_POD" -- \
+              curl -f http://localhost:80/api/health || echo "⚠️ Auth service health check failed"
+          fi
           
-          if ($testPassed) {
-            Write-Host "`n✅ Smoke tests completed successfully" -ForegroundColor Green
-          } else {
-            Write-Host "`n⚠️ Some smoke tests failed" -ForegroundColor Yellow
-          }
+          echo "✅ Smoke tests completed"
 
       - name: Get service endpoints
-        shell: pwsh
         run: |
-          $namespace = "${{ env.KUBERNETES_NAMESPACE }}"
-          
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## 🔗 Service Endpoints`n"
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
-          kubectl get services -n $namespace | Add-Content -Path $env:GITHUB_STEP_SUMMARY
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "``````"
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          echo "## 🔗 Service Endpoints" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          kubectl get services -n "${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
   # PHASE 5: Deployment Summary
   # ============================================================================
   deployment-summary:
-    needs: [prepare-deployment, deploy-to-staging, smoke-tests]
+    needs: [prepare-deployment, deploy-to-kubernetes, smoke-tests]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Deployment Summary
         run: |
-          echo "## 🎉 Deployment to Staging Complete" >> $GITHUB_STEP_SUMMARY
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+          NAMESPACE="${{ needs.prepare-deployment.outputs.namespace }}"
+          echo "## 🎉 Deployment to ${ENV^} Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${{ needs.prepare-deployment.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Git SHA:** ${{ needs.prepare-deployment.outputs.git-sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
-          echo "**Namespace:** ${{ env.KUBERNETES_NAMESPACE }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${ENV^}" >> $GITHUB_STEP_SUMMARY
+          echo "**Namespace:** ${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📦 Deployed Services:" >> $GITHUB_STEP_SUMMARY
           echo "- Auth Service" >> $GITHUB_STEP_SUMMARY
@@ -393,7 +337,12 @@ jobs:
           echo "- Frontend" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### ✅ Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Verify services are running: \`kubectl get pods -n staging\`" >> $GITHUB_STEP_SUMMARY
-          echo "2. Check logs: \`kubectl logs -n staging deployment/<service-name>\`" >> $GITHUB_STEP_SUMMARY
-          echo "3. Access frontend: http://staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
-          echo "4. Access API: http://api.staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+          echo "1. Verify services are running: \`kubectl get pods -n ${NAMESPACE}\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check logs: \`kubectl logs -n ${NAMESPACE} deployment/<service-name>\`" >> $GITHUB_STEP_SUMMARY
+          if [ "$ENV" == "prod" ]; then
+            echo "3. Access frontend: http://app.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+            echo "4. Access API: http://api.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "3. Access frontend: http://staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+            echo "4. Access API: http://api.staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+          fi

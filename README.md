@@ -6,15 +6,14 @@ A comprehensive microservices-based e-commerce platform built with .NET 8, demon
 
 > **📖 For detailed step-by-step instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
-### Fastest Start (Automated)
+### Fastest Start (VS Code Tasks)
 
-**Windows PowerShell:**
-```powershell
-# From repository root
-.\scripts\docker-build-start.ps1
-```
+**Recommended: Use VS Code Tasks**
+1. Press `Ctrl+Shift+P`
+2. Type "Tasks: Run Task"
+3. Select "Docker: Build & Start All Services"
 
-This script automatically handles BuildKit, builds all services, and starts them.
+This will clean, build, and start all services automatically.
 
 ### Manual Setup
 
@@ -66,8 +65,7 @@ Electronic-Paradise/
 ├── gateway/               # API Gateway (YARP)
 ├── frontend/              # React frontend application
 ├── platform/              # Ep.Platform shared library
-├── scripts/               # Automation scripts (NEW)
-│   ├── docker-build-start.ps1  # Build & start all services
+├── scripts/               # Automation scripts
 │   ├── get-next-version.ps1    # Semantic versioning (CI/CD)
 │   └── tag-images.ps1          # Image tagging (CI/CD)
 ├── infra/                 # Infrastructure & Docker setup

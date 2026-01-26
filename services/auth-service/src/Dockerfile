@@ -17,20 +17,6 @@ COPY ["services/auth-service/src/Directory.Build.props", "services/auth-service/
 # Copy nuget.config
 COPY ["services/auth-service/nuget.config", "services/auth-service/"]
 
-# Accept GitHub token as build argument
-ARG GITHUB_TOKEN
-# Handle GitHub token and remove local source (not available in Docker)
-RUN sed -i '/<add key="local"/d' services/auth-service/nuget.config && \
-    if [ -n "$GITHUB_TOKEN" ] && [ "$GITHUB_TOKEN" != "" ]; then \
-      sed -i "s|%GITHUB_TOKEN%|$GITHUB_TOKEN|g" services/auth-service/nuget.config; \
-      echo "GitHub token provided, using GitHub Packages source."; \
-    else \
-      echo "Warning: GITHUB_TOKEN not provided. Removing GitHub package source and credentials."; \
-      sed -i '/<add key="github"/d' services/auth-service/nuget.config; \
-      sed -i '/<packageSourceCredentials>/,/<\\/packageSourceCredentials>/d' services/auth-service/nuget.config; \
-      echo "GitHub source removed. Ep.Platform package must be available from nuget.org."; \
-    fi
-
 # Restore dependencies
 WORKDIR /src/services/auth-service/src
 RUN dotnet restore "AuthService.API/AuthService.API.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true
