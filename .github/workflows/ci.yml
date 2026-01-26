@@ -566,13 +566,16 @@ jobs:
       contents: write
       pull-requests: write
       packages: read
-    # Only create deployment PR if ALL three conditions are met:
-    # 1. Push event to main branch (not PR)
-    # 2. docker-build job succeeded (at least partially - full verification in step)
-    # 3. All images pushed to GHCR (verified in "Verify all Docker builds succeeded" step)
+    # Create deployment PR when images are ACTUALLY PUSHED to registry:
+    # Case 1: Merge to main (automatic push) - creates production deployment PR
+    # Case 2: Manual trigger with PublishBuild=true (alpha push) - creates staging deployment PR
+    # All conditions:
+    # 1. Images were pushed: (main push) OR (PublishBuild=true)
+    # 2. docker-build job succeeded
+    # 3. All images verified in GHCR (checked in verification step)
     if: |
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
+      ((github.event_name == 'push' && github.ref == 'refs/heads/main') || 
+       (github.event.inputs.PublishBuild == 'true')) &&
       needs.docker-build.result == 'success'
     steps:
       - name: Checkout code
