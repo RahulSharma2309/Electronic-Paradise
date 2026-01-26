@@ -1,3 +1,16 @@
+## [1.3.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.2.0...v1.3.0) (2026-01-26)
+
+### 🚀 Features
+
+* replace :latest tags with v1.2.0 in all K8s deployments ([#103](https://github.com/RahulSharma2309/Electronic-Paradise/issues/103)) ([25e8d52](https://github.com/RahulSharma2309/Electronic-Paradise/commit/25e8d5213c641663cd6a528c6eba6790acd6f8ab))
+
+### 🐛 Bug Fixes
+
+* increased the cpu ([#104](https://github.com/RahulSharma2309/Electronic-Paradise/issues/104)) ([ff00342](https://github.com/RahulSharma2309/Electronic-Paradise/commit/ff00342e0c46b06f4bb691260554f239c6698d3f))
+* remove duplicate deployment PR logic from CI pipeline ([566a43b](https://github.com/RahulSharma2309/Electronic-Paradise/commit/566a43b50d1441240e38dc53c0cb34f855e63217))
+* test version bump up ([#102](https://github.com/RahulSharma2309/Electronic-Paradise/issues/102)) ([870bc87](https://github.com/RahulSharma2309/Electronic-Paradise/commit/870bc87e5a92c7afafabfd4d131f9af3b18bfaa0))
+* updated cpu ([#107](https://github.com/RahulSharma2309/Electronic-Paradise/issues/107)) ([19a0892](https://github.com/RahulSharma2309/Electronic-Paradise/commit/19a08920a9c01642a5ede2c8a2a419bb428d5bed))
+
 ## [1.2.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.1.1...v1.2.0) (2026-01-14)
 
 ### 🚀 Features
