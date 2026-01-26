@@ -2,10 +2,20 @@ name: CI Pipeline (Modular)
 
 on:
   push:
-    branches: [main]
+    branches: ['**']  # Run on all branches
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches: [main]
+    branches: ['**']  # Run on PRs to any branch
+  workflow_dispatch:  # Allow manual trigger
+    inputs:
+      PublishBuild:
+        description: 'Push images to registry (default: false for PRs, true for main)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   DOTNET_VERSION: "8.0.x"
@@ -335,7 +345,8 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    if: github.event_name != 'pull_request'
+    # Only scan if images were actually pushed to registry
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event.inputs.PublishBuild == 'true')
     strategy:
       fail-fast: false
       matrix:
@@ -511,7 +522,11 @@ jobs:
         with:
           context: .
           file: ${{ matrix.service.dockerfile }}
-          push: ${{ github.event_name != 'pull_request' }}
+          # Push logic:
+          # - On main push: ALWAYS push (production images)
+          # - On PR/other branches: DON'T push UNLESS PublishBuild=true (manual trigger)
+          # - Build always happens (for validation), push is conditional
+          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event.inputs.PublishBuild == 'true') }}
           tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -682,6 +697,14 @@ jobs:
           git checkout -b "${BRANCH_NAME}"
           echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
           echo "TARGET_ENV=${ENV}" >> $GITHUB_ENV
+          
+          # Set PR title based on environment
+          if [ "${ENV}" == "prod" ]; then
+            ENV_DISPLAY="Production"
+          else
+            ENV_DISPLAY="Staging"
+          fi
+          echo "PR_TITLE=🚀 Deploy v${VERSION} to ${ENV_DISPLAY}" >> $GITHUB_ENV
 
       - name: Update image tags in deployments
         run: |
@@ -813,7 +836,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ env.BRANCH_NAME }}
           base: main
-          title: "🚀 Deploy v${{ needs.calculate-version.outputs.version }} to ${{ steps.determine-env.outputs.target_env == 'prod' && 'Production' || 'Staging' }}"
+          title: ${{ env.PR_TITLE }}
           body: |
             ## 🚀 Deployment PR - v${{ needs.calculate-version.outputs.version }}
             
