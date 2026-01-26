@@ -2,7 +2,7 @@
 
 **Concepts + Implementation Guide**
 
-----
+---
 
 ## Table of Contents
 
