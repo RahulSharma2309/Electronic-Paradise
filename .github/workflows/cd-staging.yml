@@ -1,11 +1,14 @@
 name: CD Pipeline - Deploy to Kubernetes
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
-  workflow_dispatch: # Allow manual trigger
+  # Trigger when CI pipeline completes successfully on main branch
+  workflow_run:
+    workflows: ["CI Pipeline (Modular)"]
+    types: [completed]
+    branches: [main]
+  
+  # Allow manual trigger for testing
+  workflow_dispatch:
     inputs:
       environment:
         description: 'Deployment environment'
@@ -18,38 +21,32 @@ on:
 
 env:
   KUBERNETES_CONTEXT: docker-desktop
+  TARGET_NAMESPACE: staging  # For inception phase, always deploy to staging
 
 jobs:
   # ============================================================================
-  # PHASE 1: Determine Deployment Environment
+  # PHASE 1: Verify CI Success
   # ============================================================================
-  determine-environment:
+  verify-ci:
     runs-on: ubuntu-latest
-    # Only run if:
-    # 1. PR was merged AND has 'deploy-to-staging' or 'deploy-to-prod' label (deployment PRs created by CI)
-    # 2. OR manually triggered via workflow_dispatch
+    # Only proceed if CI succeeded or manual trigger
     if: |
-      (github.event.pull_request.merged == true && 
-       (contains(github.event.pull_request.labels.*.name, 'deploy-to-staging') || 
-        contains(github.event.pull_request.labels.*.name, 'deploy-to-prod'))) ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
       github.event_name == 'workflow_dispatch'
     outputs:
-      environment: ${{ steps.env.outputs.environment }}
-      namespace: ${{ steps.env.outputs.namespace }}
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+      environment: ${{ steps.check.outputs.environment }}
+      namespace: ${{ steps.check.outputs.namespace }}
     steps:
-      - name: Determine environment from PR labels or input
-        id: env
+      - name: Verify deployment conditions
+        id: check
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             ENV="${{ github.event.inputs.environment }}"
+            echo "📋 Manual deployment triggered for: ${ENV}"
           else
-            # Check PR labels for deploy-to-prod
-            PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
-            if echo "$PR_LABELS" | grep -q "deploy-to-prod"; then
-              ENV="prod"
-            else
-              ENV="staging"
-            fi
+            ENV="staging"
+            echo "🚀 Auto-deployment triggered by CI success"
           fi
           
           if [ "$ENV" == "prod" ]; then
@@ -58,6 +55,7 @@ jobs:
             NAMESPACE="staging"
           fi
           
+          echo "should_deploy=true" >> $GITHUB_OUTPUT
           echo "environment=${ENV}" >> $GITHUB_OUTPUT
           echo "namespace=${NAMESPACE}" >> $GITHUB_OUTPUT
           echo "🎯 Deploying to: ${ENV} (namespace: ${NAMESPACE})"
@@ -66,14 +64,14 @@ jobs:
   # PHASE 2: Prepare Deployment
   # ============================================================================
   prepare-deployment:
-    needs: determine-environment
+    needs: verify-ci
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       git-sha: ${{ steps.git.outputs.sha }}
       repo-owner: ${{ steps.repo.outputs.owner }}
-      environment: ${{ needs.determine-environment.outputs.environment }}
-      namespace: ${{ needs.determine-environment.outputs.namespace }}
+      environment: ${{ needs.verify-ci.outputs.environment }}
+      namespace: ${{ needs.verify-ci.outputs.namespace }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -84,7 +82,7 @@ jobs:
         id: version
         run: |
           # Extract version from deployment YAML files
-          DEPLOYMENT_FILE="infra/k8s/${{ needs.determine-environment.outputs.namespace }}/deployments/auth-service/deployment.yaml"
+          DEPLOYMENT_FILE="infra/k8s/${{ needs.verify-ci.outputs.namespace }}/deployments/auth-service/deployment.yaml"
           if [ -f "$DEPLOYMENT_FILE" ]; then
             IMAGE_TAG=$(grep -E "image:.*:v[0-9]" "$DEPLOYMENT_FILE" | head -1 | sed -E 's/.*:v([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
             if [ -n "$IMAGE_TAG" ]; then
@@ -114,10 +112,10 @@ jobs:
           echo "owner=$OWNER" >> $GITHUB_OUTPUT
 
   # ============================================================================
-  # PHASE 2: Verify Images Exist
+  # PHASE 3: Verify Images Exist
   # ============================================================================
   verify-images:
-    needs: [determine-environment, prepare-deployment]
+    needs: [verify-ci, prepare-deployment]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -164,7 +162,7 @@ jobs:
           echo "✅ Image found: ${IMAGE_TAG}"
 
   # ============================================================================
-  # PHASE 3: Deploy to Kubernetes
+  # PHASE 4: Deploy to Kubernetes
   # ============================================================================
   deploy-to-kubernetes:
     needs: [prepare-deployment, verify-images]
@@ -254,7 +252,7 @@ jobs:
           kubectl get pods -n "${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
-  # PHASE 4: Smoke Tests
+  # PHASE 5: Smoke Tests
   # ============================================================================
   smoke-tests:
     needs: [deploy-to-kubernetes]
@@ -316,7 +314,7 @@ jobs:
           kubectl get services -n "${NAMESPACE}" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
-  # PHASE 5: Deployment Summary
+  # PHASE 6: Deployment Summary
   # ============================================================================
   deployment-summary:
     needs: [prepare-deployment, deploy-to-kubernetes, smoke-tests]
