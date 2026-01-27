@@ -21,8 +21,6 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
     # SSL redirect (when TLS is configured)
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # Rewrite target for API paths
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
@@ -35,27 +33,6 @@ spec:
             backend:
               service:
                 name: frontend
-                port:
-                  number: 80
-    
-    # API Gateway route - routes all /api/* requests to gateway
-    - host: api.staging.electronic-paradise.local
-      http:
-        paths:
-          - path: /api(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: gateway
-                port:
-                  number: 80
-          
-          # Health check endpoint
-          - path: /health
-            pathType: Prefix
-            backend:
-              service:
-                name: gateway
                 port:
                   number: 80
     
@@ -118,5 +95,42 @@ spec:
                 name: payment-service
                 port:
                   number: 80
-
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: electronic-paradise-api-ingress
+  namespace: staging
+  labels:
+    managed-by: electronic-paradise
+    environment: staging
+  annotations:
+    # Use NGINX Ingress Controller
+    kubernetes.io/ingress.class: nginx
+    # Rewrite target for API paths
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # SSL redirect (when TLS is configured)
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+    # API Gateway route - routes all /api/* requests to gateway
+    - host: api.staging.electronic-paradise.local
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
+          
+          # Health check endpoint
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 80
