@@ -2,12 +2,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mssql
-  namespace: varnex-enterprise
+  namespace: prod
+  labels:
+    app: mssql
+    component: database
 spec:
   selector:
-    app: varnex-enterprise-mssql
+    app: mssql
   ports:
   - port: 1433
     targetPort: 1433
+    protocol: TCP
     name: mssql
   type: ClusterIP

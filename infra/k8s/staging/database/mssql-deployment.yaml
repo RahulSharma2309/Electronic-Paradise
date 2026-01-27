@@ -1,17 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: varnex-enterprise-mssql
-  namespace: varnex-enterprise
+  name: mssql
+  namespace: staging
+  labels:
+    app: mssql
+    component: database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: varnex-enterprise-mssql
+      app: mssql
   template:
     metadata:
       labels:
-        app: varnex-enterprise-mssql
+        app: mssql
+        component: database
     spec:
       automountServiceAccountToken: false
       containers:
@@ -26,7 +30,7 @@ spec:
         - name: SA_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: varnex-enterprise-mssql-secret
+              name: mssql-secret
               key: SA_PASSWORD
         - name: MSSQL_PID
           value: "Express"
@@ -45,18 +49,4 @@ spec:
       volumes:
       - name: mssql-data
         persistentVolumeClaim:
-          claimName: varnex-enterprise-mssql-data
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: varnex-enterprise-mssql
-  namespace: varnex-enterprise
-spec:
-  selector:
-    app: varnex-enterprise-mssql
-  ports:
-  - port: 1433
-    targetPort: 1433
-    name: mssql
-  type: ClusterIP
+          claimName: mssql-data
