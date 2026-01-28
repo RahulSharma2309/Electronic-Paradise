@@ -758,7 +758,15 @@ jobs:
           git checkout -b "${BRANCH}"
           git push origin "${BRANCH}"
           
-          # Create PR if it doesn't exist yet
+          # Create PR if it doesn't exist yet (use PAT to trigger PR workflows)
+          if [ -z "${CI_PR_TOKEN}" ]; then
+            echo "⚠️ CI_PR_TOKEN not set. Skipping PR creation."
+            echo "Create PR manually: https://github.com/${GITHUB_REPOSITORY}/pull/new/${BRANCH}"
+            exit 0
+          fi
+
+          export GH_TOKEN="${CI_PR_TOKEN}"
+
           if gh pr list --head "${BRANCH}" --base "main" --json number --jq "length" | grep -q "^0$"; then
             echo "🧾 Creating PR..."
             gh pr create \
@@ -772,4 +780,4 @@ jobs:
           
           echo "✅ Successfully opened PR for staging deployment updates"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_PR_TOKEN: ${{ secrets.CI_PR_TOKEN }}
