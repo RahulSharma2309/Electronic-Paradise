@@ -18,6 +18,14 @@ on:
         options:
           - staging
           - prod
+      run_k8s_apply:
+        description: 'Run kubectl apply/smoke tests from runner'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   KUBERNETES_CONTEXT: docker-desktop
@@ -167,6 +175,7 @@ jobs:
   deploy-to-kubernetes:
     needs: [prepare-deployment, verify-images]
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_k8s_apply == 'true'
     permissions:
       contents: read
     environment:
@@ -257,6 +266,7 @@ jobs:
   smoke-tests:
     needs: [deploy-to-kubernetes]
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_k8s_apply == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
