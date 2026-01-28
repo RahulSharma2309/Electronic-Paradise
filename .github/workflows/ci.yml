@@ -676,6 +676,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     # Update staging K8s deployment files with new image tags when:
     # Case 1: Push to main (after PR merge) - images already pushed
     # Case 2: Manual CI with PublishBuild=true - images pushed
@@ -734,6 +735,7 @@ jobs:
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
+          BRANCH="ci/update-staging-v${VERSION}-${SHA}"
           
           # Stage all staging deployment changes
           git add infra/k8s/staging/deployments/
@@ -747,13 +749,27 @@ jobs:
           
           # Commit the changes
           echo "📝 Committing updated deployment files..."
-          git commit -m "ci: update staging deployments to v${VERSION} [skip ci]" \
+          git commit -m "ci: update staging deployments to v${VERSION}" \
                      -m "Automated image tag update by CI pipeline" \
                      -m "Git SHA: ${SHA}"
           
-          # Push directly to main
-          echo "🚀 Pushing to main..."
-          git push origin HEAD:main
+          # Push to a branch and open a PR (respects branch protection)
+          echo "🚀 Pushing to branch: ${BRANCH}..."
+          git checkout -b "${BRANCH}"
+          git push origin "${BRANCH}"
           
-          echo "✅ Successfully updated staging deployment files"
-          echo "🎯 CD pipeline will now automatically deploy to staging K8s"
+          # Create PR if it doesn't exist yet
+          if gh pr list --head "${BRANCH}" --base "main" --json number --jq "length" | grep -q "^0$"; then
+            echo "🧾 Creating PR..."
+            gh pr create \
+              --base "main" \
+              --head "${BRANCH}" \
+              --title "ci: update staging deployments to v${VERSION}" \
+              --body "Automated image tag update by CI pipeline.\n\nGit SHA: ${SHA}"
+          else
+            echo "ℹ️ PR already exists for ${BRANCH}"
+          fi
+          
+          echo "✅ Successfully opened PR for staging deployment updates"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
