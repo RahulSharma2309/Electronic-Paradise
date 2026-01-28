@@ -735,7 +735,7 @@ jobs:
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
-          BRANCH="ci/update-staging-v${VERSION}-${SHA}"
+          BRANCH="ci/update-staging-v${VERSION}-${SHA}-${GITHUB_RUN_ID}"
           
           # Stage all staging deployment changes
           git add infra/k8s/staging/deployments/
