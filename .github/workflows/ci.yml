@@ -26,6 +26,39 @@ env:
 
 jobs:
   # ============================================================================
+  # PHASE 0: Detect K8s-only changes (skip heavy jobs)
+  # ============================================================================
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      only_k8s: ${{ steps.flags.outputs.only_k8s }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            k8s:
+              - 'infra/k8s/**'
+            other:
+              - '**'
+              - '!infra/k8s/**'
+
+      - name: Compute only_k8s flag
+        id: flags
+        run: |
+          if [ "${{ steps.filter.outputs.k8s }}" == "true" ] && [ "${{ steps.filter.outputs.other }}" == "false" ]; then
+            echo "only_k8s=true" >> $GITHUB_OUTPUT
+          else
+            echo "only_k8s=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ============================================================================
   # PHASE 1: Calculate Version (runs once, shares with all)
   # ============================================================================
   calculate-version:
@@ -78,6 +111,8 @@ jobs:
   # PHASE 2: Build & Test .NET Services (PARALLEL via Matrix)
   # ============================================================================
   dotnet-services:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -161,6 +196,8 @@ jobs:
   # PHASE 3: Frontend Build & Test
   # ============================================================================
   frontend-build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -202,6 +239,8 @@ jobs:
   # PHASE 4: Dependency Scanning
   # ============================================================================
   dependency-scanning:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -284,6 +323,8 @@ jobs:
   # PHASE 5: Frontend Dependency Scanning
   # ============================================================================
   frontend-dependency-scanning:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -343,13 +384,18 @@ jobs:
   # PHASE 6: Docker Image Scanning (Trivy)
   # ============================================================================
   docker-scanning:
-    needs: [calculate-version, docker-build]
+    needs: [detect-changes, calculate-version, docker-build]
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
     # Only scan if images were actually pushed to registry
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')
+    if: |
+      needs.detect-changes.outputs.only_k8s != 'true' &&
+      (
+        (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+        (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true')
+      )
     strategy:
       fail-fast: false
       matrix:
@@ -402,6 +448,8 @@ jobs:
   # PHASE 7: SonarCloud Analysis
   # ============================================================================
   sonarcloud:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -432,6 +480,7 @@ jobs:
   docker-build:
     needs:
       [
+        detect-changes,
         calculate-version,
         dotnet-services,
         frontend-build,
@@ -439,6 +488,7 @@ jobs:
         frontend-dependency-scanning,
         sonarcloud,
       ]
+    if: needs.detect-changes.outputs.only_k8s != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -560,6 +610,63 @@ jobs:
           echo "- Payment Service" >> $GITHUB_STEP_SUMMARY
           echo "- Gateway" >> $GITHUB_STEP_SUMMARY
           echo "- Frontend" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PHASE 9.5: CI Gate (single required check)
+  # ============================================================================
+  ci-gate:
+    needs:
+      [
+        detect-changes,
+        calculate-version,
+        dotnet-services,
+        frontend-build,
+        dependency-scanning,
+        frontend-dependency-scanning,
+        sonarcloud,
+        docker-build,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Evaluate CI gate
+        run: |
+          if [ "${{ needs.detect-changes.outputs.only_k8s }}" == "true" ]; then
+            echo "✅ Only infra/k8s changes detected. Heavy jobs skipped."
+            exit 0
+          fi
+
+          if [ "${{ needs.dotnet-services.result }}" != "success" ]; then
+            echo "❌ dotnet-services failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.frontend-build.result }}" != "success" ]; then
+            echo "❌ frontend-build failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.dependency-scanning.result }}" != "success" ]; then
+            echo "❌ dependency-scanning failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.frontend-dependency-scanning.result }}" != "success" ]; then
+            echo "❌ frontend-dependency-scanning failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.sonarcloud.result }}" != "success" ]; then
+            echo "❌ sonarcloud failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.docker-build.result }}" != "success" ]; then
+            echo "❌ docker-build failed"
+            exit 1
+          fi
+
+          echo "✅ CI gate passed"
 
   # ============================================================================
   # PHASE 10: Update Staging Deployment Files (Auto-Deploy)
