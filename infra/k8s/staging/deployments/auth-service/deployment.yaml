@@ -27,7 +27,7 @@ spec:
       serviceAccountName: auth-service-sa # Use the ServiceAccount we created
       containers:
         - name: auth-service
-          image: ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.1
+          image: ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.3.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
