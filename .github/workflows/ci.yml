@@ -90,16 +90,15 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls")
 
-            PR_BRANCH=$(python - <<'PY'
+            PR_BRANCH=$(echo "$PR_JSON" | python -c "
 import json, sys
 try:
     data = json.load(sys.stdin)
     if isinstance(data, list) and data:
-        print(data[0].get("head", {}).get("ref", ""))
+        print(data[0].get('head', {}).get('ref', ''))
 except Exception:
     pass
-PY
-<<< "$PR_JSON")
+")
 
             if [ -n "$PR_BRANCH" ]; then
               BRANCH_NAME="$PR_BRANCH"
