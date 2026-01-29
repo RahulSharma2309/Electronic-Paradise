@@ -62,6 +62,9 @@ jobs:
   # PHASE 1: Calculate Version (runs once, shares with all)
   # ============================================================================
   calculate-version:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -79,6 +82,31 @@ jobs:
         run: |
           chmod +x ./scripts/get-next-version.sh
           BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+
+          # On main, try to resolve the merged PR branch
+          if [ "$BRANCH_NAME" = "main" ] && [ -n "${GITHUB_TOKEN:-}" ]; then
+            PR_JSON=$(curl -s \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls")
+
+            PR_BRANCH=$(python - <<'PY'
+import json, sys
+try:
+    data = json.load(sys.stdin)
+    if isinstance(data, list) and data:
+        print(data[0].get("head", {}).get("ref", ""))
+except Exception:
+    pass
+PY
+<<< "$PR_JSON")
+
+            if [ -n "$PR_BRANCH" ]; then
+              BRANCH_NAME="$PR_BRANCH"
+              echo "🔎 Using PR branch for versioning: $BRANCH_NAME"
+            fi
+          fi
+
           VERSION=$(./scripts/get-next-version.sh "$BRANCH_NAME")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "📊 Version: $VERSION"
@@ -678,11 +706,10 @@ jobs:
       contents: write
       pull-requests: write
     # Update staging K8s deployment files with new image tags when:
-    # Case 1: Push to main (after PR merge) - images already pushed
-    # Case 2: Manual CI with PublishBuild=true - images pushed
+    # ONLY on push to main (after PR merge) - production images already pushed
+    # Do NOT update on manual builds from branches (those create alpha tags)
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.docker-build.result == 'success') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.PublishBuild == 'true' && needs.docker-build.result == 'success')
+      github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.docker-build.result == 'success'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -735,7 +762,6 @@ jobs:
         run: |
           VERSION="${{ needs.calculate-version.outputs.version }}"
           SHA="${{ needs.calculate-version.outputs.git-sha }}"
-          BRANCH="ci/update-staging-v${VERSION}-${SHA}-${GITHUB_RUN_ID}"
           
           # Stage all staging deployment changes
           git add infra/k8s/staging/deployments/
@@ -753,31 +779,9 @@ jobs:
                      -m "Automated image tag update by CI pipeline" \
                      -m "Git SHA: ${SHA}"
           
-          # Push to a branch and open a PR (respects branch protection)
-          echo "🚀 Pushing to branch: ${BRANCH}..."
-          git checkout -b "${BRANCH}"
-          git push origin "${BRANCH}"
+          # Push directly to main (GitHub Actions bypass enabled)
+          echo "🚀 Pushing to main..."
+          git push origin HEAD:main
           
-          # Create PR if it doesn't exist yet (use PAT to trigger PR workflows)
-          if [ -z "${CI_PR_TOKEN}" ]; then
-            echo "⚠️ CI_PR_TOKEN not set. Skipping PR creation."
-            echo "Create PR manually: https://github.com/${GITHUB_REPOSITORY}/pull/new/${BRANCH}"
-            exit 0
-          fi
-
-          export GH_TOKEN="${CI_PR_TOKEN}"
-
-          if gh pr list --head "${BRANCH}" --base "main" --json number --jq "length" | grep -q "^0$"; then
-            echo "🧾 Creating PR..."
-            gh pr create \
-              --base "main" \
-              --head "${BRANCH}" \
-              --title "ci: update staging deployments to v${VERSION}" \
-              --body "Automated image tag update by CI pipeline.\n\nGit SHA: ${SHA}"
-          else
-            echo "ℹ️ PR already exists for ${BRANCH}"
-          fi
-          
-          echo "✅ Successfully opened PR for staging deployment updates"
-        env:
-          CI_PR_TOKEN: ${{ secrets.CI_PR_TOKEN }}
+          echo "✅ Successfully updated staging deployment files in main"
+          echo "🎯 ArgoCD will automatically detect and deploy changes"
