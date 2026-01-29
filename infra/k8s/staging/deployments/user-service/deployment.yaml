@@ -27,7 +27,7 @@ spec:
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        image: ghcr.io/rahulsharma2309/electronic-paradise-user:v1.3.1
+        image: ghcr.io/rahulsharma2309/electronic-paradise-user:v1.4.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
