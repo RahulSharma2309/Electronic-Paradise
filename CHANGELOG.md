@@ -1,3 +1,16 @@
+## [1.4.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.3.0...v1.4.0) (2026-01-29)
+
+### 🚀 Features
+
+*  made ci simpler ([#118](https://github.com/RahulSharma2309/Electronic-Paradise/issues/118)) ([7296982](https://github.com/RahulSharma2309/Electronic-Paradise/commit/72969821dab6d826990b5ed8f7d049ad394d7112))
+* add k8 to local ([#108](https://github.com/RahulSharma2309/Electronic-Paradise/issues/108)) ([b50af4c](https://github.com/RahulSharma2309/Electronic-Paradise/commit/b50af4c3e4b285b918abb3170cb7df095d6b86bc))
+* cd run pr is not raised ([#117](https://github.com/RahulSharma2309/Electronic-Paradise/issues/117)) ([dc47bc6](https://github.com/RahulSharma2309/Electronic-Paradise/commit/dc47bc6ff5522babc1ee747af68bbec1f6074d1a))
+
+### 🐛 Bug Fixes
+
+* ci pipeline fix ([#110](https://github.com/RahulSharma2309/Electronic-Paradise/issues/110)) ([4b6a7e0](https://github.com/RahulSharma2309/Electronic-Paradise/commit/4b6a7e0679dc5426f2954eb04db5df204edd75fd))
+* test argocd ([#109](https://github.com/RahulSharma2309/Electronic-Paradise/issues/109)) ([78090dd](https://github.com/RahulSharma2309/Electronic-Paradise/commit/78090ddf4352414960850fc33723ab666ed68da6))
+
 ## [1.3.0](https://github.com/RahulSharma2309/Electronic-Paradise/compare/v1.2.0...v1.3.0) (2026-01-26)
 
 ### 🚀 Features
