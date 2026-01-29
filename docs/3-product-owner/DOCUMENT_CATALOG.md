@@ -4,7 +4,7 @@ This is a catalog of **product documents**: what they are, why they exist, who o
 
 > **Goal:** Make product planning understandable and executable, while staying aligned with the existing engineering roadmap (`docs/PROJECT_ROADMAP.md`).
 
----
+----
 
 ## ✅ Core Product Documents (Minimum Set)
 
