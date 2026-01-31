@@ -4,7 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using UserService.Abstraction.DTOs;
+using UserService.Abstraction.DTOs.Requests;
+using UserService.Abstraction.DTOs.Responses;
 
 namespace UserService.Core.Business;
 
@@ -14,18 +15,18 @@ namespace UserService.Core.Business;
 public interface IUserService
 {
     /// <summary>
-    /// Retrieves a user profile by its unique identifier.
+    /// Retrieves a user profile by its unique identifier (comprehensive details).
     /// </summary>
     /// <param name="id">The unique identifier of the profile.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user profile if found, otherwise null.</returns>
-    Task<UserProfileDto?> GetByIdAsync(Guid id);
+    Task<UserProfileDetailResponse?> GetByIdAsync(Guid id);
 
     /// <summary>
-    /// Retrieves a user profile by the authentication service user ID.
+    /// Retrieves a user profile by the authentication service user ID (lightweight).
     /// </summary>
     /// <param name="userId">The user ID from the authentication service.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user profile if found, otherwise null.</returns>
-    Task<UserProfileDto?> GetByUserIdAsync(Guid userId);
+    Task<UserProfileResponse?> GetByUserIdAsync(Guid userId);
 
     /// <summary>
     /// Checks whether a phone number is already registered.
@@ -37,31 +38,39 @@ public interface IUserService
     /// <summary>
     /// Creates a new user profile.
     /// </summary>
-    /// <param name="dto">The user creation data transfer object.</param>
+    /// <param name="request">The user creation request.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the created user profile.</returns>
-    Task<UserProfileDto> CreateAsync(CreateUserDto dto);
+    Task<UserProfileDetailResponse> CreateAsync(CreateUserProfileRequest request);
 
     /// <summary>
     /// Updates an existing user profile.
     /// </summary>
     /// <param name="id">The unique identifier of the profile to update.</param>
-    /// <param name="dto">The user update data transfer object.</param>
+    /// <param name="request">The user update request.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the updated user profile if found, otherwise null.</returns>
-    Task<UserProfileDto?> UpdateAsync(Guid id, CreateUserDto dto);
+    Task<UserProfileDetailResponse?> UpdateAsync(Guid id, UpdateUserProfileRequest request);
+
+    /// <summary>
+    /// Adds balance to a user's wallet.
+    /// </summary>
+    /// <param name="userId">The user ID from the authentication service.</param>
+    /// <param name="request">The add balance request.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the wallet balance response.</returns>
+    Task<WalletBalanceResponse> AddBalanceAsync(Guid userId, AddBalanceRequest request);
 
     /// <summary>
     /// Debits (subtracts) an amount from a user's wallet balance.
     /// </summary>
-    /// <param name="id">The unique identifier of the user profile.</param>
+    /// <param name="userId">The user ID from the authentication service.</param>
     /// <param name="amount">The amount to debit.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the new wallet balance.</returns>
-    Task<decimal> DebitWalletAsync(Guid id, decimal amount);
+    /// <returns>A task that represents the asynchronous operation. The task result contains the wallet balance response.</returns>
+    Task<WalletBalanceResponse> DebitWalletAsync(Guid userId, decimal amount);
 
     /// <summary>
     /// Credits (adds) an amount to a user's wallet balance.
     /// </summary>
-    /// <param name="id">The unique identifier of the user profile.</param>
+    /// <param name="userId">The user ID from the authentication service.</param>
     /// <param name="amount">The amount to credit.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the new wallet balance.</returns>
-    Task<decimal> CreditWalletAsync(Guid id, decimal amount);
+    /// <returns>A task that represents the asynchronous operation. The task result contains the wallet balance response.</returns>
+    Task<WalletBalanceResponse> CreditWalletAsync(Guid userId, decimal amount);
 }

@@ -100,6 +100,19 @@ Documents how users add money to their wallet:
 
 ---
 
+### 7. [PROFILE_EDIT_FLOW.md](./PROFILE_EDIT_FLOW.md)
+**Profile View & Edit Journey**
+
+Documents how users view and update their profile details:
+- Fetch profile by Auth `userId`
+- Edit form behavior (frontend state)
+- Partial updates via `PATCH` (market-standard)
+- Phone uniqueness conflicts and error codes
+
+**Key Technologies**: User Service, PATCH semantics, React State management
+
+---
+
 ## 🏗️ Architecture Overview
 
 ```

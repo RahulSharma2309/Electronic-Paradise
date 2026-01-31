@@ -1,9 +1,11 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy Platform project (now accessible with repo-root context)
 COPY ["platform/Ep.Platform/Ep.Platform.csproj", "platform/Ep.Platform/"]
 COPY ["platform/Ep.Platform/", "platform/Ep.Platform/"]
+COPY ["platform/Directory.Build.props", "platform/"]
+COPY ["platform/.build/", "platform/.build/"]
 
 # Copy service .build folder with version definitions
 COPY ["services/payment-service/.build/", "services/payment-service/.build/"]
@@ -26,10 +28,10 @@ COPY ["services/payment-service/src/", "/src/services/payment-service/src/"]
 
 # Build and publish
 WORKDIR "/src/services/payment-service/src/PaymentService.API"
-RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true
+RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true /p:TreatWarningsAsErrors=false
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app .
 

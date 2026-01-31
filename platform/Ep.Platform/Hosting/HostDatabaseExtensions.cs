@@ -1,61 +1,46 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-namespace Ep.Platform.Hosting;
-
-public interface IDbSeeder<in TContext> where TContext : DbContext
+namespace Ep.Platform.Hosting
 {
-    Task SeedAsync(TContext db, CancellationToken cancellationToken = default);
-}
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
 
-public static class HostDatabaseExtensions
-{
     /// <summary>
-    /// Applies migrations (or creates the database) and runs any registered seeders.
-    /// Intended to replace the ad-hoc EnsureCreated calls in Program.cs.
+    /// Provides host extensions for ensuring the database is created/migrated and seeded.
     /// </summary>
-    public static async Task EnsureDatabaseAsync<TContext>(
-        this IHost host,
-        bool applyMigrations = true,
-        CancellationToken cancellationToken = default)
-        where TContext : DbContext
+    public static class HostDatabaseExtensions
     {
-        using var scope = host.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<TContext>();
+        /// <summary>
+        /// Applies migrations (or creates the database) and runs any registered seeders.
+        /// Intended to replace ad-hoc database initialization calls in Program.cs.
+        /// </summary>
+        /// <typeparam name="TContext">The DbContext type.</typeparam>
+        /// <param name="host">The host instance.</param>
+        /// <param name="applyMigrations">Whether to apply EF Core migrations.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task representing the asynchronous initialization operation.</returns>
+        public static async Task EnsureDatabaseAsync<TContext>(
+            this IHost host,
+            bool applyMigrations = true,
+            CancellationToken cancellationToken = default)
+            where TContext : DbContext
+        {
+            using var scope = host.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<TContext>();
 
-        if (applyMigrations)
-        {
-            await db.Database.MigrateAsync(cancellationToken);
-        }
-        else
-        {
-            await db.Database.EnsureCreatedAsync(cancellationToken);
-        }
+            if (applyMigrations)
+            {
+                await db.Database.MigrateAsync(cancellationToken);
+            }
+            else
+            {
+                await db.Database.EnsureCreatedAsync(cancellationToken);
+            }
 
-        var seeders = scope.ServiceProvider.GetServices<IDbSeeder<TContext>>();
-        foreach (var seeder in seeders)
-        {
-            await seeder.SeedAsync(db, cancellationToken);
+            var seeders = scope.ServiceProvider.GetServices<IDbSeeder<TContext>>();
+            foreach (var seeder in seeders)
+            {
+                await seeder.SeedAsync(db, cancellationToken);
+            }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

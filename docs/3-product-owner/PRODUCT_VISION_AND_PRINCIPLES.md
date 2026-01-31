@@ -1,23 +1,29 @@
 # 🎯 Product Vision & Principles (PM/PO)
 
+## 🌱 Product Pivot (Jan 2026)
+**Previous:** Electronics & Smart Devices E-Commerce  
+**Current:** **Organic Products Marketplace**
+
 ## Product Name
-**Electronics & Smart Devices E-Commerce Platform**
+**FreshHarvest Market** - Organic Products E-Commerce Platform
 
 ## Vision (North Star Statement)
-Enable customers to **discover, compare, and purchase electronics confidently** with a checkout experience that is **fast, trustworthy, and transparent**.
+Enable customers to **discover, trust, and purchase certified organic products** with a shopping experience that is **transparent, fresh, and sustainable**.
 
 ## Mission (What we do day-to-day)
-Build an e-commerce experience that:
-- makes product choice easier (specs, variants, search, comparison, reviews)
-- makes checkout reliable (validation, payments, order state visibility)
-- makes the system production-ready (quality, testing, security, observability)
+Build an organic marketplace experience that:
+- makes choosing organic products easier (certifications, origin, freshness, categories)
+- makes checkout reliable (validation, payments, delivery tracking)
+- makes the system white-label ready (configurable branding, multi-tenant architecture)
+- ensures quality and freshness (expiration tracking, organic certification verification)
 
 ---
 
 ## Target Customers
-- **Primary:** First-time and returning shoppers buying electronics (phones, laptops, wearables, accessories).
-- **Secondary:** Power users who care about specs, variants, and comparisons.
-- **Future (Admin/Operations):** Product and order admins managing catalog, pricing, inventory, and customer issues.
+- **Primary:** Health-conscious consumers seeking certified organic produce, grains, and groceries.
+- **Secondary:** Environmentally aware shoppers who value sustainable farming and local sourcing.
+- **Tertiary:** Families prioritizing chemical-free, natural food products.
+- **Future (Admin/Operations):** Product and order admins managing organic catalog, certifications, supplier relationships, and freshness tracking.
 
 ---
 
@@ -73,11 +79,14 @@ Why:
 
 ## Strategic Bets (12-Month)
 
-1. **Better product decisioning drives conversion**
-   - Search/filter, variants, specs, comparison, and reviews increase confidence.
+1. **Transparency in organic certification drives trust**
+   - Displaying certification details, origin, and farm information increases customer confidence.
 
-2. **Reliable order lifecycle reduces support & increases trust**
-   - State machine + cancellation/refunds + saga reliability.
+2. **Freshness guarantee reduces waste & increases satisfaction**
+   - Expiration tracking, delivery speed, and quality assurance.
+
+3. **White-label architecture enables market expansion**
+   - Multi-tenant design allows quick deployment for new product domains.
 
 3. **Quality & operations enable scale**
    - Testing, CI/CD, observability, security.

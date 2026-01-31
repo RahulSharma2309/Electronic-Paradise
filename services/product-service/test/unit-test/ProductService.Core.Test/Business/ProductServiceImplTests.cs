@@ -1,8 +1,11 @@
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using ProductService.Abstraction.DTOs.Requests;
+using ProductService.Abstraction.DTOs.Responses;
 using ProductService.Abstraction.Models;
 using ProductService.Core.Business;
+using ProductService.Core.Mappers;
 using ProductService.Core.Repository;
 using Xunit;
 
@@ -15,17 +18,25 @@ public class ProductServiceImplTests
     {
         // Arrange
         var repo = new Mock<IProductRepository>(MockBehavior.Strict);
-        var service = new ProductServiceImpl(repo.Object, NullLogger<ProductServiceImpl>.Instance);
+        var mapper = new Mock<IProductMapper>(MockBehavior.Strict);
+        var service = new ProductServiceImpl(repo.Object, mapper.Object, NullLogger<ProductServiceImpl>.Instance);
 
-        var product = new Product
+        var request = new CreateProductRequest
         {
             Name = "   ",
             Price = 10,
             Stock = 5,
         };
 
+        mapper.Setup(m => m.ToEntity(It.IsAny<CreateProductRequest>())).Returns(new Product
+        {
+            Name = request.Name,
+            Price = request.Price,
+            Stock = request.Stock,
+        });
+
         // Act
-        var act = () => service.CreateAsync(product);
+        var act = () => service.CreateAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>()
@@ -39,17 +50,25 @@ public class ProductServiceImplTests
     {
         // Arrange
         var repo = new Mock<IProductRepository>(MockBehavior.Strict);
-        var service = new ProductServiceImpl(repo.Object, NullLogger<ProductServiceImpl>.Instance);
+        var mapper = new Mock<IProductMapper>(MockBehavior.Strict);
+        var service = new ProductServiceImpl(repo.Object, mapper.Object, NullLogger<ProductServiceImpl>.Instance);
 
-        var product = new Product
+        var request = new CreateProductRequest
         {
             Name = "Keyboard",
             Price = -1,
             Stock = 5,
         };
 
+        mapper.Setup(m => m.ToEntity(It.IsAny<CreateProductRequest>())).Returns(new Product
+        {
+            Name = request.Name,
+            Price = request.Price,
+            Stock = request.Stock,
+        });
+
         // Act
-        var act = () => service.CreateAsync(product);
+        var act = () => service.CreateAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>()
@@ -63,17 +82,25 @@ public class ProductServiceImplTests
     {
         // Arrange
         var repo = new Mock<IProductRepository>(MockBehavior.Strict);
-        var service = new ProductServiceImpl(repo.Object, NullLogger<ProductServiceImpl>.Instance);
+        var mapper = new Mock<IProductMapper>(MockBehavior.Strict);
+        var service = new ProductServiceImpl(repo.Object, mapper.Object, NullLogger<ProductServiceImpl>.Instance);
 
-        var product = new Product
+        var request = new CreateProductRequest
         {
             Name = "Mouse",
             Price = 10,
             Stock = -1,
         };
 
+        mapper.Setup(m => m.ToEntity(It.IsAny<CreateProductRequest>())).Returns(new Product
+        {
+            Name = request.Name,
+            Price = request.Price,
+            Stock = request.Stock,
+        });
+
         // Act
-        var act = () => service.CreateAsync(product);
+        var act = () => service.CreateAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>()
@@ -89,17 +116,44 @@ public class ProductServiceImplTests
         var repo = new Mock<IProductRepository>(MockBehavior.Strict);
         repo.Setup(r => r.AddAsync(It.IsAny<Product>())).Returns(Task.CompletedTask);
 
-        var service = new ProductServiceImpl(repo.Object, NullLogger<ProductServiceImpl>.Instance);
+        var mapper = new Mock<IProductMapper>(MockBehavior.Strict);
+        var service = new ProductServiceImpl(repo.Object, mapper.Object, NullLogger<ProductServiceImpl>.Instance);
 
-        var product = new Product
+        var request = new CreateProductRequest
         {
             Name = "Headphones",
             Price = 50,
             Stock = 2,
         };
 
+        mapper.Setup(m => m.ToEntity(It.IsAny<CreateProductRequest>())).Returns(new Product
+        {
+            Name = request.Name,
+            Price = request.Price,
+            Stock = request.Stock,
+        });
+
+        mapper.Setup(m => m.ToDetailResponse(It.IsAny<Product>())).Returns(new ProductDetailResponse
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Description = null,
+            Price = request.Price,
+            Stock = request.Stock,
+            Category = null,
+            Brand = null,
+            Sku = null,
+            Unit = null,
+            ImageUrl = null,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = null,
+            Certification = null,
+            Metadata = null,
+        });
+
         // Act
-        await service.CreateAsync(product);
+        await service.CreateAsync(request);
 
         // Assert
         repo.Verify(r => r.AddAsync(It.Is<Product>(p =>

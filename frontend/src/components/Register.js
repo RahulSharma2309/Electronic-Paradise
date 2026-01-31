@@ -61,9 +61,22 @@ export default function Register({ onLogin, initialEmail = "" }) {
         password: formData.password,
       });
 
-      const token = loginResponse.data.token || loginResponse.data.Token;
+      const data = loginResponse?.data || {};
+      const token =
+        data.token ||
+        data.Token ||
+        data.accessToken ||
+        data.access_token ||
+        data.jwt ||
+        null;
       const userId =
-        loginResponse.data.userId || loginResponse.data.UserId || null;
+        data.userId ||
+        data.UserId ||
+        data.user?.id ||
+        data.user?.Id ||
+        data.User?.id ||
+        data.User?.Id ||
+        null;
 
       if (token) {
         if (onLogin) onLogin(token, userId);

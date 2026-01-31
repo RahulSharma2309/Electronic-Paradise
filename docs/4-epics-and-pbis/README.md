@@ -1,6 +1,20 @@
-# 📊 Epics & PBIs (Product Backlog)
+# 📊 Epics & PBIs (Product Backlog) - FreshHarvest Market
 
-> **Complete catalog of all epics and product backlog items**
+> **Complete catalog of all epics and product backlog items for organic products marketplace**
+
+---
+
+## 🌱 Product Pivot (Jan 2026)
+
+**Previous Domain:** Electronics & Smart Devices E-Commerce  
+**Current Domain:** **Organic Products Marketplace** (FreshHarvest Market)  
+**Architecture:** White-label ready for easy domain switching
+
+**What Changed:**
+- Product model enhanced with organic-specific fields (certification, origin, expiration)
+- Frontend rebranded with organic green theme
+- White-label configuration architecture for future flexibility
+- All epics updated to reflect organic products domain
 
 ---
 
@@ -11,7 +25,7 @@ This folder contains all epics and their Product Backlog Items (PBIs). Each epic
 **Total Story Points:** 864  
 **Total Epics:** 10  
 **Completed Epics:** 0 (MVP completed separately)  
-**In Progress:** Epic 1
+**In Progress:** Epic 1 (PBI 1.1 ✅ COMPLETED)
 
 ---
 
@@ -33,32 +47,35 @@ This folder contains all epics and their Product Backlog Items (PBIs). Each epic
 
 ---
 
-## 📁 Epic 1: Enhanced Product Domain (144 pts)
+## 📁 Epic 1: Enhanced Product Domain - Organic Products (144 pts)
 
 **Location:** [`EPIC_1/`](EPIC_1/)
 
-**Goal:** Upgrade product catalog from simple CRUD to enterprise-grade with design patterns
+**Goal:** Upgrade product catalog for organic products marketplace with enterprise-grade design patterns and white-label flexibility
+
+**Progress:** 13/144 story points (9% complete) - ✅ **PBI 1.1 COMPLETED**
 
 ### Documents
-- [`EPIC_1.md`](EPIC_1/EPIC_1.md) - Epic overview, goals, scope
-- [`EPIC_1_UX_DESIGN.md`](EPIC_1/EPIC_1_UX_DESIGN.md) - UX guidelines
+- [`EPIC_1.md`](EPIC_1/EPIC_1.md) - Epic overview, goals, scope (organic products)
+- [`EPIC_1_UX_DESIGN.md`](EPIC_1/EPIC_1_UX_DESIGN.md) - UX guidelines (organic theme)
 
 ### PBIs
 
-| PBI | Title | Pattern | Story Points |
-|-----|-------|---------|--------------|
-| [`PBI_1_1`](EPIC_1/EPIC_1_PBI_1_1.md) | Product Categories & Types | Factory | 13 |
-| [`PBI_1_2`](EPIC_1/EPIC_1_PBI_1_2.md) | Product Variants (SKUs) | Builder | 13 |
-| [`PBI_1_3`](EPIC_1/EPIC_1_PBI_1_3.md) | Dynamic Pricing | Strategy | 13 |
-| [`PBI_1_4`](EPIC_1/EPIC_1_PBI_1_4.md) | Product Specifications | EAV | 13 |
-| PBI 1.5 | Product Images & Media | - | 13 |
-| PBI 1.6 | Search & Filtering | Specification | 21 |
-| PBI 1.7 | Inventory & Stock Alerts | Observer | 13 |
-| PBI 1.8 | Reviews & Ratings | - | 13 |
-| PBI 1.9 | Wishlist | Observer | 13 |
-| PBI 1.10 | Product Comparison | - | 8 |
+| PBI | Title | Pattern | Story Points | Status |
+|-----|-------|---------|--------------|--------|
+| [`PBI_1_1`](EPIC_1/EPIC_1_PBI_1_1.md) | Product Categories & Organic Fields | Factory | 13 | ✅ **DONE** |
+| [`PBI_1_2`](EPIC_1/EPIC_1_PBI_1_2.md) | Product Variants (SKUs) | Builder | 13 | 📋 Planned |
+| [`PBI_1_3`](EPIC_1/EPIC_1_PBI_1_3.md) | Dynamic Pricing | Strategy | 13 | 📋 Planned |
+| [`PBI_1_4`](EPIC_1/EPIC_1_PBI_1_4.md) | Product Specifications | EAV | 13 | 📋 Planned |
+| PBI 1.5 | Product Images & Media | - | 13 | 📋 Planned |
+| PBI 1.6 | Search & Filtering (Organic Categories) | Specification | 21 | 📋 Planned |
+| PBI 1.7 | Inventory & Stock Alerts | Observer | 13 | 📋 Planned |
+| PBI 1.8 | Reviews & Ratings | - | 13 | 📋 Planned |
+| PBI 1.9 | Wishlist | Observer | 13 | 📋 Planned |
+| PBI 1.10 | Product Comparison | - | 8 | 📋 Planned |
 
-**Total:** 144 story points
+**Total:** 144 story points  
+**Completed:** 13 points (PBI 1.1)
 
 ---
 
@@ -101,14 +118,16 @@ As epics are worked on, they will be documented in their own folders following t
 
 ## 📊 Progress Tracking
 
-**Overall Progress:** 89/864 story points (10.3%)
+**Overall Progress:** 102/864 story points (11.8%)
 
 ### By Epic
 - ✅ MVP: 89/89 (100%)
-- 📂 Epic 1: 0/144 (0%)
+- 🚧 Epic 1 (Organic Products): 13/144 (9%) - PBI 1.1 ✅ COMPLETED
 - 📋 Epic 2-10: Not started
 
 **Estimated Timeline:** 36 sprints (72 weeks @ 20 hrs/week)
+
+**Recent Milestone (Jan 2026):** Pivoted to organic products domain with white-label architecture
 
 See detailed tracking: [`../9-roadmap-and-tracking/ITERATION_CHECKLIST.md`](../9-roadmap-and-tracking/ITERATION_CHECKLIST.md)
 

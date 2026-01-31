@@ -97,7 +97,12 @@ public class ProductRepository : IProductRepository
 
         try
         {
-            using var tx = await _db.Database.BeginTransactionAsync();
+            Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? tx = null;
+            if (_db.Database.IsRelational())
+            {
+                tx = await _db.Database.BeginTransactionAsync();
+            }
+
             var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {
@@ -113,7 +118,11 @@ public class ProductRepository : IProductRepository
 
             product.Stock -= quantity;
             await _db.SaveChangesAsync();
-            await tx.CommitAsync();
+            if (tx != null)
+            {
+                await tx.CommitAsync();
+                await tx.DisposeAsync();
+            }
 
             _logger.LogInformation("Successfully reserved {Quantity} units of product {ProductId}. New stock: {NewStock}", quantity, id, product.Stock);
             return product.Stock;
@@ -138,7 +147,12 @@ public class ProductRepository : IProductRepository
 
         try
         {
-            using var tx = await _db.Database.BeginTransactionAsync();
+            Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? tx = null;
+            if (_db.Database.IsRelational())
+            {
+                tx = await _db.Database.BeginTransactionAsync();
+            }
+
             var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {
@@ -148,7 +162,11 @@ public class ProductRepository : IProductRepository
 
             product.Stock += quantity;
             await _db.SaveChangesAsync();
-            await tx.CommitAsync();
+            if (tx != null)
+            {
+                await tx.CommitAsync();
+                await tx.DisposeAsync();
+            }
 
             _logger.LogInformation("Successfully released {Quantity} units of product {ProductId}. New stock: {NewStock}", quantity, id, product.Stock);
             return product.Stock;

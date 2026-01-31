@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Abstraction.DTOs;
+using OrderService.Abstraction.DTOs.Requests;
+using OrderService.Abstraction.DTOs.Responses;
 using OrderService.Core.Business;
 
 namespace OrderService.API.Controllers;
@@ -29,58 +30,52 @@ public class OrdersController : ControllerBase
     /// <summary>
     /// Creates a new order with distributed transaction handling (payment, stock reservation).
     /// </summary>
-    /// <param name="dto">The order creation data.</param>
+    /// <param name="request">The order creation request.</param>
     /// <returns>
     /// A <see cref="CreatedAtActionResult"/> with order details if successful,
     /// or <see cref="BadRequestObjectResult"/>, <see cref="NotFoundObjectResult"/>,
     /// <see cref="ConflictObjectResult"/>, or <see cref="StatusCodeResult"/> on failure.
     /// </returns>
     [HttpPost("create")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(OrderDetailResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CreateOrder(CreateOrderDto dto)
+    public async Task<IActionResult> CreateOrder(CreateOrderRequest request)
     {
-        _logger.LogInformation("Received order creation request for user {UserId}", dto.UserId);
+        _logger.LogInformation("Received order creation request for user {UserId}", request.UserId);
 
         try
         {
-            var order = await _service.CreateOrderAsync(dto);
+            var order = await _service.CreateOrderAsync(request);
             _logger.LogInformation("Order {OrderId} created successfully for user {UserId}. Total: {TotalAmount}", order.Id, order.UserId, order.TotalAmount);
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, new
-            {
-                order.Id,
-                order.UserId,
-                order.TotalAmount,
-                order.CreatedAt,
-            });
+            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Order creation failed for user {UserId}: Invalid argument", dto.UserId);
+            _logger.LogWarning(ex, "Order creation failed for user {UserId}: Invalid argument", request.UserId);
             return BadRequest(new { error = ex.Message });
         }
         catch (KeyNotFoundException ex)
         {
-            _logger.LogWarning(ex, "Order creation failed for user {UserId}: Resource not found", dto.UserId);
+            _logger.LogWarning(ex, "Order creation failed for user {UserId}: Resource not found", request.UserId);
             return NotFound(new { error = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Order creation failed for user {UserId}: {ErrorMessage}", dto.UserId, ex.Message);
+            _logger.LogWarning(ex, "Order creation failed for user {UserId}: {ErrorMessage}", request.UserId, ex.Message);
             return Conflict(new { error = ex.Message });
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Service communication failed during order creation for user {UserId}", dto.UserId);
+            _logger.LogError(ex, "Service communication failed during order creation for user {UserId}", request.UserId);
             return StatusCode(503, new { error = "Service unavailable" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Order creation failed for user {UserId}", dto.UserId);
+            _logger.LogError(ex, "Order creation failed for user {UserId}", request.UserId);
             return StatusCode(500, new { error = "Order creation failed" });
         }
     }
@@ -94,7 +89,7 @@ public class OrdersController : ControllerBase
     /// or <see cref="NotFoundResult"/> if not found.
     /// </returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(OrderDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetOrder(Guid id)
@@ -128,7 +123,7 @@ public class OrdersController : ControllerBase
     /// An <see cref="OkObjectResult"/> with a list of orders for the user.
     /// </returns>
     [HttpGet("user/{userId:guid}")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<OrderResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUserOrders(Guid userId)
     {

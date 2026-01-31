@@ -30,7 +30,8 @@ export const userApi = {
    * Update user profile
    */
   updateProfile: (id, profile) => {
-    return api.put(API_ENDPOINTS.USERS.BY_ID(id), profile);
+    // PATCH semantics on backend (partial update)
+    return api.patch(API_ENDPOINTS.USERS.BY_ID(id), profile);
   },
 
   /**
@@ -44,21 +45,21 @@ export const userApi = {
    * Debit wallet
    */
   debitWallet: (id, amount) => {
-    return api.post(API_ENDPOINTS.USERS.WALLET_DEBIT(id), { amount });
+    return api.post(API_ENDPOINTS.USERS.WALLET_DEBIT(id), { Amount: amount, OperationType: "debit" });
   },
 
   /**
    * Credit wallet
    */
   creditWallet: (id, amount) => {
-    return api.post(API_ENDPOINTS.USERS.WALLET_CREDIT(id), { amount });
+    return api.post(API_ENDPOINTS.USERS.WALLET_CREDIT(id), { Amount: amount, OperationType: "credit" });
   },
 
   /**
    * Add balance to wallet using userId (Guid as string)
    */
   addBalance: (userId, amount) => {
-    return api.post(API_ENDPOINTS.USERS.ADD_BALANCE, { userId, amount });
+    return api.post(API_ENDPOINTS.USERS.ADD_BALANCE(userId), { Amount: amount });
   },
 };
 

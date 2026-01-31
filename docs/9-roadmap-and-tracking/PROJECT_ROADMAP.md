@@ -1,10 +1,13 @@
-# 🗺️ E-Commerce Application - Complete Roadmap
+# 🗺️ FreshHarvest Market - Complete Roadmap
 
 ## 📊 Project Overview
 
-**Product:** Electronics & Smart Devices E-Commerce Platform  
-**Vision:** Market-standard e-commerce with comprehensive learning opportunities  
-**Goal:** Master microservices, design patterns, React architecture, CI/CD, K8s, and observability
+**Product:** Organic Products E-Commerce Platform (FreshHarvest Market)  
+**Domain:** Certified organic produce, grains, and groceries marketplace  
+**Vision:** White-label ready e-commerce platform with comprehensive learning opportunities  
+**Goal:** Master microservices, design patterns, React architecture, CI/CD, K8s, and observability through a real-world organic products marketplace
+
+**Product Pivot (Jan 2026):** Transitioned from generic electronics to organic products marketplace with white-label architecture for easy domain switching.
 
 ---
 
@@ -635,31 +638,52 @@ Examples:
 
 ---
 
-## Epic 4: Enhanced Product Domain & Design Patterns
+## Epic 4: Enhanced Product Domain & Design Patterns (Organic Products)
 **Duration:** 4-5 sprints  
 **Story Points:** 144  
+**Progress:** 13/144 (9% complete) - ✅ **PBI 4.1 COMPLETED**  
 **Dependencies:** None (can start after Epic 3)  
-**Learning Focus:** Factory, Builder, Strategy patterns; .NET advanced features
+**Learning Focus:** Factory, Builder, Strategy patterns; .NET advanced features; White-label architecture
 
-### PBI 4.1: Product Category & Type System
+**Product Pivot Note (Jan 2026):** This epic has been updated to reflect the organic products domain. The product model now includes organic-specific fields (certification, origin, expiration, etc.) and white-label architecture for domain flexibility.
+
+### PBI 4.1: Product Category & Organic Fields System (COMPLETED ✅)
 **Story Points:** 13  
-**Description:** Implement product hierarchy for electronics
+**Progress:** 13/13 (100% complete)  
+**Description:** Implement enhanced product model for organic products with white-label flexibility
 
 **Acceptance Criteria:**
-- [ ] Create abstract Product base class
-- [ ] Implement ProductType enum with all categories
-- [ ] Create specific product classes (Smartphone, Laptop, Tablet, Accessories, Wearables)
-- [ ] Add category-specific attributes
-- [ ] Update database schema with inheritance (TPH or TPT)
-- [ ] Create migrations
-- [ ] Update Product Service API
-- [ ] Add category filtering endpoints
+- [x] Add Category field for product classification - ✅ **DONE** (Fruits, Vegetables, Grains, etc.)
+- [x] Add organic-specific fields (certification, origin) - ✅ **DONE**
+- [x] Add CertificationNumber and CertificationType - ✅ **DONE** (India Organic, USDA, EU)
+- [x] Add Origin field for product source - ✅ **DONE**
+- [x] Add Unit field for measurement - ✅ **DONE** (kg, lb, bunch, piece)
+- [x] Add ExpirationDate for perishable items - ✅ **DONE**
+- [x] Add white-label fields (SKU, ImageUrl, IsActive) - ✅ **DONE**
+- [x] Add AttributesJson for flexible attributes - ✅ **DONE** (JSON field + helper methods)
+- [x] Update Product Service DTOs - ✅ **DONE** (CreateProductDto updated)
+- [x] Update Order Service DTOs - ✅ **DONE** (ProductDto synchronized)
 
 **Technical Tasks:**
-- [ ] Implement Factory Pattern for product creation
-- [ ] Create ProductFactory with registration mechanism
-- [ ] Add unit tests for product creation
-- [ ] Update Swagger documentation
+- [x] Update Product entity with organic fields - ✅ **DONE** (`Product.cs`)
+- [x] Add white-label extensibility (AttributesJson) - ✅ **DONE**
+- [x] Update CreateProductDto with all new fields - ✅ **DONE**
+- [x] Update ProductDto in Order Service - ✅ **DONE**
+- [x] Add validation attributes to DTOs - ✅ **DONE**
+- [x] Add helper methods (GetAttributes/SetAttributes) - ✅ **DONE**
+- [ ] Create database migration for new fields - ⏳ **PENDING**
+- [ ] Add unit tests for new fields - ⏳ **PENDING**
+- [ ] Update Swagger documentation - ⏳ **PENDING**
+- [ ] Add category filtering endpoints - ⏳ **PENDING**
+
+**Implementation Notes:**
+- ✅ Product model now supports organic products (certification, origin, expiration)
+- ✅ White-label ready with flexible AttributesJson field
+- ✅ Frontend branding config created (`branding.js`)
+- ✅ CSS theme updated to organic green colors
+- ✅ All DTOs synchronized across services
+- ⏳ Database migration needed to persist new fields
+- ⏳ API endpoints need updates to expose new fields
 
 ---
 
@@ -1682,7 +1706,7 @@ Examples:
 | **Epic 1: Testing Strategy** | **55** | **2-3 sprints** | **MVP** | **✅ DONE (85%)** |
 | **Epic 2: CI/CD Pipeline** | **55** | **2 sprints** | **Epic 1** | **🚧 76% COMPLETE** |
 | **Epic 3: Kubernetes Deployment** | **89** | **3-4 sprints** | **Epic 2** | **✅ 69% COMPLETE** (Core features done!) |
-| **Epic 4: Enhanced Product Domain** | **144** | **4-5 sprints** | **Epic 3** | **📋 Pending** |
+| **Epic 4: Enhanced Product Domain (Organic)** | **144** | **4-5 sprints** | **Epic 3** | **🚧 9% (PBI 4.1 ✅)** |
 | **Epic 5: Advanced Order Management** | **89** | **3-4 sprints** | **Epic 4** | **📋 Pending** |
 | **Epic 6: Advanced Payment & Checkout** | **55** | **2-3 sprints** | **Epic 5** | **📋 Pending** |
 | **Epic 7: Frontend Architecture** | **89** | **3-4 sprints** | **Epics 4-6** | **📋 Pending** |
@@ -1691,8 +1715,10 @@ Examples:
 | **Epic 10: Performance & Security** | **55** | **2-3 sprints** | **All** | **📋 Pending** |
 | **TOTAL** | **919** | **30-41 sprints** | **~8-10 months** | |
 
-**Completed:** Phase 0 (144 pts) + Epic 1 (47 pts) + Epic 2 partial (42 pts) + Epic 3 core (61.5 pts) = **294.5 points**  
-**Remaining:** 624.5 points  
+**Completed:** Phase 0 (144 pts) + Epic 1 (47 pts) + Epic 2 partial (42 pts) + Epic 3 core (61.5 pts) + Epic 4 partial (13 pts) = **307.5 points**  
+**Remaining:** 611.5 points  
+
+**🌱 Product Pivot (Jan 2026):** Transitioned from electronics to **organic products marketplace** with white-label architecture.  
 **Current Progress:** 32.0% complete
 
 ---

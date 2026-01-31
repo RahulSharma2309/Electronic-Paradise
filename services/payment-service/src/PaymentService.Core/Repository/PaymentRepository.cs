@@ -45,6 +45,28 @@ public class PaymentRepository : IPaymentRepository
     }
 
     /// <inheritdoc />
+    public async Task<PaymentRecord?> GetByIdAsync(Guid id)
+    {
+        _logger.LogDebug("Fetching payment record by ID {PaymentId}", id);
+
+        try
+        {
+            var payment = await _db.Payments.FindAsync(id);
+            if (payment == null)
+            {
+                _logger.LogDebug("Payment record not found: {PaymentId}", id);
+            }
+
+            return payment;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching payment record {PaymentId}", id);
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
     public async Task<PaymentRecord?> GetByOrderIdAsync(Guid orderId)
     {
         _logger.LogDebug("Fetching payment record for Order {OrderId}", orderId);
@@ -66,6 +88,47 @@ public class PaymentRepository : IPaymentRepository
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error fetching payment record for Order {OrderId}", orderId);
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<List<PaymentRecord>> GetByUserIdAsync(Guid userId)
+    {
+        _logger.LogDebug("Fetching payment records for User {UserId}", userId);
+
+        try
+        {
+            var payments = await _db.Payments
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.Timestamp)
+                .ToListAsync();
+
+            _logger.LogDebug("Found {Count} payment records for User {UserId}", payments.Count, userId);
+            return payments;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching payment records for User {UserId}", userId);
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<PaymentRecord> UpdateAsync(PaymentRecord payment)
+    {
+        _logger.LogDebug("Updating payment record {PaymentId}", payment.Id);
+
+        try
+        {
+            _db.Payments.Update(payment);
+            await _db.SaveChangesAsync();
+            _logger.LogInformation("Payment record updated successfully: {PaymentId}", payment.Id);
+            return payment;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update payment record {PaymentId}", payment.Id);
             throw;
         }
     }

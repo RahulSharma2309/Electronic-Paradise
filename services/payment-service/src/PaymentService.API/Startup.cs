@@ -2,6 +2,7 @@ using Ep.Platform.DependencyInjection;
 using Ep.Platform.Hosting;
 using PaymentService.Core.Business;
 using PaymentService.Core.Data;
+using PaymentService.Core.Mappers;
 using PaymentService.Core.Repository;
 
 namespace PaymentService.API;
@@ -39,6 +40,9 @@ public class Startup
         // Register business and repository services
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IPaymentService, PaymentServiceImpl>();
+
+        // Register mapper
+        services.AddScoped<IPaymentMapper, PaymentMapper>();
     }
 
     /// <summary>

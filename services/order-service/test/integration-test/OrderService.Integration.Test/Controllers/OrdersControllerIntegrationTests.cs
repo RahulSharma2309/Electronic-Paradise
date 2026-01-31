@@ -4,7 +4,8 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using OrderService.Abstraction.DTOs;
+using OrderService.Abstraction.DTOs.Requests;
+using OrderService.Abstraction.DTOs.Responses;
 using Xunit;
 
 namespace OrderService.Integration.Test.Controllers;
@@ -25,12 +26,12 @@ public class OrdersControllerIntegrationTests
         // Arrange
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var dto = new CreateOrderDto
+        var dto = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto>
+            Items = new List<CreateOrderItemRequest>
             {
-                new OrderItemDto { ProductId = productId, Quantity = 2 }
+                new CreateOrderItemRequest { ProductId = productId, Quantity = 2 }
             }
         };
 
@@ -39,8 +40,9 @@ public class OrdersControllerIntegrationTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var result = await response.Content.ReadFromJsonAsync<dynamic>();
-        ((Guid)result!.userId).Should().Be(userId);
+        var result = await response.Content.ReadFromJsonAsync<OrderDetailResponse>();
+        result.Should().NotBeNull();
+        result!.UserId.Should().Be(userId);
     }
 
     [Fact]
@@ -48,22 +50,24 @@ public class OrdersControllerIntegrationTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var createDto = new CreateOrderDto
+        var createDto = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto> { new OrderItemDto { ProductId = Guid.NewGuid(), Quantity = 1 } }
+            Items = new List<CreateOrderItemRequest> { new CreateOrderItemRequest { ProductId = Guid.NewGuid(), Quantity = 1 } }
         };
         var createResponse = await _fixture.Client.PostAsJsonAsync("/api/orders/create", createDto);
-        var createdResult = await createResponse.Content.ReadFromJsonAsync<dynamic>();
-        Guid orderId = createdResult!.id;
+        createResponse.EnsureSuccessStatusCode();
+        var createdResult = await createResponse.Content.ReadFromJsonAsync<OrderDetailResponse>();
+        Guid orderId = createdResult!.Id;
 
         // Act
         var response = await _fixture.Client.GetAsync($"/api/orders/{orderId}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<dynamic>();
-        ((Guid)result!.id).Should().Be(orderId);
+        var result = await response.Content.ReadFromJsonAsync<OrderDetailResponse>();
+        result.Should().NotBeNull();
+        result!.Id.Should().Be(orderId);
     }
 
     [Fact]
@@ -71,10 +75,10 @@ public class OrdersControllerIntegrationTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var createDto = new CreateOrderDto
+        var createDto = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto> { new OrderItemDto { ProductId = Guid.NewGuid(), Quantity = 1 } }
+            Items = new List<CreateOrderItemRequest> { new CreateOrderItemRequest { ProductId = Guid.NewGuid(), Quantity = 1 } }
         };
         await _fixture.Client.PostAsJsonAsync("/api/orders/create", createDto);
 
@@ -83,7 +87,7 @@ public class OrdersControllerIntegrationTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var results = await response.Content.ReadFromJsonAsync<List<dynamic>>();
+        var results = await response.Content.ReadFromJsonAsync<List<OrderResponse>>();
         results.Should().NotBeNull();
         results!.Count.Should().BeGreaterThan(0);
     }
