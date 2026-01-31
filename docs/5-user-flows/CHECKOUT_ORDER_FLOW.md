@@ -99,7 +99,6 @@ For each item in order:
   {
     "OrderId": "temp-order-id-guid",  // Temporary ID
     "UserId": "a93ac0d5-a5aa-4f57-a666-e3da19f5e389",
-    "UserProfileId": "99e05c86-1665-4ddf-897f-7d4f222ab808",
     "Amount": 5997.00
   }
   ```
@@ -107,7 +106,7 @@ For each item in order:
 **Payment Service Processing** (`services/payment-service/Controllers/PaymentsController.cs`):
 
 1. **Debit Wallet via User Service**:
-   - `POST /api/users/{userProfileId}/wallet/debit`
+   - `POST /api/users/{userId}/wallet/debit`
    - Deducts amount from user's wallet
    - If insufficient balance → Returns `409 Conflict`
    - If user not found → Returns `404 Not Found`

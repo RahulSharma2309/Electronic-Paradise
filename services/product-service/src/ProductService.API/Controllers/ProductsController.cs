@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using ProductService.Abstraction.DTOs;
-using ProductService.Abstraction.Models;
+using ProductService.Abstraction.DTOs.Requests;
+using ProductService.Abstraction.DTOs.Responses;
 using ProductService.Core.Business;
 
 namespace ProductService.API.Controllers;
@@ -32,7 +32,7 @@ public class ProductsController : ControllerBase
     /// </summary>
     /// <returns>An <see cref="OkObjectResult"/> with a list of all products.</returns>
     [HttpGet]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProductResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
@@ -41,9 +41,8 @@ public class ProductsController : ControllerBase
         try
         {
             var products = await _service.ListAsync();
-            var dto = products.Select(p => new { p.Id, p.Name, p.Description, p.Price, p.Stock });
             _logger.LogInformation("Successfully retrieved {ProductCount} products", products.Count);
-            return Ok(dto);
+            return Ok(products);
         }
         catch (Exception ex)
         {
@@ -61,7 +60,7 @@ public class ProductsController : ControllerBase
     /// or <see cref="NotFoundResult"/> if not found.
     /// </returns>
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(Guid id)
@@ -90,41 +89,33 @@ public class ProductsController : ControllerBase
     /// <summary>
     /// Creates a new product.
     /// </summary>
-    /// <param name="dto">The product creation data.</param>
+    /// <param name="request">The product creation request.</param>
     /// <returns>
     /// A <see cref="CreatedAtActionResult"/> with the created product if successful,
     /// or <see cref="BadRequestObjectResult"/> if validation fails.
     /// </returns>
     [HttpPost]
-    [ProducesResponseType(typeof(Product), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProductDetailResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create(CreateProductDto dto)
+    public async Task<IActionResult> Create(CreateProductRequest request)
     {
-        _logger.LogInformation("Creating new product: {ProductName}", dto.Name);
-
-        var product = new Product
-        {
-            Name = dto.Name,
-            Description = dto.Description,
-            Price = dto.Price,
-            Stock = dto.Stock,
-        };
+        _logger.LogInformation("Creating new product: {ProductName}", request.Name);
 
         try
         {
-            await _service.CreateAsync(product);
+            var product = await _service.CreateAsync(request);
             _logger.LogInformation("Product created successfully: {ProductId}, Name: {ProductName}", product.Id, product.Name);
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Product creation failed: Validation error for product {ProductName}", dto.Name);
+            _logger.LogWarning(ex, "Product creation failed: Validation error for product {ProductName}", request.Name);
             return BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating product {ProductName}", dto.Name);
+            _logger.LogError(ex, "Error creating product {ProductName}", request.Name);
             return StatusCode(500, new { error = "Failed to create product" });
         }
     }
@@ -147,7 +138,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Reserve(Guid id, [FromBody] ReleaseDto dto)
+    public async Task<IActionResult> Reserve(Guid id, [FromBody] ReserveStockRequest dto)
     {
         _logger.LogInformation("Reserving {Quantity} units of product {ProductId}", dto.Quantity, id);
 
@@ -196,7 +187,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Release(Guid id, [FromBody] ReleaseDto dto)
+    public async Task<IActionResult> Release(Guid id, [FromBody] ReserveStockRequest dto)
     {
         _logger.LogInformation("Releasing {Quantity} units of product {ProductId}", dto.Quantity, id);
 

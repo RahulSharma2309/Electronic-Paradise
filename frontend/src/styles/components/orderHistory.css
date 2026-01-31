@@ -1,14 +1,16 @@
-/* Order History Styles */
+/* Order History Styles - Calm Organic Theme */
 .order-history {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0;
 }
 
 .order-history h2 {
-  margin-bottom: 30px;
-  color: var(--text-primary);
+  margin-bottom: 14px;
+  color: var(--color-text);
+  font-family: var(--font-heading);
   font-size: 2rem;
+  font-weight: 700;
 }
 
 .order-history-loading,
@@ -24,18 +26,21 @@
 
 /* Filters Section */
 .order-filters {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+  background: var(--color-card);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
 }
 
 .filter-section h3 {
   margin-top: 0;
-  margin-bottom: 20px;
-  color: var(--text-primary);
-  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: var(--color-text);
+  font-size: 1.2rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
 }
 
 .filter-row {
@@ -55,23 +60,26 @@
 .filter-group label {
   margin-bottom: 5px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--color-text-muted);
   font-size: 0.9rem;
 }
 
 .filter-group input,
 .filter-group select {
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background-color 180ms ease;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .filter-group input:focus,
 .filter-group select:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: rgba(76, 175, 80, 0.55);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.12);
+  transform: translateY(-1px);
 }
 
 .filter-group input[type="number"]::-webkit-inner-spin-button,
@@ -81,30 +89,32 @@
 
 /* Orders Summary */
 .orders-summary {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: var(--color-soil);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(141, 110, 99, 0.18);
 }
 
 .orders-summary p {
   margin: 0;
   font-size: 1rem;
-  color: var(--text-secondary);
+  color: var(--color-text-muted);
 }
 
 /* No Orders Message */
 .no-orders {
   text-align: center;
   padding: 60px 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .no-orders p {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: var(--color-text-muted);
 }
 
 /* Orders List */
@@ -116,16 +126,17 @@
 
 /* Order Card */
 .order-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
 .order-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .order-header {
@@ -133,8 +144,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  color: white;
+  background: rgba(239, 232, 220, 0.85);
+  color: var(--color-text);
+  border-bottom: 1px solid rgba(141, 110, 99, 0.16);
 }
 
 .order-id {
@@ -154,8 +166,9 @@
 .order-items h4 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: var(--text-primary);
+  color: var(--color-text);
   font-size: 1.1rem;
+  font-family: var(--font-heading);
 }
 
 .items-table {
@@ -166,15 +179,15 @@
 .items-table th {
   text-align: left;
   padding: 10px;
-  background: #f8f9fa;
+  background: rgba(239, 232, 220, 0.55);
   font-weight: 600;
-  color: var(--text-secondary);
-  border-bottom: 2px solid #dee2e6;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid rgba(141, 110, 99, 0.18);
 }
 
 .items-table td {
   padding: 12px 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(46, 46, 46, 0.08);
 }
 
 .items-table tbody tr:last-child td {
@@ -182,14 +195,14 @@
 }
 
 .items-table tbody tr:hover {
-  background: #f8f9fa;
+  background: rgba(239, 232, 220, 0.35);
 }
 
 /* Order Footer */
 .order-footer {
   padding: 20px;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+  background: rgba(239, 232, 220, 0.55);
+  border-top: 1px solid rgba(141, 110, 99, 0.16);
 }
 
 .order-total {
@@ -200,13 +213,13 @@
 }
 
 .order-total strong {
-  color: var(--text-primary);
+  color: var(--color-text);
 }
 
 .total-amount {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--accent-color);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text);
 }
 
 /* Responsive Design */

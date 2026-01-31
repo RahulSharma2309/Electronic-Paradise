@@ -16,10 +16,15 @@ export default function CheckoutPage({
   const canPay = total <= walletBalance;
 
   return (
-    <div className="checkout-page">
-      <h2>Checkout</h2>
-      
-      <div className="checkout-summary">
+    <div className="page">
+      <div className="page-header fade-in-up">
+        <h2 className="page-title">Checkout</h2>
+        <p className="page-subtitle">
+          Transparent totals and a calm, wallet-first payment experience.
+        </p>
+      </div>
+      <div className="checkout-page fade-in-up">
+        <div className="checkout-summary">
         <div className="summary-row">
           <span className="summary-label">Wallet Balance:</span>
           <span className="summary-value">
@@ -34,10 +39,10 @@ export default function CheckoutPage({
         </div>
         {!canPay && (
           <div className="summary-row">
-            <span className="summary-label" style={{ color: "#dc3545" }}>
+            <span className="summary-label" style={{ color: "rgba(122, 60, 51, 0.95)" }}>
               Insufficient Balance:
             </span>
-            <span className="summary-value" style={{ color: "#dc3545" }}>
+            <span className="summary-value" style={{ color: "rgba(122, 60, 51, 0.95)" }}>
               {formatINR(total - walletBalance)}
             </span>
           </div>
@@ -63,6 +68,7 @@ export default function CheckoutPage({
           type="info"
         />
       )}
+      </div>
     </div>
   );
 }

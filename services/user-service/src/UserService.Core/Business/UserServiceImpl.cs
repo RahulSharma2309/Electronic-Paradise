@@ -5,8 +5,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using Microsoft.Extensions.Logging;
-using UserService.Abstraction.DTOs;
+using UserService.Abstraction.DTOs.Requests;
+using UserService.Abstraction.DTOs.Responses;
 using UserService.Abstraction.Models;
+using UserService.Core.Mappers;
 using UserService.Core.Repository;
 
 namespace UserService.Core.Business;
@@ -17,22 +19,25 @@ namespace UserService.Core.Business;
 public class UserServiceImpl : IUserService
 {
     private readonly IUserRepository _repo;
+    private readonly IUserProfileMapper _mapper;
     private readonly ILogger<UserServiceImpl> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserServiceImpl"/> class.
     /// </summary>
     /// <param name="repo">The user repository for data access.</param>
+    /// <param name="mapper">The user profile mapper.</param>
     /// <param name="logger">The logger instance for structured logging.</param>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public UserServiceImpl(IUserRepository repo, ILogger<UserServiceImpl> logger)
+    public UserServiceImpl(IUserRepository repo, IUserProfileMapper mapper, ILogger<UserServiceImpl> logger)
     {
         _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc/>
-    public async Task<UserProfileDto?> GetByIdAsync(Guid id)
+    public async Task<UserProfileDetailResponse?> GetByIdAsync(Guid id)
     {
         try
         {
@@ -47,7 +52,7 @@ public class UserServiceImpl : IUserService
             }
 
             _logger.LogDebug("User profile retrieved successfully: {ProfileId}, UserId: {UserId}", m.Id, m.UserId);
-            return UserProfileDto.FromModel(m);
+            return _mapper.ToDetailResponse(m);
         }
         catch (Exception ex)
         {
@@ -57,7 +62,7 @@ public class UserServiceImpl : IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<UserProfileDto?> GetByUserIdAsync(Guid userId)
+    public async Task<UserProfileResponse?> GetByUserIdAsync(Guid userId)
     {
         try
         {
@@ -72,7 +77,7 @@ public class UserServiceImpl : IUserService
             }
 
             _logger.LogDebug("User profile retrieved successfully: {ProfileId}, UserId: {UserId}", m.Id, m.UserId);
-            return UserProfileDto.FromModel(m);
+            return _mapper.ToResponse(m);
         }
         catch (Exception ex)
         {
@@ -107,76 +112,51 @@ public class UserServiceImpl : IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<UserProfileDto> CreateAsync(CreateUserDto dto)
+    public async Task<UserProfileDetailResponse> CreateAsync(CreateUserProfileRequest request)
     {
-        if (dto == null)
+        if (request == null)
         {
-            throw new ArgumentNullException(nameof(dto));
-        }
-
-        // Backend validation
-        if (dto.UserId == Guid.Empty)
-        {
-            _logger.LogWarning("Create user profile failed: UserId is empty");
-            throw new ArgumentException("UserId is required");
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.PhoneNumber))
-        {
-            _logger.LogWarning("Create user profile failed: Phone number is empty for UserId {UserId}", dto.UserId);
-            throw new ArgumentException("Phone number is required");
-        }
-
-        if (!System.Text.RegularExpressions.Regex.IsMatch(dto.PhoneNumber, @"^\+?\d{10,15}$"))
-        {
-            _logger.LogWarning("Create user profile failed: Invalid phone number format for UserId {UserId}", dto.UserId);
-            throw new ArgumentException("Invalid phone number format");
+            throw new ArgumentNullException(nameof(request));
         }
 
         try
         {
-            _logger.LogInformation("Creating user profile for UserId: {UserId}", dto.UserId);
+            _logger.LogInformation("Creating user profile for UserId: {UserId}", request.UserId);
 
             // Check for duplicate phone number
-            var existingPhone = await _repo.GetByPhoneNumberAsync(dto.PhoneNumber);
-            if (existingPhone != null)
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
             {
-                _logger.LogWarning("Create user profile failed: Phone number already registered for UserId {UserId}", dto.UserId);
-                throw new ArgumentException("Phone number already registered");
+                var existingPhone = await _repo.GetByPhoneNumberAsync(request.PhoneNumber);
+                if (existingPhone != null)
+                {
+                    _logger.LogWarning("Create user profile failed: Phone number already registered for UserId {UserId}", request.UserId);
+                    throw new ArgumentException("Phone number already registered");
+                }
             }
 
             // If a profile already exists for this UserId, update it instead
-            var existing = await _repo.GetByUserIdAsync(dto.UserId);
+            var existing = await _repo.GetByUserIdAsync(request.UserId);
             if (existing != null)
             {
-                _logger.LogInformation("User profile already exists for UserId {UserId}, updating instead", dto.UserId);
+                _logger.LogInformation("User profile already exists for UserId {UserId}, updating instead", request.UserId);
 
-                existing.FirstName = dto.FirstName;
-                existing.LastName = dto.LastName;
-                existing.Address = dto.Address;
-                existing.PhoneNumber = dto.PhoneNumber;
+                existing.FirstName = request.FirstName;
+                existing.LastName = request.LastName;
+                existing.Address = request.Address;
+                existing.PhoneNumber = request.PhoneNumber;
+                existing.UpdatedAt = DateTime.UtcNow;
 
                 var updated = await _repo.UpdateAsync(existing);
 
                 _logger.LogInformation("User profile updated successfully: {ProfileId}, UserId: {UserId}", updated.Id, updated.UserId);
-                return UserProfileDto.FromModel(updated);
+                return _mapper.ToDetailResponse(updated);
             }
 
-            var model = new UserProfile
-            {
-                UserId = dto.UserId,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Address = dto.Address,
-                PhoneNumber = dto.PhoneNumber,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-            };
-
+            var model = _mapper.ToEntity(request);
             var created = await _repo.CreateAsync(model);
 
             _logger.LogInformation("User profile created successfully: {ProfileId}, UserId: {UserId}", created.Id, created.UserId);
-            return UserProfileDto.FromModel(created);
+            return _mapper.ToDetailResponse(created);
         }
         catch (ArgumentException)
         {
@@ -184,17 +164,17 @@ public class UserServiceImpl : IUserService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create user profile for UserId {UserId}", dto.UserId);
+            _logger.LogError(ex, "Failed to create user profile for UserId {UserId}", request.UserId);
             throw;
         }
     }
 
     /// <inheritdoc/>
-    public async Task<UserProfileDto?> UpdateAsync(Guid id, CreateUserDto dto)
+    public async Task<UserProfileDetailResponse?> UpdateAsync(Guid id, UpdateUserProfileRequest request)
     {
-        if (dto == null)
+        if (request == null)
         {
-            throw new ArgumentNullException(nameof(dto));
+            throw new ArgumentNullException(nameof(request));
         }
 
         try
@@ -208,17 +188,10 @@ public class UserServiceImpl : IUserService
                 return null;
             }
 
-            // Backend validation
-            if (!string.IsNullOrWhiteSpace(dto.PhoneNumber))
+            // Check for duplicate phone number if updating phone
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
             {
-                if (!System.Text.RegularExpressions.Regex.IsMatch(dto.PhoneNumber, @"^\+?\d{10,15}$"))
-                {
-                    _logger.LogWarning("Update failed: Invalid phone number format for ProfileId {ProfileId}", id);
-                    throw new ArgumentException("Invalid phone number format");
-                }
-
-                // Check for duplicate phone number (excluding current user)
-                var existingPhone = await _repo.GetByPhoneNumberAsync(dto.PhoneNumber);
+                var existingPhone = await _repo.GetByPhoneNumberAsync(request.PhoneNumber);
                 if (existingPhone != null && existingPhone.Id != id)
                 {
                     _logger.LogWarning("Update failed: Phone number already registered for ProfileId {ProfileId}", id);
@@ -226,16 +199,11 @@ public class UserServiceImpl : IUserService
                 }
             }
 
-            // Don't change UserId on update
-            existing.FirstName = dto.FirstName;
-            existing.LastName = dto.LastName;
-            existing.Address = dto.Address;
-            existing.PhoneNumber = dto.PhoneNumber;
-
+            _mapper.UpdateEntity(existing, request);
             var updated = await _repo.UpdateAsync(existing);
 
             _logger.LogInformation("User profile updated successfully: {ProfileId}, UserId: {UserId}", updated.Id, updated.UserId);
-            return UserProfileDto.FromModel(updated);
+            return _mapper.ToDetailResponse(updated);
         }
         catch (ArgumentException)
         {
@@ -249,39 +217,78 @@ public class UserServiceImpl : IUserService
     }
 
     /// <inheritdoc/>
-    public async Task<decimal> DebitWalletAsync(Guid id, decimal amount)
+    public async Task<WalletBalanceResponse> AddBalanceAsync(Guid userId, AddBalanceRequest request)
     {
         try
         {
-            _logger.LogInformation("Debiting wallet for ProfileId {ProfileId}, Amount: {Amount}", id, amount);
+            _logger.LogInformation("Adding balance for UserId {UserId}, Amount: {Amount}", userId, request.Amount);
 
-            var newBalance = await _repo.DebitWalletAsync(id, amount);
+            var profile = await _repo.GetByUserIdAsync(userId);
+            if (profile == null)
+            {
+                throw new KeyNotFoundException($"User profile not found for UserId {userId}");
+            }
 
-            _logger.LogInformation("Wallet debited successfully for ProfileId {ProfileId}, New Balance: {NewBalance}", id, newBalance);
-            return newBalance;
+            profile.WalletBalance += request.Amount;
+            profile.UpdatedAt = DateTime.UtcNow;
+            await _repo.UpdateAsync(profile);
+
+            _logger.LogInformation("Balance added successfully for UserId {UserId}, New Balance: {NewBalance}", userId, profile.WalletBalance);
+            return _mapper.ToWalletBalanceResponse(userId, profile.WalletBalance, $"Successfully added ${request.Amount:F2}. New balance: ${profile.WalletBalance:F2}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to debit wallet for ProfileId {ProfileId}, Amount: {Amount}", id, amount);
+            _logger.LogError(ex, "Failed to add balance for UserId {UserId}, Amount: {Amount}", userId, request.Amount);
             throw;
         }
     }
 
     /// <inheritdoc/>
-    public async Task<decimal> CreditWalletAsync(Guid id, decimal amount)
+    public async Task<WalletBalanceResponse> DebitWalletAsync(Guid userId, decimal amount)
     {
         try
         {
-            _logger.LogInformation("Crediting wallet for ProfileId {ProfileId}, Amount: {Amount}", id, amount);
+            _logger.LogInformation("Debiting wallet for UserId {UserId}, Amount: {Amount}", userId, amount);
 
-            var newBalance = await _repo.CreditWalletAsync(id, amount);
+            var profile = await _repo.GetByUserIdAsync(userId);
+            if (profile == null)
+            {
+                throw new KeyNotFoundException($"User profile not found for UserId {userId}");
+            }
 
-            _logger.LogInformation("Wallet credited successfully for ProfileId {ProfileId}, New Balance: {NewBalance}", id, newBalance);
-            return newBalance;
+            var newBalance = await _repo.DebitWalletAsync(profile.Id, amount);
+
+            _logger.LogInformation("Wallet debited successfully for UserId {UserId}, New Balance: {NewBalance}", userId, newBalance);
+            return _mapper.ToWalletBalanceResponse(userId, newBalance, $"Debited ${amount:F2}. New balance: ${newBalance:F2}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to credit wallet for ProfileId {ProfileId}, Amount: {Amount}", id, amount);
+            _logger.LogError(ex, "Failed to debit wallet for UserId {UserId}, Amount: {Amount}", userId, amount);
+            throw;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<WalletBalanceResponse> CreditWalletAsync(Guid userId, decimal amount)
+    {
+        try
+        {
+            _logger.LogInformation("Crediting wallet for UserId {UserId}, Amount: {Amount}", userId, amount);
+
+            var profile = await _repo.GetByUserIdAsync(userId);
+            if (profile == null)
+            {
+                throw new KeyNotFoundException($"User profile not found for UserId {userId}");
+            }
+
+            var newBalance = await _repo.CreditWalletAsync(profile.Id, amount);
+
+            _logger.LogInformation("Wallet credited successfully for UserId {UserId}, New Balance: {NewBalance}", userId, newBalance);
+            return _mapper.ToWalletBalanceResponse(userId, newBalance, $"Credited ${amount:F2}. New balance: ${newBalance:F2}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to credit wallet for UserId {UserId}, Amount: {Amount}", userId, amount);
             throw;
         }
     }

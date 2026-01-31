@@ -2,6 +2,21 @@
   <PropertyGroup>
     <YarpVersion>2.1.0</YarpVersion>
     <SwashbuckleVersion>7.0.0</SwashbuckleVersion>
+    <AspNetCoreVersion>10.0.2</AspNetCoreVersion>
+    <AspNetCoreTestingVersion>$(AspNetCoreVersion)</AspNetCoreTestingVersion>
+    <NewtonsoftJsonVersion>13.0.3</NewtonsoftJsonVersion>
+
+    <!-- Build variables -->
+    <NetCoreVersion>net10.0</NetCoreVersion>
+    <LangVersion>12</LangVersion>
+
+    <!-- Test package versions -->
+    <XunitVersion>2.6.2</XunitVersion>
+    <XunitRunnerVersion>2.8.0</XunitRunnerVersion>
+    <MoqVersion>4.20.70</MoqVersion>
+    <FluentAssertionsVersion>6.12.0</FluentAssertionsVersion>
+    <CoverletVersion>6.0.0</CoverletVersion>
+    <MicrosoftTestSdkVersion>17.8.0</MicrosoftTestSdkVersion>
   </PropertyGroup>
 </Project>
 

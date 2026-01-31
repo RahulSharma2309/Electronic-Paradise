@@ -4,8 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using AuthService.Abstraction.DTOs;
-using AuthService.Abstraction.Models;
+using AuthService.Abstraction.DTOs.Requests;
+using AuthService.Abstraction.DTOs.Responses;
 
 namespace AuthService.Core.Business;
 
@@ -17,28 +17,44 @@ public interface IAuthService
     /// <summary>
     /// Registers a new user account in the system.
     /// </summary>
-    /// <param name="dto">The registration data transfer object containing user information.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the created user.</returns>
-    Task<User> RegisterAsync(RegisterDto dto);
+    /// <param name="request">The registration request containing user information.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the authentication response with token and user info.</returns>
+    Task<AuthResponse> RegisterAsync(RegisterRequest request);
 
     /// <summary>
     /// Authenticates a user with their credentials.
     /// </summary>
-    /// <param name="dto">The login data transfer object containing email and password.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the authenticated user or an error message.</returns>
-    Task<(User? User, string? Error)> LoginAsync(LoginDto dto);
+    /// <param name="request">The login request containing email and password.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the authentication response with token and user info.</returns>
+    /// <exception cref="UnauthorizedAccessException">Thrown if credentials are invalid.</exception>
+    Task<AuthResponse> LoginAsync(LoginRequest request);
 
     /// <summary>
     /// Resets a user's password.
     /// </summary>
-    /// <param name="dto">The reset password data transfer object containing email and new password.</param>
+    /// <param name="request">The reset password request containing email, token, and new password.</param>
     /// <returns>A task that represents the asynchronous operation. The task result indicates whether the operation succeeded.</returns>
-    Task<bool> ResetPasswordAsync(ResetPasswordDto dto);
+    Task<bool> ResetPasswordAsync(ResetPasswordRequest request);
 
     /// <summary>
-    /// Retrieves a user by their unique identifier.
+    /// Updates user information.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <param name="request">The update user request.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the updated user details if found, otherwise null.</returns>
+    Task<UserDetailResponse?> UpdateUserAsync(Guid id, UpdateUserRequest request);
+
+    /// <summary>
+    /// Retrieves a user by their unique identifier (comprehensive details).
     /// </summary>
     /// <param name="id">The unique identifier of the user.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user if found, otherwise null.</returns>
-    Task<User?> GetUserByIdAsync(Guid id);
+    Task<UserDetailResponse?> GetUserByIdAsync(Guid id);
+
+    /// <summary>
+    /// Retrieves a user by their email address (lightweight).
+    /// </summary>
+    /// <param name="email">The email address of the user.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the user if found, otherwise null.</returns>
+    Task<UserResponse?> GetUserByEmailAsync(string email);
 }

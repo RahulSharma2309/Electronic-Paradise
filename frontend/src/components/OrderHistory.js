@@ -1,14 +1,91 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import api from "../api";
 import { API_ENDPOINTS } from "../config/apiEndpoints";
 import { formatINR, formatErrorMessage } from "../utils/formatters";
 import "../styles/components/orderHistory.css";
 
-export default function OrderHistory({ userId }) {
+export default function OrderHistory({ userId, products = [] }) {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hydratingDetails, setHydratingDetails] = useState(false);
+
+  const productNameById = useMemo(() => {
+    if (!Array.isArray(products)) return new Map();
+    return new Map(products.map((p) => [p.id, p.name]));
+  }, [products]);
+
+  const normalizeOrderItem = (item) => {
+    if (!item) return null;
+    return {
+      productId: item.productId ?? item.ProductId,
+      quantity: item.quantity ?? item.Quantity ?? 0,
+      unitPrice: item.unitPrice ?? item.UnitPrice ?? item.price ?? item.Price ?? 0,
+    };
+  };
+
+  const normalizeOrderSummary = (order) => {
+    if (!order) return null;
+
+    return {
+      id: order.id ?? order.Id,
+      createdAt:
+        order.createdAt ??
+        order.CreatedAt ??
+        order.createdOn ??
+        order.CreatedOn ??
+        order.createdDate ??
+        order.CreatedDate,
+      totalAmount:
+        order.totalAmount ??
+        order.TotalAmount ??
+        order.total ??
+        order.Total ??
+        0,
+      status: order.status ?? order.Status,
+      itemCount: order.itemCount ?? order.ItemCount ?? 0,
+      // Order list endpoint is intentionally lightweight; items are hydrated separately.
+      items,
+      _itemsHydrated: Array.isArray(items) && items.length > 0,
+    };
+  };
+
+  const normalizeOrderDetail = (order) => {
+    if (!order) return null;
+
+    const rawItems =
+      order.items ??
+      order.Items ??
+      order.orderItems ??
+      order.OrderItems ??
+      [];
+
+    const items = Array.isArray(rawItems)
+      ? rawItems.map(normalizeOrderItem).filter(Boolean)
+      : [];
+
+    return {
+      id: order.id ?? order.Id,
+      createdAt:
+        order.createdAt ??
+        order.CreatedAt ??
+        order.createdOn ??
+        order.CreatedOn ??
+        order.createdDate ??
+        order.CreatedDate,
+      totalAmount:
+        order.totalAmount ??
+        order.TotalAmount ??
+        order.total ??
+        order.Total ??
+        0,
+      status: order.status ?? order.Status,
+      itemCount: items.length,
+      items,
+      _itemsHydrated: true,
+    };
+  };
   
   // Filter and Sort States
   const [sortBy, setSortBy] = useState("date-desc"); // date-desc, date-asc, amount-desc, amount-asc
@@ -27,10 +104,65 @@ export default function OrderHistory({ userId }) {
 
   const fetchOrders = async () => {
     try {
+      if (!userId) {
+        setOrders([]);
+        setError(null);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       const response = await api.get(API_ENDPOINTS.ORDERS.BY_USER(userId));
-      setOrders(response.data);
+      const raw = response.data;
+      const list = Array.isArray(raw) ? raw : raw?.orders ?? raw?.Orders ?? [];
+
+      // This endpoint returns OrderResponse (lightweight): no Items, only ItemCount.
+      const normalized = Array.isArray(list)
+        ? list
+            .map((o) => {
+              const id = o?.id ?? o?.Id;
+              return {
+                id,
+                createdAt:
+                  o?.createdAt ??
+                  o?.CreatedAt ??
+                  o?.createdOn ??
+                  o?.CreatedOn ??
+                  o?.createdDate ??
+                  o?.CreatedDate,
+                totalAmount: o?.totalAmount ?? o?.TotalAmount ?? o?.total ?? o?.Total ?? 0,
+                status: o?.status ?? o?.Status,
+                itemCount: o?.itemCount ?? o?.ItemCount ?? 0,
+                items: [],
+                _itemsHydrated: false,
+              };
+            })
+            .filter((o) => !!o.id)
+        : [];
+      setOrders(normalized);
+
+      // Hydrate items by fetching order details per order id (OrderDetailResponse includes Items).
+      if (normalized.length > 0) {
+        setHydratingDetails(true);
+        const results = await Promise.allSettled(
+          normalized.map(async (o) => {
+            const detail = await api.get(API_ENDPOINTS.ORDERS.BY_ID(o.id));
+            return normalizeOrderDetail(detail.data);
+          })
+        );
+
+        const byId = new Map();
+        for (const r of results) {
+          if (r.status === "fulfilled" && r.value?.id) {
+            byId.set(r.value.id, r.value);
+          }
+        }
+
+        setOrders((prev) =>
+          prev.map((o) => (byId.has(o.id) ? { ...o, ...byId.get(o.id) } : o))
+        );
+        setHydratingDetails(false);
+      }
     } catch (err) {
       setError(formatErrorMessage(err, "Failed to load order history"));
     } finally {
@@ -39,7 +171,8 @@ export default function OrderHistory({ userId }) {
   };
 
   const applyFiltersAndSort = () => {
-    let filtered = [...orders];
+    const base = Array.isArray(orders) ? orders : [];
+    let filtered = [...base];
 
     // Apply amount filters
     if (minAmount) {
@@ -51,21 +184,21 @@ export default function OrderHistory({ userId }) {
 
     // Apply date filters
     if (startDate) {
-      filtered = filtered.filter(order => new Date(order.createdAt) >= new Date(startDate));
+      filtered = filtered.filter(order => order.createdAt && new Date(order.createdAt) >= new Date(startDate));
     }
     if (endDate) {
       const endDateTime = new Date(endDate);
       endDateTime.setHours(23, 59, 59, 999); // Include the entire end date
-      filtered = filtered.filter(order => new Date(order.createdAt) <= endDateTime);
+      filtered = filtered.filter(order => order.createdAt && new Date(order.createdAt) <= endDateTime);
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "date-desc":
-          return new Date(b.createdAt) - new Date(a.createdAt);
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
         case "date-asc":
-          return new Date(a.createdAt) - new Date(b.createdAt);
+          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
         case "amount-desc":
           return b.totalAmount - a.totalAmount;
         case "amount-asc":
@@ -106,8 +239,14 @@ export default function OrderHistory({ userId }) {
   }
 
   return (
-    <div className="order-history">
-      <h2>Order History</h2>
+    <div className="page">
+      <div className="page-header fade-in-up">
+        <h2 className="page-title">Order History</h2>
+        <p className="page-subtitle">
+          A calm timeline of your purchases—track totals and view items anytime.
+        </p>
+      </div>
+      <div className="order-history fade-in-up">
 
       {/* Filters and Sort Section */}
       <div className="order-filters">
@@ -177,39 +316,58 @@ export default function OrderHistory({ userId }) {
         <p>
           Showing <strong>{filteredOrders.length}</strong> of{" "}
           <strong>{orders.length}</strong> orders
+          {hydratingDetails ? " (loading items…)" : ""}
         </p>
       </div>
 
       {filteredOrders.length === 0 ? (
         <div className="no-orders">
-          <p>No orders found matching your filters.</p>
+          <p>{userId ? "No orders found matching your filters." : "Please login to see your orders."}</p>
         </div>
       ) : (
         <div className="orders-list">
           {filteredOrders.map((order) => (
+            (() => {
+              const safeId = order?.id ? String(order.id) : "";
+              const shortId = safeId ? (safeId.length > 8 ? `${safeId.substring(0, 8)}...` : safeId) : "-";
+              const items = Array.isArray(order?.items) ? order.items : [];
+              const itemCount = order?._itemsHydrated ? items.length : (order?.itemCount ?? 0);
+
+              return (
             <div key={order.id} className="order-card">
               <div className="order-header">
                 <div className="order-id">
-                  <strong>Order ID:</strong> {order.id.substring(0, 8)}...
+                  <strong>Order ID:</strong> {shortId}
                 </div>
-                <div className="order-date">{formatDate(order.createdAt)}</div>
+                <div className="order-date">{order.createdAt ? formatDate(order.createdAt) : "-"}</div>
               </div>
 
               <div className="order-items">
-                <h4>Items ({order.items.length}):</h4>
+                <h4>Items ({itemCount}):</h4>
                 <table className="items-table">
                   <thead>
                     <tr>
-                      <th>Product ID</th>
+                      <th>Product</th>
                       <th>Quantity</th>
                       <th>Unit Price</th>
                       <th>Subtotal</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {order.items.map((item, index) => (
+                    {items.map((item, index) => (
                       <tr key={index}>
-                        <td>{item.productId.substring(0, 8)}...</td>
+                        <td>
+                          {(() => {
+                            const id = item.productId ? String(item.productId) : "";
+                            const name =
+                              item.productId && productNameById.has(item.productId)
+                                ? productNameById.get(item.productId)
+                                : null;
+
+                            if (name) return name;
+                            return id ? `${id.substring(0, 8)}...` : "-";
+                          })()}
+                        </td>
                         <td>{item.quantity}</td>
                         <td>{formatINR(item.unitPrice)}</td>
                         <td>{formatINR(item.quantity * item.unitPrice)}</td>
@@ -226,9 +384,12 @@ export default function OrderHistory({ userId }) {
                 </div>
               </div>
             </div>
+              );
+            })()
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

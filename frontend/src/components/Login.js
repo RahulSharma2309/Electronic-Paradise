@@ -43,13 +43,27 @@ export default function Login({ onLogin }) {
 
     try {
       const response = await authApi.login(formData);
-      const token = response.data.token || response.data.Token;
-      const userId = response.data.userId || response.data.UserId || null;
+      const data = response?.data || {};
+      const token =
+        data.token ||
+        data.Token ||
+        data.accessToken ||
+        data.access_token ||
+        data.jwt ||
+        null;
+      const userId =
+        data.userId ||
+        data.UserId ||
+        data.user?.id ||
+        data.user?.Id ||
+        data.User?.id ||
+        data.User?.Id ||
+        null;
 
       if (token) {
         onLogin(token, userId);
       } else {
-        setMessage("Login succeeded but token missing");
+        setMessage("Login failed: token missing (check backend response)");
       }
     } catch (err) {
       const errorData = err.response?.data;

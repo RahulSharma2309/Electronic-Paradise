@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using PaymentService.Abstraction.DTOs;
+using PaymentService.Abstraction.DTOs.Requests;
+using PaymentService.Abstraction.DTOs.Responses;
 using PaymentService.Core.Business;
 
 namespace PaymentService.API.Controllers;
@@ -29,60 +30,52 @@ public class PaymentsController : ControllerBase
     /// <summary>
     /// Processes a payment by debiting the user's wallet.
     /// </summary>
-    /// <param name="dto">The payment processing data.</param>
+    /// <param name="request">The payment processing request.</param>
     /// <returns>
     /// An <see cref="OkObjectResult"/> with payment details if successful,
     /// or <see cref="BadRequestObjectResult"/>, <see cref="NotFoundResult"/>,
     /// <see cref="ConflictObjectResult"/>, or <see cref="StatusCodeResult"/> on failure.
     /// </returns>
     [HttpPost("process")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaymentDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> ProcessPayment(ProcessPaymentDto dto)
+    public async Task<IActionResult> ProcessPayment(ProcessPaymentRequest request)
     {
-        _logger.LogInformation("Received payment processing request for Order {OrderId}", dto.OrderId);
+        _logger.LogInformation("Received payment processing request for Order {OrderId}", request.OrderId);
 
         try
         {
-            var payment = await _service.ProcessPaymentAsync(dto);
-            _logger.LogInformation("Payment processed successfully for Order {OrderId}, Payment ID: {PaymentId}", dto.OrderId, payment.Id);
-            return Ok(new
-            {
-                paymentId = payment.Id,
-                orderId = payment.OrderId,
-                userId = payment.UserId,
-                amount = payment.Amount,
-                status = payment.Status,
-                timestamp = payment.Timestamp,
-            });
+            var payment = await _service.ProcessPaymentAsync(request);
+            _logger.LogInformation("Payment processed successfully for Order {OrderId}, Payment ID: {PaymentId}", request.OrderId, payment.Id);
+            return Ok(payment);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Payment processing failed for Order {OrderId}: Invalid argument", dto.OrderId);
+            _logger.LogWarning(ex, "Payment processing failed for Order {OrderId}: Invalid argument", request.OrderId);
             return BadRequest(new { error = ex.Message });
         }
         catch (KeyNotFoundException)
         {
-            _logger.LogWarning("Payment processing failed for Order {OrderId}: User not found", dto.OrderId);
+            _logger.LogWarning("Payment processing failed for Order {OrderId}: User not found", request.OrderId);
             return NotFound(new { error = "User not found" });
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning(ex, "Payment processing failed for Order {OrderId}: {ErrorMessage}", dto.OrderId, ex.Message);
+            _logger.LogWarning(ex, "Payment processing failed for Order {OrderId}: {ErrorMessage}", request.OrderId, ex.Message);
             return Conflict(new { error = ex.Message });
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Failed to communicate with User Service for Order {OrderId}", dto.OrderId);
+            _logger.LogError(ex, "Failed to communicate with User Service for Order {OrderId}", request.OrderId);
             return StatusCode(503, new { error = "User Service unavailable" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Payment processing failed for Order {OrderId}", dto.OrderId);
+            _logger.LogError(ex, "Payment processing failed for Order {OrderId}", request.OrderId);
             return StatusCode(500, new { error = "Payment processing failed" });
         }
     }
@@ -90,78 +83,44 @@ public class PaymentsController : ControllerBase
     /// <summary>
     /// Refunds a payment by crediting the user's wallet.
     /// </summary>
-    /// <param name="dto">The refund processing data.</param>
+    /// <param name="request">The refund processing request.</param>
     /// <returns>
     /// An <see cref="OkObjectResult"/> with refund details if successful,
     /// or <see cref="BadRequestObjectResult"/> or <see cref="StatusCodeResult"/> on failure.
     /// </returns>
     [HttpPost("refund")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaymentDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> RefundPayment(RefundPaymentDto dto)
+    public async Task<IActionResult> RefundPayment(RefundPaymentRequest request)
     {
-        _logger.LogInformation("Received refund request for Order {OrderId}", dto.OrderId);
+        _logger.LogInformation("Received refund request for Payment {PaymentId}", request.PaymentId);
 
         try
         {
-            var payment = await _service.RefundPaymentAsync(dto);
-            _logger.LogInformation("Refund processed successfully for Order {OrderId}, Payment ID: {PaymentId}", dto.OrderId, payment.Id);
-            return Ok(new
-            {
-                paymentId = payment.Id,
-                orderId = payment.OrderId,
-                userId = payment.UserId,
-                amount = payment.Amount,
-                status = payment.Status,
-                timestamp = payment.Timestamp,
-            });
+            var payment = await _service.RefundPaymentAsync(request);
+            _logger.LogInformation("Refund processed successfully for Payment {PaymentId}", request.PaymentId);
+            return Ok(payment);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Refund processing failed for Order {OrderId}: Invalid argument", dto.OrderId);
+            _logger.LogWarning(ex, "Refund processing failed for Payment {PaymentId}: Invalid argument", request.PaymentId);
             return BadRequest(new { error = ex.Message });
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Failed to communicate with User Service for refund of Order {OrderId}", dto.OrderId);
+            _logger.LogError(ex, "Failed to communicate with User Service for refund of Payment {PaymentId}", request.PaymentId);
             return StatusCode(503, new { error = "User Service unavailable" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Refund processing failed for Order {OrderId}", dto.OrderId);
+            _logger.LogError(ex, "Refund processing failed for Payment {PaymentId}", request.PaymentId);
             return StatusCode(500, new { error = "Refund processing failed" });
         }
     }
 
-    /// <summary>
-    /// Records a payment transaction (legacy endpoint for compatibility).
-    /// </summary>
-    /// <param name="dto">The payment record data.</param>
-    /// <returns>
-    /// An <see cref="OkObjectResult"/> with payment details if successful,
-    /// or <see cref="StatusCodeResult"/> on failure.
-    /// </returns>
-    [HttpPost("record")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RecordPayment(RecordPaymentDto dto)
-    {
-        _logger.LogInformation("Received payment record request for Order {OrderId}", dto.OrderId);
-
-        try
-        {
-            var payment = await _service.RecordPaymentAsync(dto);
-            _logger.LogInformation("Payment recorded successfully for Order {OrderId}, Payment ID: {PaymentId}", dto.OrderId, payment.Id);
-            return Ok(new { payment.OrderId, payment.UserId, payment.Amount, payment.Status, payment.Timestamp });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to record payment for Order {OrderId}", dto.OrderId);
-            return StatusCode(500, new { error = "Failed to record payment" });
-        }
-    }
+    // Legacy endpoint removed - use ProcessPayment instead
 
     /// <summary>
     /// Retrieves the payment status for a specific order.
@@ -172,7 +131,7 @@ public class PaymentsController : ControllerBase
     /// or <see cref="NotFoundResult"/> if not found.
     /// </returns>
     [HttpGet("status/{orderId}")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaymentStatusResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPaymentStatus(Guid orderId)
@@ -189,7 +148,7 @@ public class PaymentsController : ControllerBase
             }
 
             _logger.LogInformation("Payment status retrieved successfully for Order {OrderId}: {Status}", orderId, payment.Status);
-            return Ok(new { payment.OrderId, payment.Status, payment.Timestamp });
+            return Ok(payment);
         }
         catch (Exception ex)
         {

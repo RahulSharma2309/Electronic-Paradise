@@ -12,6 +12,7 @@ export const API_CONFIG = {
 export const STORAGE_KEYS = {
   TOKEN: 'token',
   USER_ID: 'userId',
+  WISHLIST: 'wishlist',
 };
 
 // Route Paths
@@ -24,6 +25,7 @@ export const ROUTES = {
   CHECKOUT: '/checkout',
   PROFILE: '/profile',
   ORDERS: '/orders',
+  WISHLIST: '/wishlist',
 };
 
 // Error Messages

@@ -1,10 +1,11 @@
 using System;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using ProductService.Abstraction.DTOs;
-using ProductService.Abstraction.Models;
+using ProductService.Abstraction.DTOs.Requests;
+using ProductService.Abstraction.DTOs.Responses;
 using Xunit;
 
 namespace ProductService.Integration.Test.Controllers;
@@ -23,12 +24,12 @@ public class ProductsControllerIntegrationTests
     public async Task Create_ValidData_ReturnsCreatedProduct()
     {
         // Arrange
-        var createDto = new CreateProductDto
+        var createDto = new CreateProductRequest
         {
             Name = "Integration Test Product",
             Description = "A product created during integration testing",
             Price = 99,
-            Stock = 10
+            Stock = 10,
         };
 
         // Act
@@ -36,7 +37,7 @@ public class ProductsControllerIntegrationTests
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var product = await response.Content.ReadFromJsonAsync<ProductDetailResponse>();
         product.Should().NotBeNull();
         product!.Name.Should().Be(createDto.Name);
         product.Price.Should().Be(createDto.Price);
@@ -46,21 +47,22 @@ public class ProductsControllerIntegrationTests
     public async Task GetById_ExistingProduct_ReturnsProduct()
     {
         // Arrange
-        var createDto = new CreateProductDto
+        var createDto = new CreateProductRequest
         {
             Name = "GetById Test Product",
             Price = 50,
-            Stock = 5
+            Stock = 5,
         };
         var createResponse = await _fixture.Client.PostAsJsonAsync("/api/products", createDto);
-        var createdProduct = await createResponse.Content.ReadFromJsonAsync<Product>();
+        createResponse.EnsureSuccessStatusCode();
+        var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductDetailResponse>();
 
         // Act
         var response = await _fixture.Client.GetAsync($"/api/products/{createdProduct!.Id}");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var product = await response.Content.ReadFromJsonAsync<ProductDetailResponse>();
         product.Should().NotBeNull();
         product!.Id.Should().Be(createdProduct.Id);
     }
@@ -69,28 +71,35 @@ public class ProductsControllerIntegrationTests
     public async Task ReserveAndRelease_ValidQuantities_UpdatesStock()
     {
         // Arrange
-        var createDto = new CreateProductDto
+        var createDto = new CreateProductRequest
         {
             Name = "Stock Operation Product",
             Price = 10,
-            Stock = 100
+            Stock = 100,
         };
         var createResponse = await _fixture.Client.PostAsJsonAsync("/api/products", createDto);
-        var createdProduct = await createResponse.Content.ReadFromJsonAsync<Product>();
+        createResponse.EnsureSuccessStatusCode();
+        var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductDetailResponse>();
+
+        // Sanity check: stock should be persisted as created
+        var beforeReserveResponse = await _fixture.Client.GetAsync($"/api/products/{createdProduct!.Id}");
+        beforeReserveResponse.EnsureSuccessStatusCode();
+        var beforeReserveProduct = await beforeReserveResponse.Content.ReadFromJsonAsync<ProductDetailResponse>();
+        beforeReserveProduct!.Stock.Should().Be(100);
 
         // Act - Reserve 20
-        var reserveDto = new ReleaseDto { Quantity = 20 };
+        var reserveDto = new ReserveStockRequest { Quantity = 20 };
         var reserveResponse = await _fixture.Client.PostAsJsonAsync($"/api/products/{createdProduct!.Id}/reserve", reserveDto);
         reserveResponse.EnsureSuccessStatusCode();
-        var reserveResult = await reserveResponse.Content.ReadFromJsonAsync<dynamic>();
-        ((int)reserveResult!.remaining).Should().Be(80);
+        var reserveResult = await reserveResponse.Content.ReadFromJsonAsync<JsonElement>();
+        reserveResult.GetProperty("remaining").GetInt32().Should().Be(80);
 
         // Act - Release 10
-        var releaseDto = new ReleaseDto { Quantity = 10 };
+        var releaseDto = new ReserveStockRequest { Quantity = 10 };
         var releaseResponse = await _fixture.Client.PostAsJsonAsync($"/api/products/{createdProduct.Id}/release", releaseDto);
         releaseResponse.EnsureSuccessStatusCode();
-        var releaseResult = await releaseResponse.Content.ReadFromJsonAsync<dynamic>();
-        ((int)releaseResult!.remaining).Should().Be(90);
+        var releaseResult = await releaseResponse.Content.ReadFromJsonAsync<JsonElement>();
+        releaseResult.GetProperty("remaining").GetInt32().Should().Be(90);
     }
 }
 

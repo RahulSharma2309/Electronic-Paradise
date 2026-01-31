@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <!-- Package version metadata -->
+    <EpPlatformVersion>1.0.3</EpPlatformVersion>
+
+    <!-- Build variables -->
+    <NetCoreVersion>net10.0</NetCoreVersion>
+    <LangVersion>12</LangVersion>
+
+    <!-- Package versions -->
+    <BCryptNetNextVersion>4.0.3</BCryptNetNextVersion>
+    <JwtBearerVersion>8.0.11</JwtBearerVersion>
+    <EfCoreSqlServerVersion>8.0.11</EfCoreSqlServerVersion>
+    <HttpPollyVersion>8.0.11</HttpPollyVersion>
+    <OptionsConfigExtensionsVersion>8.0.0</OptionsConfigExtensionsVersion>
+    <SwashbuckleVersion>7.2.0</SwashbuckleVersion>
+    <IdentityModelTokensJwtVersion>8.2.1</IdentityModelTokensJwtVersion>
+
+    <!-- Code quality tooling versions -->
+    <StyleCopAnalyzersVersion>1.2.0-beta.556</StyleCopAnalyzersVersion>
+    <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
+  </PropertyGroup>
+</Project>
+

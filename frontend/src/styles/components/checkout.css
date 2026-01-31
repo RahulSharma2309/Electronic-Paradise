@@ -1,28 +1,29 @@
 /* Checkout Component Styles - E-Commerce Theme */
 
 .checkout-page {
-  padding: 32px 40px;
-  max-width: 700px;
-  margin: 0 auto;
-  background: var(--bg-secondary);
+  padding: 0;
+  max-width: 760px;
+  margin: 0;
+  background: transparent;
 }
 
 .checkout-page h2 {
   margin-top: 0;
-  margin-bottom: 32px;
-  color: var(--text-primary);
+  margin-bottom: 18px;
+  color: var(--color-text);
+  font-family: var(--font-heading);
   font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .checkout-summary {
-  background: var(--bg-primary);
-  border-radius: 16px;
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: 32px;
+  padding: 22px;
   margin-bottom: 32px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
 }
 
 .summary-row {
@@ -30,46 +31,43 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .summary-row:last-child {
   border-bottom: none;
-  border-top: 3px solid var(--primary-color);
-  margin-top: 16px;
-  padding-top: 20px;
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-  margin-left: -32px;
-  margin-right: -32px;
-  padding-left: 32px;
-  padding-right: 32px;
-  border-radius: 0 0 16px 16px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 12px;
+  padding-top: 18px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: var(--color-soil);
+  margin-left: -22px;
+  margin-right: -22px;
+  padding-left: 22px;
+  padding-right: 22px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
 .summary-label {
-  color: var(--text-secondary);
+  color: var(--color-text-muted);
   font-weight: 600;
   font-size: 1.05rem;
 }
 
 .summary-value {
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text);
   font-size: 1.1rem;
 }
 
 .summary-row:last-child .summary-label {
-  color: var(--text-primary);
+  color: var(--color-text);
 }
 
 .summary-row:last-child .summary-value {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.5rem;
+  color: var(--color-text);
+  font-size: 1.25rem;
 }
 
 .checkout-actions {

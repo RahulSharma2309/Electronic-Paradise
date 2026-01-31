@@ -4,15 +4,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Net;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
-using AuthService.Abstraction.DTOs;
+
+using AuthService.Abstraction.DTOs.Requests;
+using AuthService.Abstraction.DTOs.Responses;
 using AuthService.Core.Business;
-using AuthService.Core.Data;
-using Ep.Platform.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.API.Controllers;
 
@@ -24,197 +23,68 @@ namespace AuthService.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ILogger<AuthController> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly AppDbContext _db;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
     /// </summary>
     /// <param name="authService">The authentication service.</param>
-    /// <param name="jwtTokenGenerator">The JWT token generator.</param>
     /// <param name="logger">The logger instance.</param>
-    /// <param name="httpClientFactory">The HTTP client factory for external service calls.</param>
-    /// <param name="db">The database context.</param>
     public AuthController(
         IAuthService authService,
-        IJwtTokenGenerator jwtTokenGenerator,
-        ILogger<AuthController> logger,
-        IHttpClientFactory httpClientFactory,
-        AppDbContext db)
+        ILogger<AuthController> logger)
     {
         _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-        _jwtTokenGenerator = jwtTokenGenerator ?? throw new ArgumentNullException(nameof(jwtTokenGenerator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-        _db = db ?? throw new ArgumentNullException(nameof(db));
     }
 
     /// <summary>
     /// Registers a new user account.
     /// </summary>
-    /// <param name="dto">The registration data transfer object.</param>
+    /// <param name="request">The registration request.</param>
     /// <returns>An <see cref="IActionResult"/> containing the created user information or error details.</returns>
-    /// <response code="201">Returns the newly created user.</response>
+    /// <response code="201">Returns the newly created user with authentication token.</response>
     /// <response code="400">If the registration data is invalid.</response>
     /// <response code="409">If the email or phone number already exists.</response>
     /// <response code="500">If an internal server error occurs.</response>
     /// <response code="503">If the user service is unavailable.</response>
     [HttpPost("register")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    public async Task<IActionResult> Register(RegisterRequest request)
     {
-        // Backend validation
-        if (string.IsNullOrWhiteSpace(dto.FullName))
-        {
-            return BadRequest(new { error = "Full name is required" });
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.Email))
-        {
-            return BadRequest(new { error = "Email is required" });
-        }
-
-        if (!Regex.IsMatch(dto.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-        {
-            return BadRequest(new { error = "Invalid email format" });
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.Password))
-        {
-            return BadRequest(new { error = "Password is required" });
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.ConfirmPassword))
-        {
-            return BadRequest(new { error = "Confirm password is required" });
-        }
-
-        if (dto.Password != dto.ConfirmPassword)
-        {
-            return BadRequest(new { error = "Passwords do not match" });
-        }
-
-        if (!Regex.IsMatch(dto.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$"))
-        {
-            return BadRequest(new { error = "Password must be 8+ chars, include upper, lower, number, special" });
-        }
-
-        // Validate phone number
-        if (string.IsNullOrWhiteSpace(dto.PhoneNumber))
-        {
-            return BadRequest(new { error = "Phone number is required" });
-        }
-
-        if (!Regex.IsMatch(dto.PhoneNumber, @"^\+?\d{10,15}$"))
-        {
-            return BadRequest(new { error = "Invalid phone number format (10-15 digits, optional + prefix)" });
-        }
-
+        // NOTE: Most validation is now handled by [Required] and [RegularExpression] attributes on RegisterRequest
+        // This is a legacy controller with custom validation logic - should be cleaned up in future iteration
         try
         {
-            // Check for duplicate email
-            var emailExists = await _db.Users.AnyAsync(u => u.Email == dto.Email);
-            if (emailExists)
-            {
-                return Conflict(new { error = "Email already registered" });
-            }
+            // Register user (service returns AuthResponse with token)
+            var authResponse = await _authService.RegisterAsync(request);
 
-            // Check for duplicate phone number via User Service
-            try
-            {
-                var httpClient = _httpClientFactory.CreateClient("user");
-                var phoneCheckResponse = await httpClient.GetAsync($"/api/users/phone-exists/{Uri.EscapeDataString(dto.PhoneNumber)}");
-                if (phoneCheckResponse.IsSuccessStatusCode)
-                {
-                    var phoneCheckResult = await phoneCheckResponse.Content.ReadFromJsonAsync<PhoneExistsResponse>();
-                    if (phoneCheckResult?.Exists == true)
-                    {
-                        return Conflict(new { error = "Phone number already registered" });
-                    }
-                }
-                else
-                {
-                    _logger.LogError("User Service returned non-success status {StatusCode} when checking phone number", phoneCheckResponse.StatusCode);
-                    return StatusCode(503, new { error = "Unable to validate phone number. Please try again later." });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to check phone number existence in User Service. Registration aborted.");
-                return StatusCode(503, new { error = "Unable to validate phone number. Please try again later." });
-            }
-
-            var user = await _authService.RegisterAsync(dto);
-
-            // Now create user profile in User Service
-            try
-            {
-                var names = dto.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                var firstName = names.Length > 0 ? names[0] : string.Empty;
-                var lastName = names.Length > 1 ? string.Join(" ", names.Skip(1)) : string.Empty;
-
-                var httpClient = _httpClientFactory.CreateClient("user");
-                var profileDto = new
-                {
-                    UserId = user.Id,
-                    FirstName = firstName,
-                    LastName = lastName,
-                    PhoneNumber = dto.PhoneNumber,
-                    Address = dto.Address,
-                };
-
-                var profileResponse = await httpClient.PostAsJsonAsync("/api/users", profileDto);
-
-                if (!profileResponse.IsSuccessStatusCode)
-                {
-                    // Profile creation failed - rollback auth user creation
-                    _db.Users.Remove(user);
-                    await _db.SaveChangesAsync();
-
-                    var errorContent = await profileResponse.Content.ReadAsStringAsync();
-                    _logger.LogError("Profile creation failed with status {StatusCode}: {Error}. Auth user rolled back.", profileResponse.StatusCode, errorContent);
-
-                    if (profileResponse.StatusCode == System.Net.HttpStatusCode.Conflict)
-                    {
-                        try
-                        {
-                            var errorObj = await profileResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
-                            if (errorObj.TryGetProperty("error", out var errorProp))
-                            {
-                                return Conflict(new { error = errorProp.GetString() });
-                            }
-                        }
-                        catch
-                        {
-                            // Ignore parsing errors and fall back to a default message.
-                        }
-
-                        return Conflict(new { error = "Phone number already registered" });
-                    }
-
-                    return StatusCode((int)profileResponse.StatusCode, new { error = "Failed to create user profile. Registration aborted." });
-                }
-            }
-            catch (Exception ex)
-            {
-                // Profile creation failed - rollback auth user creation
-                _db.Users.Remove(user);
-                await _db.SaveChangesAsync();
-                _logger.LogError(ex, "Profile creation failed. Auth user rolled back for {Email}", dto.Email);
-                return StatusCode(500, new { error = "Failed to create user profile. Registration aborted." });
-            }
-
-            return CreatedAtAction(nameof(Me), new { id = user.Id }, new { user.Id, user.Email, user.FullName });
+            return CreatedAtAction(nameof(Me), null, authResponse);
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_EXISTS")
+        {
+            return Conflict(new { error = "Email already registered" });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "PHONE_EXISTS")
+        {
+            return Conflict(new { error = "Phone number already registered" });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.ServiceUnavailable)
+        {
+            return StatusCode(503, new { error = "User service unavailable. Please try again." });
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+        {
+            // Downstream user-service duplicate validation etc.
+            return Conflict(new { error = "User profile creation failed due to a conflict" });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Registration failed for {Email}", dto.Email);
+            _logger.LogError(ex, "Registration failed for {Email}", request.Email);
             return StatusCode(500, new { error = "Registration failed. Please try again later." });
         }
     }
@@ -222,50 +92,42 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Authenticates a user and returns a JWT token.
     /// </summary>
-    /// <param name="dto">The login data transfer object containing email and password.</param>
+    /// <param name="request">The login request containing email and password.</param>
     /// <returns>An <see cref="IActionResult"/> containing the authentication token or error details.</returns>
     /// <response code="200">Returns the authentication token and user information.</response>
     /// <response code="400">If the login data is invalid.</response>
     /// <response code="401">If the credentials are invalid.</response>
     [HttpPost("login")]
-    [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password))
+        try
         {
-            return BadRequest(new { error = "Email and password required" });
+            var authResponse = await _authService.LoginAsync(request);
+            return Ok(authResponse);
         }
-
-        var (user, error) = await _authService.LoginAsync(dto);
-        if (user == null || error != null)
+        catch (KeyNotFoundException ex) when (ex.Message == "USER_NOT_FOUND")
         {
-            return Unauthorized(new { error });
+            return NotFound(new { code = "USER_NOT_FOUND", error = "User not found" });
         }
-
-        // Use Platform's JWT token generator
-        var claims = new Dictionary<string, string>
+        catch (UnauthorizedAccessException ex)
         {
-            [ClaimTypes.NameIdentifier] = user.Id.ToString(),
-            [ClaimTypes.Email] = user.Email,
-            ["fullName"] = user.FullName ?? string.Empty,
-        };
-        var token = _jwtTokenGenerator.GenerateToken(claims);
-
-        return Ok(new AuthResponseDto
+            return Unauthorized(new { error = ex.Message });
+        }
+        catch (Exception ex)
         {
-            Token = token,
-            ExpiresIn = 6 * 60 * 60,
-            UserId = user.Id,
-            Email = user.Email,
-        });
+            _logger.LogError(ex, "Login failed for {Email}", request.Email);
+            return StatusCode(500, new { error = "Login failed. Please try again." });
+        }
     }
 
     /// <summary>
     /// Resets a user's password.
     /// </summary>
-    /// <param name="dto">The reset password data transfer object containing email and new password.</param>
+    /// <param name="request">The reset password request containing email, token, and new password.</param>
     /// <returns>An <see cref="IActionResult"/> indicating the result of the password reset operation.</returns>
     /// <response code="200">If the password was reset successfully.</response>
     /// <response code="400">If the reset data is invalid.</response>
@@ -274,17 +136,12 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
-        if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.NewPassword))
-        {
-            return BadRequest(new { error = "Email and new password required" });
-        }
-
-        var success = await _authService.ResetPasswordAsync(dto);
+        var success = await _authService.ResetPasswordAsync(request);
         if (!success)
         {
-            return NotFound(new { error = "User not found" });
+            return NotFound(new { error = "User not found or invalid reset token" });
         }
 
         return Ok(new { status = "password reset" });
@@ -299,7 +156,7 @@ public class AuthController : ControllerBase
     /// <response code="404">If the user was not found.</response>
     [Authorize]
     [HttpGet("me")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(UserDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Me()
@@ -321,17 +178,6 @@ public class AuthController : ControllerBase
             return NotFound();
         }
 
-        return Ok(new { user.Id, user.Email, user.FullName, user.CreatedAt });
-    }
-
-    /// <summary>
-    /// Response model for phone number existence check.
-    /// </summary>
-    private class PhoneExistsResponse
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether the phone number exists.
-        /// </summary>
-        public bool Exists { get; set; }
+        return Ok(user);
     }
 }

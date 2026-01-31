@@ -9,6 +9,7 @@ import "../styles/components/cart.css";
 export default function Cart({
   items,
   remove,
+  updateQuantity,
   clearCart,
   userId,
   onOrderSuccess,
@@ -62,7 +63,45 @@ export default function Cart({
               <div className="cart-item-info">
                 <div className="cart-item-name">{item.name}</div>
                 <div className="cart-item-details">
-                  Quantity: {item.quantity} × {formatINR(item.price)}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <span>Quantity:</span>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                      <button
+                        type="button"
+                        className="button button-secondary"
+                        style={{ padding: "6px 10px" }}
+                        onClick={() =>
+                          typeof updateQuantity === "function"
+                            ? updateQuantity(item.productId, (item.quantity || 0) - 1)
+                            : null
+                        }
+                        disabled={loading}
+                        aria-label={`Decrease quantity for ${item.name}`}
+                      >
+                        -
+                      </button>
+                      <span style={{ minWidth: 28, textAlign: "center", fontWeight: 700 }}>
+                        {item.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        className="button button-secondary"
+                        style={{ padding: "6px 10px" }}
+                        onClick={() =>
+                          typeof updateQuantity === "function"
+                            ? updateQuantity(item.productId, (item.quantity || 0) + 1)
+                            : null
+                        }
+                        disabled={loading}
+                        aria-label={`Increase quantity for ${item.name}`}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <span>
+                      × {formatINR(item.price)}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="cart-item-price">

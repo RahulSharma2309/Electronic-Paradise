@@ -10,6 +10,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http.Json;
+using Moq;
+using Moq.Protected;
+using System.Threading;
 
 namespace PaymentService.Integration.Test;
 
@@ -45,6 +50,53 @@ public class PaymentServiceFixture : IAsyncLifetime
                 {
                     options.UseInMemoryDatabase("InMemoryPaymentTestDb");
                 });
+
+                // Mock HttpClient for User Service wallet operations
+                var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Loose);
+                handlerMock
+                    .Protected()
+                    .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>()
+                    )
+                    .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+                    {
+                        var path = request.RequestUri?.AbsolutePath ?? string.Empty;
+
+                        if (request.Method == HttpMethod.Post && path.Contains("/wallet/debit", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.OK,
+                                Content = JsonContent.Create(new { success = true }),
+                            };
+                        }
+
+                        if (request.Method == HttpMethod.Post && path.Contains("/wallet/credit", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return new HttpResponseMessage
+                            {
+                                StatusCode = HttpStatusCode.OK,
+                                Content = JsonContent.Create(new { success = true }),
+                            };
+                        }
+
+                        return new HttpResponseMessage
+                        {
+                            StatusCode = HttpStatusCode.OK,
+                            Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json"),
+                        };
+                    });
+
+                var httpClient = new HttpClient(handlerMock.Object)
+                {
+                    BaseAddress = new Uri("http://user-service-mock:3001"),
+                };
+
+                var mockFactory = new Mock<IHttpClientFactory>();
+                mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+                services.AddSingleton(mockFactory.Object);
 
                 var sp = services.BuildServiceProvider();
                 using (var scope = sp.CreateScope())

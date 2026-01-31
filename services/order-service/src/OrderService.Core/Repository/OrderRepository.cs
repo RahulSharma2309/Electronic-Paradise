@@ -88,4 +88,22 @@ public class OrderRepository : IOrderRepository
             throw;
         }
     }
+
+    /// <inheritdoc />
+    public async Task<Order> UpdateAsync(Order order)
+    {
+        _logger.LogDebug("Updating order {OrderId}", order.Id);
+        try
+        {
+            _db.Orders.Update(order);
+            await _db.SaveChangesAsync();
+            _logger.LogInformation("Order {OrderId} updated successfully", order.Id);
+            return order;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update order {OrderId}", order.Id);
+            throw;
+        }
+    }
 }

@@ -1,8 +1,9 @@
 using AuthService.Core.Business;
+using AuthService.Core.Clients;
 using AuthService.Core.Data;
+using AuthService.Core.Mappers;
 using AuthService.Core.Repository;
 using Ep.Platform.DependencyInjection;
-using Ep.Platform.Hosting;
 
 namespace AuthService.API;
 
@@ -54,6 +55,12 @@ public class Startup
         // Register business and repository services (Auth Service specific)
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, Core.Business.AuthService>();
+
+        // User Service client (used for atomic registration orchestration)
+        services.AddScoped<IUserServiceClient, UserServiceClient>();
+
+        // Register mapper
+        services.AddScoped<IAuthMapper, AuthMapper>();
     }
 
     /// <summary>
