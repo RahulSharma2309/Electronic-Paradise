@@ -1,10 +1,10 @@
 # ============================================================================
-# Create all Electronic Paradise databases in LocalDB
+# Create all FreshHarvest Market databases in LocalDB
 # ============================================================================
 # Run this script in PowerShell to create all 10 databases
 # ============================================================================
 
-Write-Host "Creating Electronic Paradise databases in LocalDB..." -ForegroundColor Cyan
+Write-Host "Creating FreshHarvest Market databases in LocalDB..." -ForegroundColor Cyan
 Write-Host ""
 
 # Local Development databases

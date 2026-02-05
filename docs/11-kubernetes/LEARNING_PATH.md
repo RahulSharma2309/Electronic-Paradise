@@ -1,8 +1,8 @@
-# Kubernetes Learning Path - Electronic Paradise
+# Kubernetes Learning Path - FreshHarvest Market
 
 > **Complete learning guide: From zero to Kubernetes expert using our project**
 
-This document provides a structured learning path to understand Kubernetes concepts by studying the Electronic Paradise implementation.
+This document provides a structured learning path to understand Kubernetes concepts by studying the FreshHarvest Market implementation.
 
 ---
 
@@ -48,7 +48,7 @@ By the end of this learning path, you will:
 ### Phase 2: Implementation (How We Did It)
 
 **4. [IMPLEMENTATION.md](./IMPLEMENTATION.md)**
-- **What:** How Electronic Paradise implemented Kubernetes
+- **What:** How FreshHarvest Market implemented Kubernetes
 - **Why:** See real-world decisions and patterns
 - **Time:** 45 minutes
 - **Key Topics:** File structure, decisions, security, environment separation
@@ -300,7 +300,7 @@ After completing this learning path:
 
 This learning path takes you from zero to Kubernetes expert by:
 1. **Understanding concepts** with analogies
-2. **Seeing real implementation** in Electronic Paradise
+2. **Seeing real implementation** in FreshHarvest Market
 3. **Practicing** with hands-on exercises
 4. **Referencing** complete file documentation
 

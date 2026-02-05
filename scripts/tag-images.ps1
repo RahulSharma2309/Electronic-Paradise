@@ -1,4 +1,4 @@
-# Tag Docker Images for Electronic Paradise
+# Tag Docker Images for FreshHarvest Market
 # Usage: .\tag-images.ps1 -Version "1.1.0" -Registry "ghcr.io/rahulsharma" [-Alpha] [-Push]
 
 param(
@@ -59,7 +59,7 @@ $ErrorCount = 0
 
 foreach ($Service in $Services) {
     $LocalImage = "infra-$Service"
-    $RepoName = "electronic-paradise-" + $Service.Replace("-service", "")
+    $RepoName = "freshharvest-market-" + $Service.Replace("-service", "")
     
     Write-Host "Processing: $Service" -ForegroundColor Cyan
     

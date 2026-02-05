@@ -8,7 +8,7 @@ metadata:
   labels:
     app: gateway
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   replicas: 2
   selector:
@@ -20,14 +20,14 @@ spec:
       labels:
         app: gateway
         environment: staging
-        managed-by: electronic-paradise
+        managed-by: freshharvest-market
     spec:
       imagePullSecrets:
         - name: ghcr-secret
       serviceAccountName: gateway-sa
       containers:
       - name: gateway
-        image: ghcr.io/rahulsharma2309/electronic-paradise-gateway:v1.4.0
+        image: ghcr.io/rahulsharma2309/freshharvest-market-gateway:v1.4.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

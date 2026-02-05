@@ -1,4 +1,4 @@
-# 🛠️ Tools & Automation
+# 🛠️ Tools & Automation - FreshHarvest Market
 
 > **Scripts, tools, and automation for development and project management**
 

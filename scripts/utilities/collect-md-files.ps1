@@ -55,7 +55,7 @@ Write-Host ""
 # Export list to file
 $listFile = Join-Path $rootPath "md-files-list.txt"
 $content = @()
-$content += "Markdown Files in Electronic Paradise"
+$content += "Markdown Files in FreshHarvest Market"
 $content += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $content += "="*70
 $content += ""

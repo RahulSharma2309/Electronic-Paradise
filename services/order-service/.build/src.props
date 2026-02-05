@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <Authors>Electronic Paradise</Authors>
-    <Company>Electronic Paradise</Company>
-    <Product>Electronic Paradise - Order Service</Product>
-    <Copyright>Copyright © Electronic Paradise</Copyright>
-    <PackageTags>order;checkout;purchase;microservices;electronic-paradise</PackageTags>
+    <Authors>FreshHarvest Market</Authors>
+    <Company>FreshHarvest Market</Company>
+    <Product>FreshHarvest Market - Order Service</Product>
+    <Copyright>Copyright © FreshHarvest Market</Copyright>
+    <PackageTags>order;checkout;purchase;microservices;freshharvest-market</PackageTags>
   </PropertyGroup>
 </Project>
 

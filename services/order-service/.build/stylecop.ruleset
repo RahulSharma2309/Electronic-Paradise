@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Electronic-Paradise StyleCop Rules" Description="Custom StyleCop rules for Electronic-Paradise microservices" ToolsVersion="16.0">
+<RuleSet Name="FreshHarvest-Market StyleCop Rules" Description="Custom StyleCop rules for FreshHarvest-Market microservices" ToolsVersion="16.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     
     <!-- Documentation Rules - Relaxed for microservices -->

@@ -2,7 +2,7 @@
 
 > **How the CI/CD pipeline automatically deploys to Kubernetes**
 
-This document explains how the Electronic Paradise CI/CD pipeline integrates with Kubernetes to automatically deploy services to the staging environment.
+This document explains how the FreshHarvest Market CI/CD pipeline integrates with Kubernetes to automatically deploy services to the staging environment.
 
 ---
 
@@ -155,8 +155,8 @@ Code Push → CI Build → Docker Images → CD Deploy → Kubernetes Staging
    ↓
 9. Deployment Complete! 🎉
    - Services available at:
-     - Frontend: http://staging.electronic-paradise.local
-     - API: http://api.staging.electronic-paradise.local
+     - Frontend: http://staging.freshharvest-market.local
+     - API: http://api.staging.freshharvest-market.local
 ```
 
 ---
@@ -229,7 +229,7 @@ export OWNER="rahulsharma2309"
 
 # 2. Update image tags in deployments
 find infra/k8s/staging/deployments -name "deployment.yaml" | \
-  xargs sed -i "s|image: ghcr.io/.*/electronic-paradise-.*:.*|image: ghcr.io/${OWNER}/electronic-paradise-*:v${VERSION}|g"
+  xargs sed -i "s|image: ghcr.io/.*/freshharvest-market-.*:.*|image: ghcr.io/${OWNER}/freshharvest-market-*:v${VERSION}|g"
 
 # 3. Apply manifests
 kubectl apply -f infra/k8s/staging/namespaces/
@@ -284,7 +284,7 @@ kubectl logs <pod-name> -n staging
 **Issue:** CD pipeline can't find images
 ```bash
 # Verify image exists
-docker manifest inspect ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.0
+docker manifest inspect ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.2.0
 
 # Check registry authentication
 docker login ghcr.io -u rahulsharma2309 -p <token>

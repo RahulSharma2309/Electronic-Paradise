@@ -23,7 +23,7 @@ metadata:
   name: frontend-config
   namespace: {{ .Values.global.environment }}
 data:
-  REACT_APP_API_BASE: "http://api.{{ .Values.global.environment }}.electronic-paradise.local"
+  REACT_APP_API_BASE: "http://api.{{ .Values.global.environment }}.freshharvest-market.local"
 {{- end }}
 {{- end }}
 

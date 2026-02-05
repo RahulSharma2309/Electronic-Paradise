@@ -2,7 +2,7 @@
 
 ## Overview
 
-The User Service manages user profiles, personal information, and wallet balance in the Electronic-Paradise e-commerce platform.
+The User Service manages user profiles, personal information, and wallet balance in the FreshHarvest-Market e-commerce platform.
 
 ### Responsibilities
 
@@ -30,7 +30,7 @@ UserService/
 
 ## Build System
 
-This service uses the same build system as all Electronic-Paradise microservices. See the **Build Files** section below for details.
+This service uses the same build system as all FreshHarvest-Market microservices. See the **Build Files** section below for details.
 
 ### Build Files
 

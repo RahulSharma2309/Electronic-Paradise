@@ -51,8 +51,8 @@ ENV ASPNETCORE_URLS=http://+:80
 ENV ConnectionStrings__DefaultConnection="Server=mssql,1433;Database=authdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
 ENV ServiceUrls__UserService="http://user-service:80"
 ENV JwtOptions__Key="your-super-secret-key-that-should-be-at-least-32-characters-long-for-security"
-ENV JwtOptions__Issuer="Electronic-Paradise"
-ENV JwtOptions__Audience="Electronic-Paradise-Users"
+ENV JwtOptions__Issuer="FreshHarvest-Market"
+ENV JwtOptions__Audience="FreshHarvest-Market-Users"
 
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]

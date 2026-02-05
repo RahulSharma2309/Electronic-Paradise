@@ -2,7 +2,7 @@
 
 > **Understanding Helm, the Kubernetes Package Manager, with real-world analogies**
 
-This document explains Helm charts and how they're used in the Electronic Paradise project.
+This document explains Helm charts and how they're used in the FreshHarvest Market project.
 
 ---
 
@@ -31,7 +31,7 @@ Think of **Helm** as a **package manager** like npm, pip, or apt:
    ↓
    Ready to use!
 
-📦 helm install electronic-paradise
+📦 helm install freshharvest-market
    ↓
    Installs all K8s resources (deployments, services, etc.)
    ↓
@@ -88,7 +88,7 @@ kubectl apply -f staging/deployments/user-service/
 **With Helm:**
 ```bash
 # Deploy to staging
-helm install electronic-paradise . -f values-staging.yaml -n staging
+helm install freshharvest-market . -f values-staging.yaml -n staging
 # Done! ✅
 ```
 
@@ -102,7 +102,7 @@ A **Chart** is a collection of files that describe a Kubernetes application.
 
 **Structure:**
 ```
-electronic-paradise/
+freshharvest-market/
 ├── Chart.yaml          # Chart metadata
 ├── values.yaml         # Default values
 ├── values-staging.yaml # Staging overrides
@@ -129,7 +129,7 @@ spec:
 spec:
   replicas: 2
   containers:
-    - image: ghcr.io/rahulsharma2309/electronic-paradise-auth:latest
+    - image: ghcr.io/rahulsharma2309/freshharvest-market-auth:latest
 ```
 
 ### 3. Values
@@ -160,8 +160,8 @@ A **Release** is a running instance of a chart.
 
 ```bash
 # Install creates a release
-helm install electronic-paradise . -n staging
-# Release name: electronic-paradise
+helm install freshharvest-market . -n staging
+# Release name: freshharvest-market
 # Chart: current directory (.)
 # Namespace: staging
 ```
@@ -173,7 +173,7 @@ helm install electronic-paradise . -n staging
 ### Location
 
 ```
-infra/k8s/helm/electronic-paradise/
+infra/k8s/helm/freshharvest-market/
 ├── Chart.yaml                    # Chart metadata
 ├── values.yaml                   # Default values
 ├── values-staging.yaml           # Staging environment
@@ -195,8 +195,8 @@ infra/k8s/helm/electronic-paradise/
 
 ```yaml
 apiVersion: v2
-name: electronic-paradise
-description: A Helm chart for Electronic Paradise
+name: freshharvest-market
+description: A Helm chart for FreshHarvest Market
 version: 1.0.0
 appVersion: "1.0.0"
 ```
@@ -215,7 +215,7 @@ services:
     enabled: true
     replicas: 2
     image:
-      repository: electronic-paradise-auth
+      repository: freshharvest-market-auth
       tag: latest
 ```
 
@@ -255,10 +255,10 @@ spec:
 
 ```bash
 # Navigate to chart directory
-cd infra/k8s/helm/electronic-paradise
+cd infra/k8s/helm/freshharvest-market
 
 # Install to staging
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   --namespace staging \
   --create-namespace \
   -f values-staging.yaml
@@ -272,7 +272,7 @@ kubectl get pods -n staging
 
 ```bash
 # Install to production
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   --namespace prod \
   --create-namespace \
   -f values-prod.yaml
@@ -282,12 +282,12 @@ helm install electronic-paradise . \
 
 ```bash
 # Upgrade staging
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace staging \
   -f values-staging.yaml
 
 # Upgrade production
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace prod \
   -f values-prod.yaml
 ```
@@ -296,10 +296,10 @@ helm upgrade electronic-paradise . \
 
 ```bash
 # Uninstall from staging
-helm uninstall electronic-paradise --namespace staging
+helm uninstall freshharvest-market --namespace staging
 
 # Uninstall from production
-helm uninstall electronic-paradise --namespace prod
+helm uninstall freshharvest-market --namespace prod
 ```
 
 ---
@@ -334,10 +334,10 @@ Our chart includes helper functions in `_helpers.tpl`:
 
 ```yaml
 # Generate labels
-{{- include "electronic-paradise.labels" . }}
+{{- include "freshharvest-market.labels" . }}
 
 # Generate image reference
-{{- include "electronic-paradise.image" (dict "Values" .Values "repository" "auth" "tag" "latest") }}
+{{- include "freshharvest-market.image" (dict "Values" .Values "repository" "auth" "tag" "latest") }}
 ```
 
 ### Values Hierarchy
@@ -353,7 +353,7 @@ values-staging.yaml (overrides)
 **Example:**
 ```bash
 # Use staging values, but override replicas
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   -f values-staging.yaml \
   --set services.auth.replicas=5
 ```
@@ -366,23 +366,23 @@ helm install electronic-paradise . \
 
 ```bash
 # 1. Install chart
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   --namespace staging \
   --create-namespace \
   -f values-staging.yaml
 
 # 2. Check status
-helm status electronic-paradise -n staging
+helm status freshharvest-market -n staging
 
 # 3. View generated resources
-helm get manifest electronic-paradise -n staging
+helm get manifest freshharvest-market -n staging
 ```
 
 ### Example 2: Update Image Tag
 
 ```bash
 # Upgrade with new image tag
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace staging \
   -f values-staging.yaml \
   --set services.auth.image.tag=v1.1.0
@@ -392,7 +392,7 @@ helm upgrade electronic-paradise . \
 
 ```bash
 # Scale auth service to 5 replicas
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace staging \
   -f values-staging.yaml \
   --set services.auth.replicas=5
@@ -402,7 +402,7 @@ helm upgrade electronic-paradise . \
 
 ```bash
 # Disable frontend temporarily
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace staging \
   -f values-staging.yaml \
   --set services.frontend.enabled=false
@@ -415,7 +415,7 @@ helm upgrade electronic-paradise . \
 ### Complete Flow
 
 ```
-1. You: helm install electronic-paradise
+1. You: helm install freshharvest-market
    ↓
 2. Helm: Reads Chart.yaml and values.yaml
    ↓
@@ -430,7 +430,7 @@ helm upgrade electronic-paradise . \
 7. Application: Running! ✅
 ```
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 ```
 Helm Chart

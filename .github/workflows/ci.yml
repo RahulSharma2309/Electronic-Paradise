@@ -419,13 +419,13 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - { name: "auth", image: "electronic-paradise-auth" }
-          - { name: "user", image: "electronic-paradise-user" }
-          - { name: "product", image: "electronic-paradise-product" }
-          - { name: "order", image: "electronic-paradise-order" }
-          - { name: "payment", image: "electronic-paradise-payment" }
-          - { name: "gateway", image: "electronic-paradise-gateway" }
-          - { name: "frontend", image: "electronic-paradise-frontend" }
+          - { name: "auth", image: "freshharvest-market-auth" }
+          - { name: "user", image: "freshharvest-market-user" }
+          - { name: "product", image: "freshharvest-market-product" }
+          - { name: "order", image: "freshharvest-market-order" }
+          - { name: "payment", image: "freshharvest-market-payment" }
+          - { name: "gateway", image: "freshharvest-market-gateway" }
+          - { name: "frontend", image: "freshharvest-market-frontend" }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -489,7 +489,7 @@ jobs:
         with:
           projectBaseDir: .
           args: >
-            -Dsonar.projectKey=RahulSharma2309_Electronic-Paradise
+            -Dsonar.projectKey=RahulSharma2309_FreshHarvest-Market
             -Dsonar.organization=rahulsharma2309
             -Dsonar.cs.opencover.reportsPaths=**/coverage.opencover.xml
 
@@ -518,37 +518,37 @@ jobs:
         service:
           - {
               name: "auth",
-              image: "electronic-paradise-auth",
+              image: "freshharvest-market-auth",
               dockerfile: "./services/auth-service/src/Dockerfile",
             }
           - {
               name: "user",
-              image: "electronic-paradise-user",
+              image: "freshharvest-market-user",
               dockerfile: "./services/user-service/src/Dockerfile",
             }
           - {
               name: "product",
-              image: "electronic-paradise-product",
+              image: "freshharvest-market-product",
               dockerfile: "./services/product-service/src/Dockerfile",
             }
           - {
               name: "order",
-              image: "electronic-paradise-order",
+              image: "freshharvest-market-order",
               dockerfile: "./services/order-service/src/Dockerfile",
             }
           - {
               name: "payment",
-              image: "electronic-paradise-payment",
+              image: "freshharvest-market-payment",
               dockerfile: "./services/payment-service/src/Dockerfile",
             }
           - {
               name: "gateway",
-              image: "electronic-paradise-gateway",
+              image: "freshharvest-market-gateway",
               dockerfile: "./gateway/src/Dockerfile",
             }
           - {
               name: "frontend",
-              image: "electronic-paradise-frontend",
+              image: "freshharvest-market-frontend",
               dockerfile: "./frontend/Dockerfile",
             }
 
@@ -723,13 +723,13 @@ jobs:
           
           # Service name to image name mapping
           declare -A SERVICE_MAP=(
-            ["auth-service"]="electronic-paradise-auth"
-            ["user-service"]="electronic-paradise-user"
-            ["product-service"]="electronic-paradise-product"
-            ["order-service"]="electronic-paradise-order"
-            ["payment-service"]="electronic-paradise-payment"
-            ["gateway"]="electronic-paradise-gateway"
-            ["frontend"]="electronic-paradise-frontend"
+            ["auth-service"]="freshharvest-market-auth"
+            ["user-service"]="freshharvest-market-user"
+            ["product-service"]="freshharvest-market-product"
+            ["order-service"]="freshharvest-market-order"
+            ["payment-service"]="freshharvest-market-payment"
+            ["gateway"]="freshharvest-market-gateway"
+            ["frontend"]="freshharvest-market-frontend"
           )
           
           # Update each deployment file in staging environment

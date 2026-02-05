@@ -9,7 +9,7 @@ metadata:
   labels:
     app: {{ $serviceName }}-service
     environment: {{ $.Values.global.environment }}
-    {{- include "electronic-paradise.labels" $ | nindent 4 }}
+    {{- include "freshharvest-market.labels" $ | nindent 4 }}
 spec:
   type: {{ $service.service.type }}
   ports:

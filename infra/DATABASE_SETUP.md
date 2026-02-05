@@ -1,6 +1,6 @@
 # Database Architecture & Setup Guide
 
-This document explains the database architecture for Electronic Paradise across different environments.
+This document explains the database architecture for FreshHarvest Market across different environments.
 
 ## Architecture Overview
 
@@ -36,7 +36,7 @@ The database layer is **separated from the application infrastructure** with thr
 Run in PowerShell:
 
 ```powershell
-cd c:\Users\Lenovo\source\repos\Electronic-Paradise\infra\sql
+cd c:\Users\Lenovo\source\repos\FreshHarvest-Market\infra\sql
 .\create-localdb-databases.ps1
 ```
 

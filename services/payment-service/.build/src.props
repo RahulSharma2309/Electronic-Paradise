@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <Authors>Electronic Paradise</Authors>
-    <Company>Electronic Paradise</Company>
-    <Product>Electronic Paradise - Payment Service</Product>
-    <Copyright>Copyright © Electronic Paradise</Copyright>
-    <PackageTags>payment;transaction;gateway;microservices;electronic-paradise</PackageTags>
+    <Authors>FreshHarvest Market</Authors>
+    <Company>FreshHarvest Market</Company>
+    <Product>FreshHarvest Market - Payment Service</Product>
+    <Copyright>Copyright © FreshHarvest Market</Copyright>
+    <PackageTags>payment;transaction;gateway;microservices;freshharvest-market</PackageTags>
   </PropertyGroup>
 </Project>
 

@@ -2,7 +2,7 @@
 
 > **Understanding Persistent Volumes, PVCs, and Storage Classes with real-world analogies**
 
-This document explains persistent storage in Kubernetes and how it's used in the Electronic Paradise project.
+This document explains persistent storage in Kubernetes and how it's used in the FreshHarvest Market project.
 
 ---
 
@@ -367,7 +367,7 @@ PV on physical storage
 Data persists! ✅
 ```
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 ```
 SQL Server Pod

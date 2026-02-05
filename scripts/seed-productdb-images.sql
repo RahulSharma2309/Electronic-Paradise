@@ -1,4 +1,4 @@
-﻿SET NOCOUNT ON;
+SET NOCOUNT ON;
 SET ANSI_NULLS ON;
 SET QUOTED_IDENTIFIER ON;
 SET ANSI_PADDING ON;
@@ -36,7 +36,7 @@ BEGIN TRY
 
   -- Products + Metadata
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('4947208a-334e-4373-ba27-cbcab282bc6c','Chamomile tea','Fresh, organically grown Chamomile tea.',177,51,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','Electronic Paradise Organics','EP-ORG-CHAMOM','bottle',1,SYSUTCDATETIME(),NULL);
+  VALUES ('4947208a-334e-4373-ba27-cbcab282bc6c','Chamomile tea','Fresh, organically grown Chamomile tea.',177,51,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','FreshHarvest Market Organics','EP-ORG-CHAMOM','bottle',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('916a554d-a139-435a-9749-ccf7188be790','4947208a-334e-4373-ba27-cbcab282bc6c','organic-beverages-chamomile-tea','{"title":"Chamomile tea","description":"Fresh, organically grown Chamomile tea.","keywords":"Chamomile tea,Organic Beverages,organic,fresh","canonicalUrl":"/products/organic-beverages-chamomile-tea"}',SYSUTCDATETIME(),NULL);
@@ -47,7 +47,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('4947208a-334e-4373-ba27-cbcab282bc6c','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('22b92d6e-880e-43d4-8bb5-dcc88f8a6b75','Coconut water','Fresh, organically grown Coconut water.',336,58,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','Electronic Paradise Organics','EP-ORG-COCONU','bottle',1,SYSUTCDATETIME(),NULL);
+  VALUES ('22b92d6e-880e-43d4-8bb5-dcc88f8a6b75','Coconut water','Fresh, organically grown Coconut water.',336,58,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','FreshHarvest Market Organics','EP-ORG-COCONU','bottle',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('d919c000-8bf6-45a6-84a6-aaa34d0e1323','22b92d6e-880e-43d4-8bb5-dcc88f8a6b75','organic-beverages-coconut-water','{"title":"Coconut water","description":"Fresh, organically grown Coconut water.","keywords":"Coconut water,Organic Beverages,organic,fresh","canonicalUrl":"/products/organic-beverages-coconut-water"}',SYSUTCDATETIME(),NULL);
@@ -58,7 +58,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('22b92d6e-880e-43d4-8bb5-dcc88f8a6b75','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('8f497f77-77b9-47c5-954d-a8bac6893d4b','Green tea','Fresh, organically grown Green tea.',159,63,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','Electronic Paradise Organics','EP-ORG-GREEN-','bottle',1,SYSUTCDATETIME(),NULL);
+  VALUES ('8f497f77-77b9-47c5-954d-a8bac6893d4b','Green tea','Fresh, organically grown Green tea.',159,63,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','FreshHarvest Market Organics','EP-ORG-GREEN-','bottle',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('20e4bf9f-7f02-4ea6-8fa5-f83fe9602350','8f497f77-77b9-47c5-954d-a8bac6893d4b','organic-beverages-green-tea','{"title":"Green tea","description":"Fresh, organically grown Green tea.","keywords":"Green tea,Organic Beverages,organic,fresh","canonicalUrl":"/products/organic-beverages-green-tea"}',SYSUTCDATETIME(),NULL);
@@ -69,7 +69,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('8f497f77-77b9-47c5-954d-a8bac6893d4b','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('6a8940b9-fd89-49de-bf33-ac2b5a7368b4','Kombucha','Fresh, organically grown Kombucha.',294,60,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','Electronic Paradise Organics','EP-ORG-KOMBUC','bottle',1,SYSUTCDATETIME(),NULL);
+  VALUES ('6a8940b9-fd89-49de-bf33-ac2b5a7368b4','Kombucha','Fresh, organically grown Kombucha.',294,60,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','FreshHarvest Market Organics','EP-ORG-KOMBUC','bottle',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('5feaa9e7-f8c6-4905-a8f4-95238af01927','6a8940b9-fd89-49de-bf33-ac2b5a7368b4','organic-beverages-kombucha','{"title":"Kombucha","description":"Fresh, organically grown Kombucha.","keywords":"Kombucha,Organic Beverages,organic,fresh","canonicalUrl":"/products/organic-beverages-kombucha"}',SYSUTCDATETIME(),NULL);
@@ -80,7 +80,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('6a8940b9-fd89-49de-bf33-ac2b5a7368b4','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('e7744376-cd93-4048-b2d9-ce7f21f82269','Vegetable juice','Fresh, organically grown Vegetable juice.',202,70,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','Electronic Paradise Organics','EP-ORG-VEGETA','bottle',1,SYSUTCDATETIME(),NULL);
+  VALUES ('e7744376-cd93-4048-b2d9-ce7f21f82269','Vegetable juice','Fresh, organically grown Vegetable juice.',202,70,'7f5f0873-97ca-4a8e-a27e-a22e9c0a3eb8','FreshHarvest Market Organics','EP-ORG-VEGETA','bottle',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('70d8f838-be08-41c9-85af-31ba5042e248','e7744376-cd93-4048-b2d9-ce7f21f82269','organic-beverages-vegetable-juice','{"title":"Vegetable juice","description":"Fresh, organically grown Vegetable juice.","keywords":"Vegetable juice,Organic Beverages,organic,fresh","canonicalUrl":"/products/organic-beverages-vegetable-juice"}',SYSUTCDATETIME(),NULL);
@@ -91,7 +91,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('e7744376-cd93-4048-b2d9-ce7f21f82269','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('5f44c07b-4c85-4f95-b0e6-b7886196730f','Cheddar cheese','Fresh, organically grown Cheddar cheese.',59,55,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','Electronic Paradise Organics','EP-ORG-CHEDDA','pack',1,SYSUTCDATETIME(),NULL);
+  VALUES ('5f44c07b-4c85-4f95-b0e6-b7886196730f','Cheddar cheese','Fresh, organically grown Cheddar cheese.',59,55,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','FreshHarvest Market Organics','EP-ORG-CHEDDA','pack',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('565a9dfb-d556-4eb9-b44e-ba6a92baabfb','5f44c07b-4c85-4f95-b0e6-b7886196730f','organic-dairy-products-cheddar-cheese','{"title":"Cheddar cheese","description":"Fresh, organically grown Cheddar cheese.","keywords":"Cheddar cheese,Organic Dairy Products,organic,fresh","canonicalUrl":"/products/organic-dairy-products-cheddar-cheese"}',SYSUTCDATETIME(),NULL);
@@ -102,7 +102,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('5f44c07b-4c85-4f95-b0e6-b7886196730f','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('9f237df5-721c-4a7c-aedf-f6fbfecd683e','Cottage cheese','Fresh, organically grown Cottage cheese.',82,91,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','Electronic Paradise Organics','EP-ORG-COTTAG','pack',1,SYSUTCDATETIME(),NULL);
+  VALUES ('9f237df5-721c-4a7c-aedf-f6fbfecd683e','Cottage cheese','Fresh, organically grown Cottage cheese.',82,91,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','FreshHarvest Market Organics','EP-ORG-COTTAG','pack',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('c7db0872-9596-471f-a5bb-c2ace8a88806','9f237df5-721c-4a7c-aedf-f6fbfecd683e','organic-dairy-products-cottage-cheese','{"title":"Cottage cheese","description":"Fresh, organically grown Cottage cheese.","keywords":"Cottage cheese,Organic Dairy Products,organic,fresh","canonicalUrl":"/products/organic-dairy-products-cottage-cheese"}',SYSUTCDATETIME(),NULL);
@@ -113,7 +113,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('9f237df5-721c-4a7c-aedf-f6fbfecd683e','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('207ddb53-c370-490c-b240-de3d262790c0','Greek yogurt','Fresh, organically grown Greek yogurt.',133,18,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','Electronic Paradise Organics','EP-ORG-GREEK-','pack',1,SYSUTCDATETIME(),NULL);
+  VALUES ('207ddb53-c370-490c-b240-de3d262790c0','Greek yogurt','Fresh, organically grown Greek yogurt.',133,18,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','FreshHarvest Market Organics','EP-ORG-GREEK-','pack',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('0f6c2807-6970-45f7-a329-d88eb2d161fc','207ddb53-c370-490c-b240-de3d262790c0','organic-dairy-products-greek-yogurt','{"title":"Greek yogurt","description":"Fresh, organically grown Greek yogurt.","keywords":"Greek yogurt,Organic Dairy Products,organic,fresh","canonicalUrl":"/products/organic-dairy-products-greek-yogurt"}',SYSUTCDATETIME(),NULL);
@@ -124,7 +124,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('207ddb53-c370-490c-b240-de3d262790c0','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('76468a49-bc53-4efa-9346-a8380df52db2','Kefir','Fresh, organically grown Kefir.',71,39,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','Electronic Paradise Organics','EP-ORG-KEFIR','pack',1,SYSUTCDATETIME(),NULL);
+  VALUES ('76468a49-bc53-4efa-9346-a8380df52db2','Kefir','Fresh, organically grown Kefir.',71,39,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','FreshHarvest Market Organics','EP-ORG-KEFIR','pack',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('65ce0546-ac0a-4d80-88d8-b73d5050dee6','76468a49-bc53-4efa-9346-a8380df52db2','organic-dairy-products-kefir','{"title":"Kefir","description":"Fresh, organically grown Kefir.","keywords":"Kefir,Organic Dairy Products,organic,fresh","canonicalUrl":"/products/organic-dairy-products-kefir"}',SYSUTCDATETIME(),NULL);
@@ -135,7 +135,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('76468a49-bc53-4efa-9346-a8380df52db2','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('5546023b-f290-4115-a743-9532b45c2f71','Milk','Fresh, organically grown Milk.',132,91,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','Electronic Paradise Organics','EP-ORG-MILK','pack',1,SYSUTCDATETIME(),NULL);
+  VALUES ('5546023b-f290-4115-a743-9532b45c2f71','Milk','Fresh, organically grown Milk.',132,91,'9a5bbc16-ec30-4c87-b0d3-e9b4778e66a2','FreshHarvest Market Organics','EP-ORG-MILK','pack',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('c6edeb63-6aa4-42ec-883f-417ccebac80c','5546023b-f290-4115-a743-9532b45c2f71','organic-dairy-products-milk','{"title":"Milk","description":"Fresh, organically grown Milk.","keywords":"Milk,Organic Dairy Products,organic,fresh","canonicalUrl":"/products/organic-dairy-products-milk"}',SYSUTCDATETIME(),NULL);
@@ -146,7 +146,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('5546023b-f290-4115-a743-9532b45c2f71','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('7952c24f-925b-4624-b37a-af1d11b5cf9a','Apples','Fresh, organically grown Apples.',167,108,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-APPLES','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('7952c24f-925b-4624-b37a-af1d11b5cf9a','Apples','Fresh, organically grown Apples.',167,108,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-APPLES','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('5ee15579-b9ae-423a-9ef7-4f958a3fd299','7952c24f-925b-4624-b37a-af1d11b5cf9a','organic-fruits-apples','{"title":"Apples","description":"Fresh, organically grown Apples.","keywords":"Apples,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-apples"}',SYSUTCDATETIME(),NULL);
@@ -157,7 +157,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('7952c24f-925b-4624-b37a-af1d11b5cf9a','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('9cf942c1-97b1-4e12-b109-f58903d8d128','Avocados','Fresh, organically grown Avocados.',159,62,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-AVOCAD','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('9cf942c1-97b1-4e12-b109-f58903d8d128','Avocados','Fresh, organically grown Avocados.',159,62,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-AVOCAD','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('2001e563-9323-4081-a033-555d49d8b6d8','9cf942c1-97b1-4e12-b109-f58903d8d128','organic-fruits-avocados','{"title":"Avocados","description":"Fresh, organically grown Avocados.","keywords":"Avocados,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-avocados"}',SYSUTCDATETIME(),NULL);
@@ -168,7 +168,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('9cf942c1-97b1-4e12-b109-f58903d8d128','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('40637382-edb6-4876-9d30-d954fa87a336','Bananas','Fresh, organically grown Bananas.',167,84,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-BANANA','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('40637382-edb6-4876-9d30-d954fa87a336','Bananas','Fresh, organically grown Bananas.',167,84,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-BANANA','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('7cad2e02-61f3-4928-a03a-fd011b2a838c','40637382-edb6-4876-9d30-d954fa87a336','organic-fruits-bananas','{"title":"Bananas","description":"Fresh, organically grown Bananas.","keywords":"Bananas,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-bananas"}',SYSUTCDATETIME(),NULL);
@@ -179,7 +179,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('40637382-edb6-4876-9d30-d954fa87a336','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('5eb3e1a8-f8f4-4db9-9508-5c7309c231f2','Blueberries','Fresh, organically grown Blueberries.',116,88,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-BLUEBE','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('5eb3e1a8-f8f4-4db9-9508-5c7309c231f2','Blueberries','Fresh, organically grown Blueberries.',116,88,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-BLUEBE','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('53ad5a85-7c1e-4a86-8b6e-24835c9588ec','5eb3e1a8-f8f4-4db9-9508-5c7309c231f2','organic-fruits-blueberries','{"title":"Blueberries","description":"Fresh, organically grown Blueberries.","keywords":"Blueberries,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-blueberries"}',SYSUTCDATETIME(),NULL);
@@ -190,7 +190,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('5eb3e1a8-f8f4-4db9-9508-5c7309c231f2','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('4c8f7cef-9baf-48c3-aa93-66d7c692d253','Grapes','Fresh, organically grown Grapes.',124,21,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-GRAPES','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('4c8f7cef-9baf-48c3-aa93-66d7c692d253','Grapes','Fresh, organically grown Grapes.',124,21,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-GRAPES','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('9b877744-ff5e-446c-a42f-fcf1186893f0','4c8f7cef-9baf-48c3-aa93-66d7c692d253','organic-fruits-grapes','{"title":"Grapes","description":"Fresh, organically grown Grapes.","keywords":"Grapes,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-grapes"}',SYSUTCDATETIME(),NULL);
@@ -201,7 +201,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('4c8f7cef-9baf-48c3-aa93-66d7c692d253','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('e7d6bdd5-37cc-41ae-b1f6-ccb7cad466e0','Mangoes','Fresh, organically grown Mangoes.',219,79,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-MANGOE','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('e7d6bdd5-37cc-41ae-b1f6-ccb7cad466e0','Mangoes','Fresh, organically grown Mangoes.',219,79,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-MANGOE','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('f9923553-8d69-4099-be8e-43209e398f30','e7d6bdd5-37cc-41ae-b1f6-ccb7cad466e0','organic-fruits-mangoes','{"title":"Mangoes","description":"Fresh, organically grown Mangoes.","keywords":"Mangoes,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-mangoes"}',SYSUTCDATETIME(),NULL);
@@ -212,7 +212,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('e7d6bdd5-37cc-41ae-b1f6-ccb7cad466e0','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('e09384b6-2e54-45e2-8224-b4857d229f1d','Oranges','Fresh, organically grown Oranges.',114,51,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-ORANGE','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('e09384b6-2e54-45e2-8224-b4857d229f1d','Oranges','Fresh, organically grown Oranges.',114,51,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-ORANGE','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('1824a95b-0a8b-4a61-9322-4c3f9ad5ec35','e09384b6-2e54-45e2-8224-b4857d229f1d','organic-fruits-oranges','{"title":"Oranges","description":"Fresh, organically grown Oranges.","keywords":"Oranges,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-oranges"}',SYSUTCDATETIME(),NULL);
@@ -223,7 +223,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('e09384b6-2e54-45e2-8224-b4857d229f1d','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('1ebaf900-261c-4d6a-89be-29e4cd8b37c0','Pomegranates','Fresh, organically grown Pomegranates.',195,25,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-POMEGR','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('1ebaf900-261c-4d6a-89be-29e4cd8b37c0','Pomegranates','Fresh, organically grown Pomegranates.',195,25,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-POMEGR','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('241cd88c-d7ef-4874-9b42-fd2107bebdd1','1ebaf900-261c-4d6a-89be-29e4cd8b37c0','organic-fruits-pomegranates','{"title":"Pomegranates","description":"Fresh, organically grown Pomegranates.","keywords":"Pomegranates,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-pomegranates"}',SYSUTCDATETIME(),NULL);
@@ -234,7 +234,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('1ebaf900-261c-4d6a-89be-29e4cd8b37c0','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('b3fc7a6e-96b1-431b-8819-dd5d8c1a6f94','Raspberries','Fresh, organically grown Raspberries.',163,98,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-RASPBE','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('b3fc7a6e-96b1-431b-8819-dd5d8c1a6f94','Raspberries','Fresh, organically grown Raspberries.',163,98,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-RASPBE','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('892303c9-ff07-4cf3-90f5-95d2ae5f5480','b3fc7a6e-96b1-431b-8819-dd5d8c1a6f94','organic-fruits-raspberries','{"title":"Raspberries","description":"Fresh, organically grown Raspberries.","keywords":"Raspberries,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-raspberries"}',SYSUTCDATETIME(),NULL);
@@ -245,7 +245,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('b3fc7a6e-96b1-431b-8819-dd5d8c1a6f94','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('81fa9fab-55ee-4f33-97a5-8370f785a1e2','Strawberries','Fresh, organically grown Strawberries.',176,72,'3c5f7f01-c2f2-4142-8532-da208cfa29de','Electronic Paradise Organics','EP-ORG-STRAWB','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('81fa9fab-55ee-4f33-97a5-8370f785a1e2','Strawberries','Fresh, organically grown Strawberries.',176,72,'3c5f7f01-c2f2-4142-8532-da208cfa29de','FreshHarvest Market Organics','EP-ORG-STRAWB','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('e884c9e1-d3fa-473b-871a-5cdcd1a871b1','81fa9fab-55ee-4f33-97a5-8370f785a1e2','organic-fruits-strawberries','{"title":"Strawberries","description":"Fresh, organically grown Strawberries.","keywords":"Strawberries,Organic Fruits,organic,fresh","canonicalUrl":"/products/organic-fruits-strawberries"}',SYSUTCDATETIME(),NULL);
@@ -256,7 +256,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('81fa9fab-55ee-4f33-97a5-8370f785a1e2','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('c2b7565e-d21d-4a62-814c-8154eb091b6d','Brown rice','Fresh, organically grown Brown rice.',64,111,'a33a5368-518b-4ed2-895e-0c71a5a81670','Electronic Paradise Organics','EP-ORG-BROWN-','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('c2b7565e-d21d-4a62-814c-8154eb091b6d','Brown rice','Fresh, organically grown Brown rice.',64,111,'a33a5368-518b-4ed2-895e-0c71a5a81670','FreshHarvest Market Organics','EP-ORG-BROWN-','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('4600006e-5cac-438a-904c-9819cf3e8ab5','c2b7565e-d21d-4a62-814c-8154eb091b6d','organic-grains-cereals-brown-rice','{"title":"Brown rice","description":"Fresh, organically grown Brown rice.","keywords":"Brown rice,Organic Grains & Cereals,organic,fresh","canonicalUrl":"/products/organic-grains-cereals-brown-rice"}',SYSUTCDATETIME(),NULL);
@@ -267,7 +267,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('c2b7565e-d21d-4a62-814c-8154eb091b6d','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('66b331ee-6099-40c4-866e-97e2092d5076','Buckwheat','Fresh, organically grown Buckwheat.',125,66,'a33a5368-518b-4ed2-895e-0c71a5a81670','Electronic Paradise Organics','EP-ORG-BUCKWH','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('66b331ee-6099-40c4-866e-97e2092d5076','Buckwheat','Fresh, organically grown Buckwheat.',125,66,'a33a5368-518b-4ed2-895e-0c71a5a81670','FreshHarvest Market Organics','EP-ORG-BUCKWH','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('3813d3ae-7ff7-4e17-9723-e7cc534feefc','66b331ee-6099-40c4-866e-97e2092d5076','organic-grains-cereals-buckwheat','{"title":"Buckwheat","description":"Fresh, organically grown Buckwheat.","keywords":"Buckwheat,Organic Grains & Cereals,organic,fresh","canonicalUrl":"/products/organic-grains-cereals-buckwheat"}',SYSUTCDATETIME(),NULL);
@@ -278,7 +278,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('66b331ee-6099-40c4-866e-97e2092d5076','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('a114955e-0c49-4b92-8950-f0dcee779bca','Millet','Fresh, organically grown Millet.',69,97,'a33a5368-518b-4ed2-895e-0c71a5a81670','Electronic Paradise Organics','EP-ORG-MILLET','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('a114955e-0c49-4b92-8950-f0dcee779bca','Millet','Fresh, organically grown Millet.',69,97,'a33a5368-518b-4ed2-895e-0c71a5a81670','FreshHarvest Market Organics','EP-ORG-MILLET','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('da878af9-e6ac-4274-9269-549a9566c0c7','a114955e-0c49-4b92-8950-f0dcee779bca','organic-grains-cereals-millet','{"title":"Millet","description":"Fresh, organically grown Millet.","keywords":"Millet,Organic Grains & Cereals,organic,fresh","canonicalUrl":"/products/organic-grains-cereals-millet"}',SYSUTCDATETIME(),NULL);
@@ -289,7 +289,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('a114955e-0c49-4b92-8950-f0dcee779bca','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('4f1f6570-acdb-4b75-9ebb-9b419eaca8a3','Oats','Fresh, organically grown Oats.',66,98,'a33a5368-518b-4ed2-895e-0c71a5a81670','Electronic Paradise Organics','EP-ORG-OATS','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('4f1f6570-acdb-4b75-9ebb-9b419eaca8a3','Oats','Fresh, organically grown Oats.',66,98,'a33a5368-518b-4ed2-895e-0c71a5a81670','FreshHarvest Market Organics','EP-ORG-OATS','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('b938273e-fe99-401f-8933-059e45e6a089','4f1f6570-acdb-4b75-9ebb-9b419eaca8a3','organic-grains-cereals-oats','{"title":"Oats","description":"Fresh, organically grown Oats.","keywords":"Oats,Organic Grains & Cereals,organic,fresh","canonicalUrl":"/products/organic-grains-cereals-oats"}',SYSUTCDATETIME(),NULL);
@@ -300,7 +300,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('4f1f6570-acdb-4b75-9ebb-9b419eaca8a3','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('3404a775-b1b9-42fa-a7db-dc156d966dbb','Quinoa','Fresh, organically grown Quinoa.',55,22,'a33a5368-518b-4ed2-895e-0c71a5a81670','Electronic Paradise Organics','EP-ORG-QUINOA','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('3404a775-b1b9-42fa-a7db-dc156d966dbb','Quinoa','Fresh, organically grown Quinoa.',55,22,'a33a5368-518b-4ed2-895e-0c71a5a81670','FreshHarvest Market Organics','EP-ORG-QUINOA','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('f6089c18-c26b-4380-9400-763bed7fd1f8','3404a775-b1b9-42fa-a7db-dc156d966dbb','organic-grains-cereals-quinoa','{"title":"Quinoa","description":"Fresh, organically grown Quinoa.","keywords":"Quinoa,Organic Grains & Cereals,organic,fresh","canonicalUrl":"/products/organic-grains-cereals-quinoa"}',SYSUTCDATETIME(),NULL);
@@ -311,7 +311,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('3404a775-b1b9-42fa-a7db-dc156d966dbb','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('2fe16402-0147-4b6b-945b-e40baaf77147','Basil','Fresh, organically grown Basil.',53,23,'14b7e158-ae37-4441-8868-97d15ff787d4','Electronic Paradise Organics','EP-ORG-BASIL','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('2fe16402-0147-4b6b-945b-e40baaf77147','Basil','Fresh, organically grown Basil.',53,23,'14b7e158-ae37-4441-8868-97d15ff787d4','FreshHarvest Market Organics','EP-ORG-BASIL','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('2146bc41-aadf-4e71-bbb3-68f0f3987129','2fe16402-0147-4b6b-945b-e40baaf77147','organic-herbs-spices-basil','{"title":"Basil","description":"Fresh, organically grown Basil.","keywords":"Basil,Organic Herbs & Spices,organic,fresh","canonicalUrl":"/products/organic-herbs-spices-basil"}',SYSUTCDATETIME(),NULL);
@@ -322,7 +322,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('2fe16402-0147-4b6b-945b-e40baaf77147','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('ec10adfc-e343-42b5-bca6-44ef2ffc0d0f','Cinnamon','Fresh, organically grown Cinnamon.',73,62,'14b7e158-ae37-4441-8868-97d15ff787d4','Electronic Paradise Organics','EP-ORG-CINNAM','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('ec10adfc-e343-42b5-bca6-44ef2ffc0d0f','Cinnamon','Fresh, organically grown Cinnamon.',73,62,'14b7e158-ae37-4441-8868-97d15ff787d4','FreshHarvest Market Organics','EP-ORG-CINNAM','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('d5f3d51c-9c22-4d53-9d22-b502ea894096','ec10adfc-e343-42b5-bca6-44ef2ffc0d0f','organic-herbs-spices-cinnamon','{"title":"Cinnamon","description":"Fresh, organically grown Cinnamon.","keywords":"Cinnamon,Organic Herbs & Spices,organic,fresh","canonicalUrl":"/products/organic-herbs-spices-cinnamon"}',SYSUTCDATETIME(),NULL);
@@ -333,7 +333,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('ec10adfc-e343-42b5-bca6-44ef2ffc0d0f','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('352a4f89-13e3-4fa2-9010-070a9ee70562','Ginger','Fresh, organically grown Ginger.',74,112,'14b7e158-ae37-4441-8868-97d15ff787d4','Electronic Paradise Organics','EP-ORG-GINGER','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('352a4f89-13e3-4fa2-9010-070a9ee70562','Ginger','Fresh, organically grown Ginger.',74,112,'14b7e158-ae37-4441-8868-97d15ff787d4','FreshHarvest Market Organics','EP-ORG-GINGER','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('26d91a2f-401a-40d3-8d42-7227ce0c0eb5','352a4f89-13e3-4fa2-9010-070a9ee70562','organic-herbs-spices-ginger','{"title":"Ginger","description":"Fresh, organically grown Ginger.","keywords":"Ginger,Organic Herbs & Spices,organic,fresh","canonicalUrl":"/products/organic-herbs-spices-ginger"}',SYSUTCDATETIME(),NULL);
@@ -344,7 +344,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('352a4f89-13e3-4fa2-9010-070a9ee70562','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('006f2cc1-54f8-4ed2-9d6f-ac454592ea59','Oregano','Fresh, organically grown Oregano.',61,96,'14b7e158-ae37-4441-8868-97d15ff787d4','Electronic Paradise Organics','EP-ORG-OREGAN','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('006f2cc1-54f8-4ed2-9d6f-ac454592ea59','Oregano','Fresh, organically grown Oregano.',61,96,'14b7e158-ae37-4441-8868-97d15ff787d4','FreshHarvest Market Organics','EP-ORG-OREGAN','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('891eab8e-f33c-4cd8-8a4d-a0c12fd75b2e','006f2cc1-54f8-4ed2-9d6f-ac454592ea59','organic-herbs-spices-oregano','{"title":"Oregano","description":"Fresh, organically grown Oregano.","keywords":"Oregano,Organic Herbs & Spices,organic,fresh","canonicalUrl":"/products/organic-herbs-spices-oregano"}',SYSUTCDATETIME(),NULL);
@@ -355,7 +355,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('006f2cc1-54f8-4ed2-9d6f-ac454592ea59','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('33241df6-2896-4045-8d24-9c0e26b7304f','Turmeric','Fresh, organically grown Turmeric.',78,17,'14b7e158-ae37-4441-8868-97d15ff787d4','Electronic Paradise Organics','EP-ORG-TURMER','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('33241df6-2896-4045-8d24-9c0e26b7304f','Turmeric','Fresh, organically grown Turmeric.',78,17,'14b7e158-ae37-4441-8868-97d15ff787d4','FreshHarvest Market Organics','EP-ORG-TURMER','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('f4f3a741-6a74-490c-b9c1-a97bb3c32b14','33241df6-2896-4045-8d24-9c0e26b7304f','organic-herbs-spices-turmeric','{"title":"Turmeric","description":"Fresh, organically grown Turmeric.","keywords":"Turmeric,Organic Herbs & Spices,organic,fresh","canonicalUrl":"/products/organic-herbs-spices-turmeric"}',SYSUTCDATETIME(),NULL);
@@ -366,7 +366,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('33241df6-2896-4045-8d24-9c0e26b7304f','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('4ef271d3-d973-43e4-a23e-6d16fd944987','Black beans','Fresh, organically grown Black beans.',117,19,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','Electronic Paradise Organics','EP-ORG-BLACK-','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('4ef271d3-d973-43e4-a23e-6d16fd944987','Black beans','Fresh, organically grown Black beans.',117,19,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','FreshHarvest Market Organics','EP-ORG-BLACK-','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('287bf484-ab71-4f4f-b336-61da09bb746b','4ef271d3-d973-43e4-a23e-6d16fd944987','organic-legumes-pulses-black-beans','{"title":"Black beans","description":"Fresh, organically grown Black beans.","keywords":"Black beans,Organic Legumes & Pulses,organic,fresh","canonicalUrl":"/products/organic-legumes-pulses-black-beans"}',SYSUTCDATETIME(),NULL);
@@ -377,7 +377,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('4ef271d3-d973-43e4-a23e-6d16fd944987','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('a430db4f-8964-4a0f-bcce-7a7922e6b013','Chickpeas','Fresh, organically grown Chickpeas.',112,16,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','Electronic Paradise Organics','EP-ORG-CHICKP','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('a430db4f-8964-4a0f-bcce-7a7922e6b013','Chickpeas','Fresh, organically grown Chickpeas.',112,16,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','FreshHarvest Market Organics','EP-ORG-CHICKP','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('b9568bba-9270-42fc-a0ad-7124f3f8beb2','a430db4f-8964-4a0f-bcce-7a7922e6b013','organic-legumes-pulses-chickpeas','{"title":"Chickpeas","description":"Fresh, organically grown Chickpeas.","keywords":"Chickpeas,Organic Legumes & Pulses,organic,fresh","canonicalUrl":"/products/organic-legumes-pulses-chickpeas"}',SYSUTCDATETIME(),NULL);
@@ -388,7 +388,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('a430db4f-8964-4a0f-bcce-7a7922e6b013','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('405bfb55-db4f-4aa3-ad7c-ff507b98f526','Green peas','Fresh, organically grown Green peas.',155,88,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','Electronic Paradise Organics','EP-ORG-GREEN-','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('405bfb55-db4f-4aa3-ad7c-ff507b98f526','Green peas','Fresh, organically grown Green peas.',155,88,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','FreshHarvest Market Organics','EP-ORG-GREEN-','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('5cbdd816-48fb-4dc1-ba12-1945746bbfd9','405bfb55-db4f-4aa3-ad7c-ff507b98f526','organic-legumes-pulses-green-peas','{"title":"Green peas","description":"Fresh, organically grown Green peas.","keywords":"Green peas,Organic Legumes & Pulses,organic,fresh","canonicalUrl":"/products/organic-legumes-pulses-green-peas"}',SYSUTCDATETIME(),NULL);
@@ -399,7 +399,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('405bfb55-db4f-4aa3-ad7c-ff507b98f526','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('b8817db1-18b6-404c-bb42-17d1e87afb36','Kidney beans','Fresh, organically grown Kidney beans.',125,43,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','Electronic Paradise Organics','EP-ORG-KIDNEY','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('b8817db1-18b6-404c-bb42-17d1e87afb36','Kidney beans','Fresh, organically grown Kidney beans.',125,43,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','FreshHarvest Market Organics','EP-ORG-KIDNEY','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('62e62f08-f457-41bf-94b2-20dc58fb453f','b8817db1-18b6-404c-bb42-17d1e87afb36','organic-legumes-pulses-kidney-beans','{"title":"Kidney beans","description":"Fresh, organically grown Kidney beans.","keywords":"Kidney beans,Organic Legumes & Pulses,organic,fresh","canonicalUrl":"/products/organic-legumes-pulses-kidney-beans"}',SYSUTCDATETIME(),NULL);
@@ -410,7 +410,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('b8817db1-18b6-404c-bb42-17d1e87afb36','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('0ac4f0f9-8aae-4ef6-b4de-28622a1100c0','Lentils','Fresh, organically grown Lentils.',104,68,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','Electronic Paradise Organics','EP-ORG-LENTIL','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('0ac4f0f9-8aae-4ef6-b4de-28622a1100c0','Lentils','Fresh, organically grown Lentils.',104,68,'75e9f924-74bc-4b9f-9271-71ff69a6dab1','FreshHarvest Market Organics','EP-ORG-LENTIL','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('17c2256e-ff3f-47fe-9f4f-68a123dd4a0b','0ac4f0f9-8aae-4ef6-b4de-28622a1100c0','organic-legumes-pulses-lentils','{"title":"Lentils","description":"Fresh, organically grown Lentils.","keywords":"Lentils,Organic Legumes & Pulses,organic,fresh","canonicalUrl":"/products/organic-legumes-pulses-lentils"}',SYSUTCDATETIME(),NULL);
@@ -421,7 +421,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('0ac4f0f9-8aae-4ef6-b4de-28622a1100c0','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('eda76370-d2c8-4a74-a602-910f443a2b95','Almonds','Fresh, organically grown Almonds.',363,37,'b410d77f-f06c-4223-8c8e-d626f65fdd20','Electronic Paradise Organics','EP-ORG-ALMOND','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('eda76370-d2c8-4a74-a602-910f443a2b95','Almonds','Fresh, organically grown Almonds.',363,37,'b410d77f-f06c-4223-8c8e-d626f65fdd20','FreshHarvest Market Organics','EP-ORG-ALMOND','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('5f30ee34-39d4-46be-b287-55ec2a5bd410','eda76370-d2c8-4a74-a602-910f443a2b95','organic-nuts-seeds-almonds','{"title":"Almonds","description":"Fresh, organically grown Almonds.","keywords":"Almonds,Organic Nuts & Seeds,organic,fresh","canonicalUrl":"/products/organic-nuts-seeds-almonds"}',SYSUTCDATETIME(),NULL);
@@ -432,7 +432,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('eda76370-d2c8-4a74-a602-910f443a2b95','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('e414a976-8ab2-4da4-ba50-b34927ae0d65','Chia seeds','Fresh, organically grown Chia seeds.',581,15,'b410d77f-f06c-4223-8c8e-d626f65fdd20','Electronic Paradise Organics','EP-ORG-CHIA-S','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('e414a976-8ab2-4da4-ba50-b34927ae0d65','Chia seeds','Fresh, organically grown Chia seeds.',581,15,'b410d77f-f06c-4223-8c8e-d626f65fdd20','FreshHarvest Market Organics','EP-ORG-CHIA-S','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('545f393d-084b-47ae-8492-1d3f7aad6d8b','e414a976-8ab2-4da4-ba50-b34927ae0d65','organic-nuts-seeds-chia-seeds','{"title":"Chia seeds","description":"Fresh, organically grown Chia seeds.","keywords":"Chia seeds,Organic Nuts & Seeds,organic,fresh","canonicalUrl":"/products/organic-nuts-seeds-chia-seeds"}',SYSUTCDATETIME(),NULL);
@@ -443,7 +443,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('e414a976-8ab2-4da4-ba50-b34927ae0d65','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('b5538745-c0b2-446c-b3d9-345d1e9c663b','Flaxseeds','Fresh, organically grown Flaxseeds.',846,40,'b410d77f-f06c-4223-8c8e-d626f65fdd20','Electronic Paradise Organics','EP-ORG-FLAXSE','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('b5538745-c0b2-446c-b3d9-345d1e9c663b','Flaxseeds','Fresh, organically grown Flaxseeds.',846,40,'b410d77f-f06c-4223-8c8e-d626f65fdd20','FreshHarvest Market Organics','EP-ORG-FLAXSE','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('3022d5cf-64e9-4032-9cd9-7516eebcccdc','b5538745-c0b2-446c-b3d9-345d1e9c663b','organic-nuts-seeds-flaxseeds','{"title":"Flaxseeds","description":"Fresh, organically grown Flaxseeds.","keywords":"Flaxseeds,Organic Nuts & Seeds,organic,fresh","canonicalUrl":"/products/organic-nuts-seeds-flaxseeds"}',SYSUTCDATETIME(),NULL);
@@ -454,7 +454,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('b5538745-c0b2-446c-b3d9-345d1e9c663b','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('9cf94514-a5e8-41dd-b96e-c2fbbebb4d3c','Pumpkin seeds','Fresh, organically grown Pumpkin seeds.',919,17,'b410d77f-f06c-4223-8c8e-d626f65fdd20','Electronic Paradise Organics','EP-ORG-PUMPKI','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('9cf94514-a5e8-41dd-b96e-c2fbbebb4d3c','Pumpkin seeds','Fresh, organically grown Pumpkin seeds.',919,17,'b410d77f-f06c-4223-8c8e-d626f65fdd20','FreshHarvest Market Organics','EP-ORG-PUMPKI','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('42da1d58-8773-432f-891b-206238c768a2','9cf94514-a5e8-41dd-b96e-c2fbbebb4d3c','organic-nuts-seeds-pumpkin-seeds','{"title":"Pumpkin seeds","description":"Fresh, organically grown Pumpkin seeds.","keywords":"Pumpkin seeds,Organic Nuts & Seeds,organic,fresh","canonicalUrl":"/products/organic-nuts-seeds-pumpkin-seeds"}',SYSUTCDATETIME(),NULL);
@@ -465,7 +465,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('9cf94514-a5e8-41dd-b96e-c2fbbebb4d3c','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('53a9112f-a7ac-44bf-a007-c968b617ea27','Walnuts','Fresh, organically grown Walnuts.',329,12,'b410d77f-f06c-4223-8c8e-d626f65fdd20','Electronic Paradise Organics','EP-ORG-WALNUT','kg',1,SYSUTCDATETIME(),NULL);
+  VALUES ('53a9112f-a7ac-44bf-a007-c968b617ea27','Walnuts','Fresh, organically grown Walnuts.',329,12,'b410d77f-f06c-4223-8c8e-d626f65fdd20','FreshHarvest Market Organics','EP-ORG-WALNUT','kg',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('809e62e5-58b7-42cd-8763-66bd0b9c0600','53a9112f-a7ac-44bf-a007-c968b617ea27','organic-nuts-seeds-walnuts','{"title":"Walnuts","description":"Fresh, organically grown Walnuts.","keywords":"Walnuts,Organic Nuts & Seeds,organic,fresh","canonicalUrl":"/products/organic-nuts-seeds-walnuts"}',SYSUTCDATETIME(),NULL);
@@ -476,7 +476,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('53a9112f-a7ac-44bf-a007-c968b617ea27','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('5a90ff57-d854-4da2-9351-979a0f908b10','Beets','Fresh, organically grown Beets.',142,108,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-BEETS','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('5a90ff57-d854-4da2-9351-979a0f908b10','Beets','Fresh, organically grown Beets.',142,108,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-BEETS','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('37fed772-c5a9-4d13-9dd2-ad789b909e0a','5a90ff57-d854-4da2-9351-979a0f908b10','organic-vegetables-beets','{"title":"Beets","description":"Fresh, organically grown Beets.","keywords":"Beets,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-beets"}',SYSUTCDATETIME(),NULL);
@@ -487,7 +487,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('5a90ff57-d854-4da2-9351-979a0f908b10','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('dffbf1d4-aaf9-4832-b4e8-9e0ac723c9e6','Bell peppers','Fresh, organically grown Bell peppers.',76,50,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-BELL-P','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('dffbf1d4-aaf9-4832-b4e8-9e0ac723c9e6','Bell peppers','Fresh, organically grown Bell peppers.',76,50,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-BELL-P','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('beeada70-b9b8-4b00-a120-dc10de9f3394','dffbf1d4-aaf9-4832-b4e8-9e0ac723c9e6','organic-vegetables-bell-peppers','{"title":"Bell peppers","description":"Fresh, organically grown Bell peppers.","keywords":"Bell peppers,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-bell-peppers"}',SYSUTCDATETIME(),NULL);
@@ -498,7 +498,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('dffbf1d4-aaf9-4832-b4e8-9e0ac723c9e6','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('13cb79e0-ff9c-40bf-b4c4-178faf796b38','Broccoli','Fresh, organically grown Broccoli.',89,94,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-BROCCO','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('13cb79e0-ff9c-40bf-b4c4-178faf796b38','Broccoli','Fresh, organically grown Broccoli.',89,94,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-BROCCO','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('2e166c51-1821-4741-a747-6bcab878cddd','13cb79e0-ff9c-40bf-b4c4-178faf796b38','organic-vegetables-broccoli','{"title":"Broccoli","description":"Fresh, organically grown Broccoli.","keywords":"Broccoli,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-broccoli"}',SYSUTCDATETIME(),NULL);
@@ -509,7 +509,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('13cb79e0-ff9c-40bf-b4c4-178faf796b38','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('d89c0187-8b38-4efb-bcd2-44188a15cb5d','Brussels sprouts','Fresh, organically grown Brussels sprouts.',147,91,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-BRUSSE','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('d89c0187-8b38-4efb-bcd2-44188a15cb5d','Brussels sprouts','Fresh, organically grown Brussels sprouts.',147,91,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-BRUSSE','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('997b61fe-8905-4e20-b2d1-a30ba1f5e57e','d89c0187-8b38-4efb-bcd2-44188a15cb5d','organic-vegetables-brussels-sprouts','{"title":"Brussels sprouts","description":"Fresh, organically grown Brussels sprouts.","keywords":"Brussels sprouts,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-brussels-sprouts"}',SYSUTCDATETIME(),NULL);
@@ -520,7 +520,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('d89c0187-8b38-4efb-bcd2-44188a15cb5d','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('59873b7f-712c-42f0-a7bd-67f1568c0a92','Carrots','Fresh, organically grown Carrots.',68,72,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-CARROT','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('59873b7f-712c-42f0-a7bd-67f1568c0a92','Carrots','Fresh, organically grown Carrots.',68,72,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-CARROT','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('c409ea82-b928-4dc0-842a-b2aa3a575c4b','59873b7f-712c-42f0-a7bd-67f1568c0a92','organic-vegetables-carrots','{"title":"Carrots","description":"Fresh, organically grown Carrots.","keywords":"Carrots,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-carrots"}',SYSUTCDATETIME(),NULL);
@@ -531,7 +531,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('59873b7f-712c-42f0-a7bd-67f1568c0a92','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('da6d6abb-138d-45a1-9ec5-6cb5f997f297','Cauliflower','Fresh, organically grown Cauliflower.',116,39,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-CAULIF','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('da6d6abb-138d-45a1-9ec5-6cb5f997f297','Cauliflower','Fresh, organically grown Cauliflower.',116,39,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-CAULIF','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('33a58f1e-4d83-4091-a03f-6463e426132e','da6d6abb-138d-45a1-9ec5-6cb5f997f297','organic-vegetables-cauliflower','{"title":"Cauliflower","description":"Fresh, organically grown Cauliflower.","keywords":"Cauliflower,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-cauliflower"}',SYSUTCDATETIME(),NULL);
@@ -542,7 +542,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('da6d6abb-138d-45a1-9ec5-6cb5f997f297','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('19c0c8ee-5a44-4ec7-92e8-0aec6c491fb0','Kale','Fresh, organically grown Kale.',153,98,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-KALE','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('19c0c8ee-5a44-4ec7-92e8-0aec6c491fb0','Kale','Fresh, organically grown Kale.',153,98,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-KALE','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('a37958a2-e9e6-42bc-86c5-839dd1f7275c','19c0c8ee-5a44-4ec7-92e8-0aec6c491fb0','organic-vegetables-kale','{"title":"Kale","description":"Fresh, organically grown Kale.","keywords":"Kale,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-kale"}',SYSUTCDATETIME(),NULL);
@@ -553,7 +553,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('19c0c8ee-5a44-4ec7-92e8-0aec6c491fb0','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('ab8d6bc4-68af-4103-a778-428788914fa2','Spinach','Fresh, organically grown Spinach.',121,74,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-SPINAC','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('ab8d6bc4-68af-4103-a778-428788914fa2','Spinach','Fresh, organically grown Spinach.',121,74,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-SPINAC','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('f00a0eba-e5d0-4d0c-85eb-fc32fecd6351','ab8d6bc4-68af-4103-a778-428788914fa2','organic-vegetables-spinach','{"title":"Spinach","description":"Fresh, organically grown Spinach.","keywords":"Spinach,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-spinach"}',SYSUTCDATETIME(),NULL);
@@ -564,7 +564,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('ab8d6bc4-68af-4103-a778-428788914fa2','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('a274943b-6f07-450f-9b3d-c9a79d80b232','Sweet potato','Fresh, organically grown Sweet potato.',132,104,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-SWEET-','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('a274943b-6f07-450f-9b3d-c9a79d80b232','Sweet potato','Fresh, organically grown Sweet potato.',132,104,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-SWEET-','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('8d65036f-5b34-46b1-8296-88c66cd016aa','a274943b-6f07-450f-9b3d-c9a79d80b232','organic-vegetables-sweet-potato','{"title":"Sweet potato","description":"Fresh, organically grown Sweet potato.","keywords":"Sweet potato,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-sweet-potato"}',SYSUTCDATETIME(),NULL);
@@ -575,7 +575,7 @@ BEGIN TRY
   INSERT INTO [ProductTags] ([ProductId],[TagId]) VALUES ('a274943b-6f07-450f-9b3d-c9a79d80b232','bf80a8f8-280a-4b3c-ad79-32548705e17c');
 
   INSERT INTO [Products] ([Id],[Name],[Description],[Price],[Stock],[CategoryId],[Brand],[Sku],[Unit],[IsActive],[CreatedAt],[UpdatedAt])
-  VALUES ('93b85e86-bd44-46b2-90dc-2872cdb9f071','Tomatoes','Fresh, organically grown Tomatoes.',93,32,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','Electronic Paradise Organics','EP-ORG-TOMATO','bunch',1,SYSUTCDATETIME(),NULL);
+  VALUES ('93b85e86-bd44-46b2-90dc-2872cdb9f071','Tomatoes','Fresh, organically grown Tomatoes.',93,32,'954671e4-0b9f-477b-8ee8-e2f0ba87138a','FreshHarvest Market Organics','EP-ORG-TOMATO','bunch',1,SYSUTCDATETIME(),NULL);
 
   INSERT INTO [ProductMetadata] ([Id],[ProductId],[Slug],[SeoMetadataJson],[CreatedAt],[UpdatedAt])
   VALUES ('83b57531-fdfa-4b05-a221-1261c16f59d9','93b85e86-bd44-46b2-90dc-2872cdb9f071','organic-vegetables-tomatoes','{"title":"Tomatoes","description":"Fresh, organically grown Tomatoes.","keywords":"Tomatoes,Organic Vegetables,organic,fresh","canonicalUrl":"/products/organic-vegetables-tomatoes"}',SYSUTCDATETIME(),NULL);

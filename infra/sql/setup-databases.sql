@@ -1,5 +1,5 @@
 -- ============================================================================
--- Electronic Paradise - Database Setup Script
+-- FreshHarvest Market - Database Setup Script
 -- ============================================================================
 -- This script creates the databases for Local Development and Staging environments
 --
@@ -132,7 +132,7 @@ GO
 -- ============================================================================
 
 /*
--- Create a login for Electronic Paradise
+-- Create a login for FreshHarvest Market
 IF NOT EXISTS (SELECT name FROM sys.server_principals WHERE name = 'ep_app_user')
 BEGIN
     CREATE LOGIN [ep_app_user] WITH PASSWORD = 'YourSecurePassword123!'

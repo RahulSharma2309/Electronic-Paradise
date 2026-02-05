@@ -1,6 +1,6 @@
-# E-Commerce Application - User Flow Documentation
+# FreshHarvest Market - User Flow Documentation
 
-This directory contains comprehensive documentation for all user journeys in the MVP E-Commerce application.
+This directory contains comprehensive documentation for all user journeys in the FreshHarvest Market organic food marketplace application.
 
 ## New here?
 

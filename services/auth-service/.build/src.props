@@ -30,10 +30,10 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <Authors>Electronic Paradise</Authors>
-    <Company>Electronic Paradise</Company>
-    <Product>Electronic Paradise - Auth Service</Product>
-    <Copyright>Copyright © Electronic Paradise</Copyright>
-    <PackageTags>auth;authentication;authorization;jwt;microservices;electronic-paradise</PackageTags>
+    <Authors>FreshHarvest Market</Authors>
+    <Company>FreshHarvest Market</Company>
+    <Product>FreshHarvest Market - Auth Service</Product>
+    <Copyright>Copyright © FreshHarvest Market</Copyright>
+    <PackageTags>auth;authentication;authorization;jwt;microservices;freshharvest-market</PackageTags>
   </PropertyGroup>
 </Project>

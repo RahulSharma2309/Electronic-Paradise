@@ -1,6 +1,6 @@
-# 📚 E-Commerce Application Documentation
+# 📚 FreshHarvest Market Documentation
 
-> **Complete documentation for the E-Commerce platform - your guide to mastering full-stack development**
+> **Complete documentation for the organic food marketplace - your guide to mastering full-stack development**
 
 ---
 
@@ -140,14 +140,14 @@ This documentation is organized into **10 numbered categories** for clear naviga
 
 ---
 
-### 4. **Product Strategy** 📱
+### 4. **Product Strategy** 🥬
 **File:** [`3-product-owner/PRODUCT_STRATEGY.md`](3-product-owner/PRODUCT_STRATEGY.md)
 
 **What it covers:**
-- Why Electronics was chosen as product category
+- Why Organic Food was chosen as product category
 - Design pattern opportunities per feature
-- Technical complexity analysis
-- Comparison with other categories (Groceries, Fashion, Books)
+- Technical complexity analysis (freshness, certifications)
+- Comparison with other categories (Electronics, Fashion, Books)
 - Business model possibilities
 - Scalability scenarios
 - Interview talking points

@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>Electronic Paradise</Authors>
-    <Company>Electronic Paradise</Company>
-    <Product>Electronic Paradise - API Gateway</Product>
-    <Copyright>Copyright © Electronic Paradise</Copyright>
-    <PackageTags>gateway;api-gateway;yarp;reverse-proxy;electronic-paradise</PackageTags>
+    <Authors>FreshHarvest Market</Authors>
+    <Company>FreshHarvest Market</Company>
+    <Product>FreshHarvest Market - API Gateway</Product>
+    <Copyright>Copyright © FreshHarvest Market</Copyright>
+    <PackageTags>gateway;api-gateway;yarp;reverse-proxy;freshharvest-market</PackageTags>
   </PropertyGroup>
 </Project>
 

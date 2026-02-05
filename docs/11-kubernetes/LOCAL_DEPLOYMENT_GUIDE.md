@@ -1,6 +1,6 @@
-# 🚀 Varnex Enterprise - Local Kubernetes Deployment Guide
+# 🚀 FreshHarvest Market - Local Kubernetes Deployment Guide
 
-> **Complete step-by-step guide to run Varnex Enterprise on your local Kubernetes cluster**
+> **Complete step-by-step guide to run FreshHarvest Market on your local Kubernetes cluster**
 
 ## 📋 Table of Contents
 
@@ -56,27 +56,27 @@ For experienced developers, here's the TL;DR:
 
 ```powershell
 # 1. Clone and navigate
-git clone https://github.com/RahulSharma2309/Electronic-Paradise.git
-cd Electronic-Paradise
+git clone https://github.com/RahulSharma2309/FreshHarvest-Market.git
+cd FreshHarvest-Market
 
 # 2. Deploy everything
-kubectl apply -f infra/k8s/varnex-enterprise/namespace.yaml
-kubectl apply -f infra/k8s/varnex-enterprise/configmap.yaml
-kubectl apply -f infra/k8s/varnex-enterprise/database/
-kubectl apply -f infra/k8s/varnex-enterprise/services/
-kubectl apply -f infra/k8s/varnex-enterprise/ingress-all-services.yaml
+kubectl apply -f infra/k8s/freshharvest-market/namespace.yaml
+kubectl apply -f infra/k8s/freshharvest-market/configmap.yaml
+kubectl apply -f infra/k8s/freshharvest-market/database/
+kubectl apply -f infra/k8s/freshharvest-market/services/
+kubectl apply -f infra/k8s/freshharvest-market/ingress-all-services.yaml
 
 # 3. Install Nginx Ingress Controller (if not already installed)
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
 
 # 4. Update hosts file (run Notepad as Admin)
-# Add lines from: infra/k8s/varnex-enterprise/hosts-file-update.txt
+# Add lines from: infra/k8s/freshharvest-market/hosts-file-update.txt
 
 # 5. Wait for pods to be ready
-kubectl get pods -n varnex-enterprise -w
+kubectl get pods -n freshharvest-market -w
 
 # 6. Access application
-Start-Process "http://app.varnex-enterprise.local"
+Start-Process "http://app.freshharvest-market.local"
 ```
 
 Continue reading for detailed explanations of each step.
@@ -162,7 +162,7 @@ kubectl get pods -n ingress-nginx
 
 - Installs Nginx Ingress Controller in `ingress-nginx` namespace
 - Creates a LoadBalancer service on `localhost`
-- Enables routing based on domain names (like `auth.varnex-enterprise.local`)
+- Enables routing based on domain names (like `auth.freshharvest-market.local`)
 - Without this, you can't access services via URLs
 </details>
 
@@ -172,13 +172,13 @@ kubectl get pods -n ingress-nginx
 
 ```powershell
 # Clone the repo
-git clone https://github.com/RahulSharma2309/Electronic-Paradise.git
+git clone https://github.com/RahulSharma2309/FreshHarvest-Market.git
 
 # Navigate to project
-cd Electronic-Paradise
+cd FreshHarvest-Market
 
 # Verify Kubernetes manifests exist
-ls infra/k8s/varnex-enterprise/
+ls infra/k8s/freshharvest-market/
 
 # Expected output:
 # - namespace.yaml
@@ -197,14 +197,14 @@ Deploy in this order (order matters!):
 #### 5.1 Create Namespace
 
 ```powershell
-kubectl apply -f infra/k8s/varnex-enterprise/namespace.yaml
+kubectl apply -f infra/k8s/freshharvest-market/namespace.yaml
 ```
 
-**What this does:** Creates an isolated environment called `varnex-enterprise` for all our services.
+**What this does:** Creates an isolated environment called `freshharvest-market` for all our services.
 
 **Verify:**
 ```powershell
-kubectl get namespace varnex-enterprise
+kubectl get namespace freshharvest-market
 # STATUS should be: Active
 ```
 
@@ -213,7 +213,7 @@ kubectl get namespace varnex-enterprise
 #### 5.2 Create ConfigMap
 
 ```powershell
-kubectl apply -f infra/k8s/varnex-enterprise/configmap.yaml
+kubectl apply -f infra/k8s/freshharvest-market/configmap.yaml
 ```
 
 **What this does:** Creates configuration shared by all services (environment variables, URLs, etc.)
@@ -225,8 +225,8 @@ kubectl apply -f infra/k8s/varnex-enterprise/configmap.yaml
 
 **Verify:**
 ```powershell
-kubectl get configmap -n varnex-enterprise
-# Should show: varnex-enterprise-config
+kubectl get configmap -n freshharvest-market
+# Should show: freshharvest-market-config
 ```
 
 ---
@@ -234,7 +234,7 @@ kubectl get configmap -n varnex-enterprise
 #### 5.3 Deploy Database
 
 ```powershell
-kubectl apply -f infra/k8s/varnex-enterprise/database/
+kubectl apply -f infra/k8s/freshharvest-market/database/
 ```
 
 **What this deploys:**
@@ -244,23 +244,23 @@ kubectl apply -f infra/k8s/varnex-enterprise/database/
 4. **Service** (`mssql-deployment.yaml`) - Exposes database to other services
 5. **Service Alias** (`mssql-service-alias.yaml`) - Creates `mssql` DNS name
 
-**Why the alias?** Services look for `mssql:1433`, but the actual service is `varnex-enterprise-mssql`. The alias bridges this gap.
+**Why the alias?** Services look for `mssql:1433`, but the actual service is `freshharvest-market-mssql`. The alias bridges this gap.
 
 **Verify:**
 ```powershell
-kubectl get pods -n varnex-enterprise
-# Should show: varnex-enterprise-mssql-xxxxxxxxxx   1/1   Running
+kubectl get pods -n freshharvest-market
+# Should show: freshharvest-market-mssql-xxxxxxxxxx   1/1   Running
 
-kubectl get pvc -n varnex-enterprise
-# Should show: varnex-enterprise-mssql-data   Bound   5Gi
+kubectl get pvc -n freshharvest-market
+# Should show: freshharvest-market-mssql-data   Bound   5Gi
 
-kubectl get svc -n varnex-enterprise
-# Should show: mssql and varnex-enterprise-mssql
+kubectl get svc -n freshharvest-market
+# Should show: mssql and freshharvest-market-mssql
 ```
 
 **Wait for database pod to be ready** (takes ~1 minute):
 ```powershell
-kubectl wait --for=condition=ready pod -l app=varnex-enterprise-mssql -n varnex-enterprise --timeout=120s
+kubectl wait --for=condition=ready pod -l app=freshharvest-market-mssql -n freshharvest-market --timeout=120s
 ```
 
 ---
@@ -268,7 +268,7 @@ kubectl wait --for=condition=ready pod -l app=varnex-enterprise-mssql -n varnex-
 #### 5.4 Deploy All Microservices
 
 ```powershell
-kubectl apply -f infra/k8s/varnex-enterprise/services/
+kubectl apply -f infra/k8s/freshharvest-market/services/
 ```
 
 **What this deploys:**
@@ -288,7 +288,7 @@ Each service:
 
 **Verify:**
 ```powershell
-kubectl get pods -n varnex-enterprise
+kubectl get pods -n freshharvest-market
 
 # Expected: 15 pods total
 # - 2 auth pods
@@ -303,7 +303,7 @@ kubectl get pods -n varnex-enterprise
 
 **Wait for all pods to be Running** (takes 2-3 minutes):
 ```powershell
-kubectl get pods -n varnex-enterprise -w
+kubectl get pods -n freshharvest-market -w
 # Press Ctrl+C when all show 1/1 Running
 ```
 
@@ -321,25 +321,25 @@ kubectl get pods -n varnex-enterprise -w
 #### 5.5 Create Ingress Routes
 
 ```powershell
-kubectl apply -f infra/k8s/varnex-enterprise/ingress-all-services.yaml
+kubectl apply -f infra/k8s/freshharvest-market/ingress-all-services.yaml
 ```
 
 **What this does:** Configures routing rules so you can access services via URLs:
-- `app.varnex-enterprise.local` → Frontend
-- `api.varnex-enterprise.local` → Gateway
-- `auth.varnex-enterprise.local` → Auth Service
-- `user.varnex-enterprise.local` → User Service
-- `product.varnex-enterprise.local` → Product Service
-- `order.varnex-enterprise.local` → Order Service
-- `payment.varnex-enterprise.local` → Payment Service
+- `app.freshharvest-market.local` → Frontend
+- `api.freshharvest-market.local` → Gateway
+- `auth.freshharvest-market.local` → Auth Service
+- `user.freshharvest-market.local` → User Service
+- `product.freshharvest-market.local` → Product Service
+- `order.freshharvest-market.local` → Order Service
+- `payment.freshharvest-market.local` → Payment Service
 
 **Verify:**
 ```powershell
-kubectl get ingress -n varnex-enterprise
+kubectl get ingress -n freshharvest-market
 
 # Expected output:
 # NAME                              HOSTS                 ADDRESS       PORTS
-# varnex-enterprise-ingress-all     app.varnex-... +6     localhost     80
+# freshharvest-market-ingress-all     app.freshharvest-... +6     localhost     80
 ```
 
 **ADDRESS should be `localhost`** - this means Nginx is ready.
@@ -348,7 +348,7 @@ kubectl get ingress -n varnex-enterprise
 
 ### Step 6: Configure Local DNS (Hosts File)
 
-**Why?** Your browser needs to know that `*.varnex-enterprise.local` points to `localhost`.
+**Why?** Your browser needs to know that `*.freshharvest-market.local` points to `localhost`.
 
 #### Option A: Manual Configuration
 
@@ -365,14 +365,14 @@ kubectl get ingress -n varnex-enterprise
 
 3. **Add These Lines at the Bottom**
    ```
-   # Varnex Enterprise - Kubernetes Ingress URLs
-   127.0.0.1 app.varnex-enterprise.local
-   127.0.0.1 api.varnex-enterprise.local
-   127.0.0.1 auth.varnex-enterprise.local
-   127.0.0.1 user.varnex-enterprise.local
-   127.0.0.1 product.varnex-enterprise.local
-   127.0.0.1 order.varnex-enterprise.local
-   127.0.0.1 payment.varnex-enterprise.local
+   # FreshHarvest Market - Kubernetes Ingress URLs
+   127.0.0.1 app.freshharvest-market.local
+   127.0.0.1 api.freshharvest-market.local
+   127.0.0.1 auth.freshharvest-market.local
+   127.0.0.1 user.freshharvest-market.local
+   127.0.0.1 product.freshharvest-market.local
+   127.0.0.1 order.freshharvest-market.local
+   127.0.0.1 payment.freshharvest-market.local
    ```
 
 4. **Save** (Ctrl+S) and **Close**
@@ -381,7 +381,7 @@ kubectl get ingress -n varnex-enterprise
 
 ```powershell
 # View the pre-made configuration
-Get-Content infra/k8s/varnex-enterprise/hosts-file-update.txt
+Get-Content infra/k8s/freshharvest-market/hosts-file-update.txt
 
 # Copy the lines starting with 127.0.0.1 to your hosts file
 ```
@@ -389,10 +389,10 @@ Get-Content infra/k8s/varnex-enterprise/hosts-file-update.txt
 **Verify DNS Configuration:**
 ```powershell
 # Check hosts file
-Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String "varnex"
+Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String "freshharvest"
 
 # Test DNS resolution
-ping app.varnex-enterprise.local
+ping app.freshharvest-market.local
 # Should resolve to 127.0.0.1
 ```
 
@@ -425,7 +425,7 @@ Start-Process "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/serv
 1. Select "Token"
 2. Paste the token you copied
 3. Click "Sign In"
-4. **Change namespace dropdown to `varnex-enterprise`** to see your services
+4. **Change namespace dropdown to `freshharvest-market`** to see your services
 
 ---
 
@@ -442,27 +442,27 @@ This is the **recommended approach** as it mirrors production setup. All service
 **Open Notepad as Administrator** and add these entries to `C:\Windows\System32\drivers\etc\hosts`:
 
 ```
-# Electronic Paradise - Staging
-127.0.0.1 staging.electronic-paradise.local
-127.0.0.1 api.staging.electronic-paradise.local
-127.0.0.1 auth.staging.electronic-paradise.local
-127.0.0.1 user.staging.electronic-paradise.local
-127.0.0.1 product.staging.electronic-paradise.local
-127.0.0.1 order.staging.electronic-paradise.local
-127.0.0.1 payment.staging.electronic-paradise.local
+# FreshHarvest Market - Staging
+127.0.0.1 staging.freshharvest-market.local
+127.0.0.1 api.staging.freshharvest-market.local
+127.0.0.1 auth.staging.freshharvest-market.local
+127.0.0.1 user.staging.freshharvest-market.local
+127.0.0.1 product.staging.freshharvest-market.local
+127.0.0.1 order.staging.freshharvest-market.local
+127.0.0.1 payment.staging.freshharvest-market.local
 ```
 
-**Or for varnex-enterprise namespace:**
+**Or for freshharvest-market namespace:**
 
 ```
-# Varnex Enterprise
-127.0.0.1 app.varnex-enterprise.local
-127.0.0.1 api.varnex-enterprise.local
-127.0.0.1 auth.varnex-enterprise.local
-127.0.0.1 user.varnex-enterprise.local
-127.0.0.1 product.varnex-enterprise.local
-127.0.0.1 order.varnex-enterprise.local
-127.0.0.1 payment.varnex-enterprise.local
+# FreshHarvest Market
+127.0.0.1 app.freshharvest-market.local
+127.0.0.1 api.freshharvest-market.local
+127.0.0.1 auth.freshharvest-market.local
+127.0.0.1 user.freshharvest-market.local
+127.0.0.1 product.freshharvest-market.local
+127.0.0.1 order.freshharvest-market.local
+127.0.0.1 payment.freshharvest-market.local
 ```
 
 #### Step 2: Access Services via Ingress
@@ -472,28 +472,28 @@ All services are accessible via your browser:
 **For Staging Namespace:**
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend** | http://staging.electronic-paradise.local | React application UI |
-| **API Gateway** | http://api.staging.electronic-paradise.local/swagger | Gateway Swagger docs |
-| **Auth Service** | http://auth.staging.electronic-paradise.local/swagger | Authentication APIs |
-| **User Service** | http://user.staging.electronic-paradise.local/swagger | User management APIs |
-| **Product Service** | http://product.staging.electronic-paradise.local/swagger | Product catalog APIs |
-| **Order Service** | http://order.staging.electronic-paradise.local/swagger | Order management APIs |
-| **Payment Service** | http://payment.staging.electronic-paradise.local/swagger | Payment APIs |
+| **Frontend** | http://staging.freshharvest-market.local | React application UI |
+| **API Gateway** | http://api.staging.freshharvest-market.local/swagger | Gateway Swagger docs |
+| **Auth Service** | http://auth.staging.freshharvest-market.local/swagger | Authentication APIs |
+| **User Service** | http://user.staging.freshharvest-market.local/swagger | User management APIs |
+| **Product Service** | http://product.staging.freshharvest-market.local/swagger | Product catalog APIs |
+| **Order Service** | http://order.staging.freshharvest-market.local/swagger | Order management APIs |
+| **Payment Service** | http://payment.staging.freshharvest-market.local/swagger | Payment APIs |
 
-**For Varnex Enterprise Namespace:**
+**For FreshHarvest Market Namespace:**
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend (Main App)** | http://app.varnex-enterprise.local | React application UI |
-| **API Gateway** | http://api.varnex-enterprise.local/swagger/index.html | Gateway Swagger docs |
-| **Auth Service** | http://auth.varnex-enterprise.local/swagger/index.html | Authentication APIs |
-| **User Service** | http://user.varnex-enterprise.local/swagger/index.html | User management APIs |
-| **Product Service** | http://product.varnex-enterprise.local/swagger/index.html | Product catalog APIs |
-| **Order Service** | http://order.varnex-enterprise.local/swagger/index.html | Order management APIs |
-| **Payment Service** | http://payment.varnex-enterprise.local/swagger/index.html | Payment APIs |
+| **Frontend (Main App)** | http://app.freshharvest-market.local | React application UI |
+| **API Gateway** | http://api.freshharvest-market.local/swagger/index.html | Gateway Swagger docs |
+| **Auth Service** | http://auth.freshharvest-market.local/swagger/index.html | Authentication APIs |
+| **User Service** | http://user.freshharvest-market.local/swagger/index.html | User management APIs |
+| **Product Service** | http://product.freshharvest-market.local/swagger/index.html | Product catalog APIs |
+| **Order Service** | http://order.freshharvest-market.local/swagger/index.html | Order management APIs |
+| **Payment Service** | http://payment.freshharvest-market.local/swagger/index.html | Payment APIs |
 
 **Note:** 
-- For staging namespace, use `/swagger` (e.g., `http://auth.staging.electronic-paradise.local/swagger`)
-- For varnex-enterprise namespace, use `/swagger/index.html` (e.g., `http://auth.varnex-enterprise.local/swagger/index.html`)
+- For staging namespace, use `/swagger` (e.g., `http://auth.staging.freshharvest-market.local/swagger`)
+- For freshharvest-market namespace, use `/swagger/index.html` (e.g., `http://auth.freshharvest-market.local/swagger/index.html`)
 
 #### Advantages of Ingress:
 - ✅ Production-like setup
@@ -537,31 +537,31 @@ kubectl port-forward svc/gateway 5000:80 -n staging
 # Access at: http://localhost:5000/swagger
 ```
 
-**For varnex-enterprise namespace:**
+**For freshharvest-market namespace:**
 
 ```powershell
 # Auth Service
-kubectl port-forward svc/varnex-enterprise-auth 5001:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-auth 5001:80 -n freshharvest-market
 # Access at: http://localhost:5001/swagger
 
 # User Service
-kubectl port-forward svc/varnex-enterprise-user 5002:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-user 5002:80 -n freshharvest-market
 # Access at: http://localhost:5002/swagger
 
 # Product Service
-kubectl port-forward svc/varnex-enterprise-product 5003:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-product 5003:80 -n freshharvest-market
 # Access at: http://localhost:5003/swagger
 
 # Order Service
-kubectl port-forward svc/varnex-enterprise-order 5004:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-order 5004:80 -n freshharvest-market
 # Access at: http://localhost:5004/swagger
 
 # Payment Service
-kubectl port-forward svc/varnex-enterprise-payment 5005:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-payment 5005:80 -n freshharvest-market
 # Access at: http://localhost:5005/swagger
 
 # Gateway
-kubectl port-forward svc/varnex-enterprise-gateway 5000:80 -n varnex-enterprise
+kubectl port-forward svc/freshharvest-market-gateway 5000:80 -n freshharvest-market
 # Access at: http://localhost:5000/swagger
 ```
 
@@ -595,13 +595,13 @@ kubectl port-forward svc/varnex-enterprise-gateway 5000:80 -n varnex-enterprise
 ```powershell
 # Test all services via Ingress (Staging)
 $services = @(
-    @{Name="Frontend"; Url="http://staging.electronic-paradise.local"},
-    @{Name="Gateway"; Url="http://api.staging.electronic-paradise.local/swagger"},
-    @{Name="Auth"; Url="http://auth.staging.electronic-paradise.local/swagger"},
-    @{Name="User"; Url="http://user.staging.electronic-paradise.local/swagger"},
-    @{Name="Product"; Url="http://product.staging.electronic-paradise.local/swagger"},
-    @{Name="Order"; Url="http://order.staging.electronic-paradise.local/swagger"},
-    @{Name="Payment"; Url="http://payment.staging.electronic-paradise.local/swagger"}
+    @{Name="Frontend"; Url="http://staging.freshharvest-market.local"},
+    @{Name="Gateway"; Url="http://api.staging.freshharvest-market.local/swagger"},
+    @{Name="Auth"; Url="http://auth.staging.freshharvest-market.local/swagger"},
+    @{Name="User"; Url="http://user.staging.freshharvest-market.local/swagger"},
+    @{Name="Product"; Url="http://product.staging.freshharvest-market.local/swagger"},
+    @{Name="Order"; Url="http://order.staging.freshharvest-market.local/swagger"},
+    @{Name="Payment"; Url="http://payment.staging.freshharvest-market.local/swagger"}
 )
 
 foreach ($svc in $services) {
@@ -614,18 +614,18 @@ foreach ($svc in $services) {
 }
 ```
 
-### 🎯 Quick Test Script (Varnex Enterprise)
+### 🎯 Quick Test Script (FreshHarvest Market)
 
 ```powershell
-# Test all services via Ingress (Varnex Enterprise)
+# Test all services via Ingress (FreshHarvest Market)
 $services = @(
-    @{Name="Frontend"; Url="http://app.varnex-enterprise.local"},
-    @{Name="Gateway"; Url="http://api.varnex-enterprise.local/swagger/index.html"},
-    @{Name="Auth"; Url="http://auth.varnex-enterprise.local/swagger/index.html"},
-    @{Name="User"; Url="http://user.varnex-enterprise.local/swagger/index.html"},
-    @{Name="Product"; Url="http://product.varnex-enterprise.local/swagger/index.html"},
-    @{Name="Order"; Url="http://order.varnex-enterprise.local/swagger/index.html"},
-    @{Name="Payment"; Url="http://payment.varnex-enterprise.local/swagger/index.html"}
+    @{Name="Frontend"; Url="http://app.freshharvest-market.local"},
+    @{Name="Gateway"; Url="http://api.freshharvest-market.local/swagger/index.html"},
+    @{Name="Auth"; Url="http://auth.freshharvest-market.local/swagger/index.html"},
+    @{Name="User"; Url="http://user.freshharvest-market.local/swagger/index.html"},
+    @{Name="Product"; Url="http://product.freshharvest-market.local/swagger/index.html"},
+    @{Name="Order"; Url="http://order.freshharvest-market.local/swagger/index.html"},
+    @{Name="Payment"; Url="http://payment.freshharvest-market.local/swagger/index.html"}
 )
 
 foreach ($svc in $services) {
@@ -660,33 +660,33 @@ foreach ($svc in $services) {
 
 ```powershell
 # All pods should be Running
-kubectl get pods -n varnex-enterprise
+kubectl get pods -n freshharvest-market
 
 # All services should have endpoints
-kubectl get svc -n varnex-enterprise
+kubectl get svc -n freshharvest-market
 
 # Ingress should show localhost
-kubectl get ingress -n varnex-enterprise
+kubectl get ingress -n freshharvest-market
 ```
 
 ### Check Pod Logs
 
 ```powershell
 # View logs for a specific service
-kubectl logs -n varnex-enterprise -l app=varnex-enterprise-auth --tail=50
+kubectl logs -n freshharvest-market -l app=freshharvest-market-auth --tail=50
 
 # Follow logs in real-time
-kubectl logs -n varnex-enterprise -l app=varnex-enterprise-payment -f
+kubectl logs -n freshharvest-market -l app=freshharvest-market-payment -f
 
 # Check if a pod is crashing
-kubectl describe pod <pod-name> -n varnex-enterprise
+kubectl describe pod <pod-name> -n freshharvest-market
 ```
 
 ### Verify Database Connectivity
 
 ```powershell
 # Check if database is ready
-kubectl exec -it -n varnex-enterprise $(kubectl get pod -n varnex-enterprise -l app=varnex-enterprise-mssql -o jsonpath='{.items[0].metadata.name}') -- /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong@Passw0rd' -Q 'SELECT @@VERSION'
+kubectl exec -it -n freshharvest-market $(kubectl get pod -n freshharvest-market -l app=freshharvest-market-mssql -o jsonpath='{.items[0].metadata.name}') -- /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrong@Passw0rd' -Q 'SELECT @@VERSION'
 ```
 
 ---
@@ -695,14 +695,14 @@ kubectl exec -it -n varnex-enterprise $(kubectl get pod -n varnex-enterprise -l 
 
 ### Issue 1: "This site can't be reached"
 
-**Symptom:** Browser shows "This site can't be reached" for any varnex-enterprise.local URL
+**Symptom:** Browser shows "This site can't be reached" for any freshharvest-market.local URL
 
 **Causes & Solutions:**
 
 1. **Hosts file not updated**
    ```powershell
    # Verify hosts file
-   Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String "varnex"
+   Get-Content C:\Windows\System32\drivers\etc\hosts | Select-String "freshharvest"
    ```
    If no results, re-add the entries from [Step 6](#step-6-configure-local-dns-hosts-file)
 
@@ -730,26 +730,26 @@ kubectl exec -it -n varnex-enterprise $(kubectl get pod -n varnex-enterprise -l 
 **Diagnosis:**
 ```powershell
 # Check pod status
-kubectl describe pod <pod-name> -n varnex-enterprise
+kubectl describe pod <pod-name> -n freshharvest-market
 
 # Check logs
-kubectl logs <pod-name> -n varnex-enterprise --previous
+kubectl logs <pod-name> -n freshharvest-market --previous
 ```
 
 **Common Causes:**
 
-1. **Database not ready** - Wait for `varnex-enterprise-mssql` to be Running first
+1. **Database not ready** - Wait for `freshharvest-market-mssql` to be Running first
 2. **Wrong connection string** - Check ConfigMap
 3. **Resource limits** - Pod might need more memory/CPU
 
 **Solutions:**
 ```powershell
 # Restart all deployments
-kubectl rollout restart deployment -n varnex-enterprise
+kubectl rollout restart deployment -n freshharvest-market
 
 # Scale down and up
-kubectl scale deployment --all --replicas=0 -n varnex-enterprise
-kubectl scale deployment --all --replicas=2 -n varnex-enterprise
+kubectl scale deployment --all --replicas=0 -n freshharvest-market
+kubectl scale deployment --all --replicas=2 -n freshharvest-market
 ```
 
 ---
@@ -759,8 +759,8 @@ kubectl scale deployment --all --replicas=2 -n varnex-enterprise
 **Symptom:** Service URL works but `/swagger` shows 404
 
 **Solution:** Use `/swagger/index.html` instead of just `/swagger`
-- ✅ `http://auth.varnex-enterprise.local/swagger/index.html`
-- ❌ `http://auth.varnex-enterprise.local/swagger`
+- ✅ `http://auth.freshharvest-market.local/swagger/index.html`
+- ❌ `http://auth.freshharvest-market.local/swagger`
 
 ---
 
@@ -777,8 +777,8 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
 
 # Build and push (example for auth service)
 cd services/auth-service
-docker build -t ghcr.io/rahulsharma2309/electronic-paradise-auth:latest .
-docker push ghcr.io/rahulsharma2309/electronic-paradise-auth:latest
+docker build -t ghcr.io/rahulsharma2309/freshharvest-market-auth:latest .
+docker push ghcr.io/rahulsharma2309/freshharvest-market-auth:latest
 ```
 
 Or use the CI/CD pipeline to build images automatically.
@@ -804,7 +804,7 @@ docker system prune -a --volumes
 
 **Symptom:** Dashboard loads but shows empty
 
-**Solution:** **Change the namespace dropdown from `default` to `varnex-enterprise`** (top-left corner)
+**Solution:** **Change the namespace dropdown from `default` to `freshharvest-market`** (top-left corner)
 
 ---
 
@@ -813,8 +813,8 @@ docker system prune -a --volumes
 If everything is broken and you want to start fresh:
 
 ```powershell
-# 1. Delete everything in varnex-enterprise namespace
-kubectl delete namespace varnex-enterprise
+# 1. Delete everything in freshharvest-market namespace
+kubectl delete namespace freshharvest-market
 
 # 2. Wait for namespace deletion
 kubectl get namespace
@@ -841,22 +841,22 @@ kubectl get namespace
 #### Change Service Replicas
 ```powershell
 # Scale a service to 3 replicas
-kubectl scale deployment varnex-enterprise-auth --replicas=3 -n varnex-enterprise
+kubectl scale deployment freshharvest-market-auth --replicas=3 -n freshharvest-market
 ```
 
 #### Update Environment Variables
 ```powershell
 # Edit ConfigMap
-kubectl edit configmap varnex-enterprise-config -n varnex-enterprise
+kubectl edit configmap freshharvest-market-config -n freshharvest-market
 
 # Restart deployments to pick up changes
-kubectl rollout restart deployment -n varnex-enterprise
+kubectl rollout restart deployment -n freshharvest-market
 ```
 
 #### View Resource Usage
 ```powershell
 # Check CPU/Memory usage
-kubectl top pods -n varnex-enterprise
+kubectl top pods -n freshharvest-market
 kubectl top nodes
 ```
 
@@ -878,41 +878,41 @@ See **[CI_CD_INTEGRATION.md](./CI_CD_INTEGRATION.md)** for automated production 
 
 ```powershell
 # View all resources in namespace
-kubectl get all -n varnex-enterprise
+kubectl get all -n freshharvest-market
 
 # Describe a resource
-kubectl describe pod <pod-name> -n varnex-enterprise
-kubectl describe svc <service-name> -n varnex-enterprise
+kubectl describe pod <pod-name> -n freshharvest-market
+kubectl describe svc <service-name> -n freshharvest-market
 
 # View logs
-kubectl logs <pod-name> -n varnex-enterprise
-kubectl logs -f <pod-name> -n varnex-enterprise  # Follow logs
+kubectl logs <pod-name> -n freshharvest-market
+kubectl logs -f <pod-name> -n freshharvest-market  # Follow logs
 
 # Execute commands in pod
-kubectl exec -it <pod-name> -n varnex-enterprise -- /bin/bash
+kubectl exec -it <pod-name> -n freshharvest-market -- /bin/bash
 
 # Port forward (temporary access - Option 2)
 # For staging namespace:
 kubectl port-forward svc/auth-service 5001:80 -n staging
 # Access at: http://localhost:5001/swagger
 
-# For varnex-enterprise namespace:
-kubectl port-forward svc/varnex-enterprise-auth 8080:80 -n varnex-enterprise
+# For freshharvest-market namespace:
+kubectl port-forward svc/freshharvest-market-auth 8080:80 -n freshharvest-market
 # Access at: http://localhost:8080/swagger
 
 # Note: Use Ingress (Option 1) for production-like access instead
 
 # Restart a deployment
-kubectl rollout restart deployment <deployment-name> -n varnex-enterprise
+kubectl rollout restart deployment <deployment-name> -n freshharvest-market
 
 # Check rollout status
-kubectl rollout status deployment <deployment-name> -n varnex-enterprise
+kubectl rollout status deployment <deployment-name> -n freshharvest-market
 
 # View events
-kubectl get events -n varnex-enterprise --sort-by='.lastTimestamp'
+kubectl get events -n freshharvest-market --sort-by='.lastTimestamp'
 
 # Delete a resource
-kubectl delete pod <pod-name> -n varnex-enterprise
+kubectl delete pod <pod-name> -n freshharvest-market
 kubectl delete -f <file.yaml>
 
 # Apply changes
@@ -926,14 +926,14 @@ kubectl apply -f <file.yaml>
 ```
 User Browser
     │
-    ├─→ http://app.varnex-enterprise.local (Frontend)
-    ├─→ http://api.varnex-enterprise.local (Gateway)
-    └─→ http://auth.varnex-enterprise.local (Auth Service)
+    ├─→ http://app.freshharvest-market.local (Frontend)
+    ├─→ http://api.freshharvest-market.local (Gateway)
+    └─→ http://auth.freshharvest-market.local (Auth Service)
     
         ↓
         
 Windows Hosts File (DNS Resolution)
-    127.0.0.1 → All *.varnex-enterprise.local
+    127.0.0.1 → All *.freshharvest-market.local
     
         ↓
         
@@ -960,7 +960,7 @@ SQL Server Database (Persistent Storage)
 
 ## Summary
 
-You now have a **complete local Kubernetes deployment** of Varnex Enterprise! 🎉
+You now have a **complete local Kubernetes deployment** of FreshHarvest Market! 🎉
 
 **What you've accomplished:**
 - ✅ Deployed 7 microservices to Kubernetes
@@ -976,7 +976,7 @@ You now have a **complete local Kubernetes deployment** of Varnex Enterprise! �
 - Nginx Ingress Controller for routing
 - ConfigMaps and Secrets for configuration
 
-**Access everything at:** http://app.varnex-enterprise.local
+**Access everything at:** http://app.freshharvest-market.local
 
 ---
 

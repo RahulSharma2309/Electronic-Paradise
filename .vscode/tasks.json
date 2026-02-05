@@ -165,7 +165,7 @@
     {
       "label": "dotnet: Build All Services",
       "type": "shell",
-      "command": "dotnet build ${workspaceFolder}/Electronic-Paradise.sln",
+      "command": "dotnet build ${workspaceFolder}/FreshHarvest-Market.sln",
       "problemMatcher": "$msCompile",
       "group": "build",
       "presentation": {
@@ -180,7 +180,7 @@
     {
       "label": "dotnet: Run All Tests",
       "type": "shell",
-      "command": "dotnet test ${workspaceFolder}/Electronic-Paradise.sln --logger 'console;verbosity=detailed'",
+      "command": "dotnet test ${workspaceFolder}/FreshHarvest-Market.sln --logger 'console;verbosity=detailed'",
       "problemMatcher": "$msCompile",
       "group": "test",
       "presentation": {

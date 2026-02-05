@@ -22,7 +22,7 @@
 
 ### Purpose
 
-The **Product Service** is the central catalog management system for Electronic Paradise. It handles:
+The **Product Service** is the central catalog management system for FreshHarvest Market. It handles:
 
 - **Product Catalog** - Store and manage all product information
 - **Inventory Management** - Track stock levels and availability

@@ -4,7 +4,7 @@
 ## 2. Low-level Design Doc – `docs/low-level-design.md`
 
 ```markdown
-# MY_Practice – Low-level Design
+# FreshHarvest Market – Low-level Design
 
 ## 1. Code Structure (Per Service)
 

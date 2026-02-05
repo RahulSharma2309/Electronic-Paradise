@@ -1,6 +1,6 @@
-# Electronic Paradise - E-Commerce Microservices Platform
+# FreshHarvest Market - Organic Food Marketplace
 
-A comprehensive microservices-based e-commerce platform built with .NET 8, demonstrating modern software architecture patterns, best practices, and scalable design.
+A comprehensive microservices-based organic food marketplace built with .NET 10, demonstrating modern software architecture patterns, best practices, and scalable design.
 
 ## 🚀 Quick Start
 
@@ -29,7 +29,7 @@ This will clean, build, and start all services automatically.
 
    ```bash
    git clone <repository-url>
-   cd Electronic-Paradise
+   cd FreshHarvest-Market
    ```
 
 2. **Build Docker images**
@@ -55,7 +55,7 @@ This will clean, build, and start all services automatically.
 ## 📁 Project Structure
 
 ```
-Electronic-Paradise/
+FreshHarvest-Market/
 ├── services/              # Microservices
 │   ├── auth-service/      # Authentication & Authorization
 │   ├── user-service/      # User profiles & wallet management

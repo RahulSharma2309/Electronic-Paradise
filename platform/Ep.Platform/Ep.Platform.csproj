@@ -8,11 +8,11 @@
     <!-- NuGet Package Metadata -->
     <PackageId>Ep.Platform</PackageId>
     <Version>$(EpPlatformVersion)</Version>
-    <Authors>Electronic Paradise</Authors>
-    <Company>Electronic Paradise</Company>
+    <Authors>FreshHarvest Market</Authors>
+    <Company>FreshHarvest Market</Company>
     <Description>Enterprise platform library providing infrastructure abstractions for ASP.NET Core services including JWT authentication, Entity Framework Core, password hashing, HTTP clients with Polly resilience, Swagger configuration, and CORS setup.</Description>
     <PackageTags>platform;infrastructure;jwt;entityframework;bcrypt;swagger;cors;polly;httpclient</PackageTags>
-    <RepositoryUrl>https://github.com/RahulSharma2309/Electronic-Paradise</RepositoryUrl>
+    <RepositoryUrl>https://github.com/RahulSharma2309/FreshHarvest-Market</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

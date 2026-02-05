@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Electronic-Paradise StyleCop Rules" Description="Custom StyleCop rules for Electronic-Paradise projects" ToolsVersion="16.0">
+<RuleSet Name="FreshHarvest-Market StyleCop Rules" Description="Custom StyleCop rules for FreshHarvest-Market projects" ToolsVersion="16.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1600" Action="None" />
     <Rule Id="SA1601" Action="None" />

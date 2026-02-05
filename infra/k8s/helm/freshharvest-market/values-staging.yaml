@@ -1,5 +1,5 @@
 # Staging Environment Values
-# Usage: helm install electronic-paradise . -f values-staging.yaml -n staging
+# Usage: helm install freshharvest-market . -f values-staging.yaml -n staging
 
 global:
   environment: staging
@@ -7,12 +7,12 @@ global:
 ingress:
   enabled: true
   hosts:
-    - host: staging.electronic-paradise.local
+    - host: staging.freshharvest-market.local
       paths:
         - path: /
           pathType: Prefix
           service: frontend
-    - host: api.staging.electronic-paradise.local
+    - host: api.staging.freshharvest-market.local
       paths:
         - path: /api(/|$)(.*)
           pathType: ImplementationSpecific

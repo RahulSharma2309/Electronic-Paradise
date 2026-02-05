@@ -34,7 +34,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet-sonarscanner begin \
-            /k:"RahulSharma2309_Electronic-Paradise" \
+            /k:"RahulSharma2309_FreshHarvest-Market" \
             /o:"rahulsharma2309" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url="https://sonarcloud.io" \
@@ -171,9 +171,9 @@ jobs:
           file: ./services/auth-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-auth:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-auth:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-auth:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-auth:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-auth:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -184,9 +184,9 @@ jobs:
           file: ./services/user-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-user:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-user:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-user:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-user:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-user:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -197,9 +197,9 @@ jobs:
           file: ./services/product-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-product:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-product:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-product:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-product:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-product:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -210,9 +210,9 @@ jobs:
           file: ./services/order-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-order:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-order:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-order:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-order:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-order:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -223,9 +223,9 @@ jobs:
           file: ./services/payment-service/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-payment:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-payment:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-payment:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-payment:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-payment:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -236,9 +236,9 @@ jobs:
           file: ./gateway/src/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-gateway:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-gateway:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-gateway:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-gateway:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-gateway:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -249,9 +249,9 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.tags.outputs.repo_owner }}/electronic-paradise-frontend:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
-            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/electronic-paradise-frontend:latest', steps.tags.outputs.repo_owner) || '' }}
+            ghcr.io/${{ steps.tags.outputs.repo_owner }}/freshharvest-market-frontend:${{ steps.tags.outputs.mode == 'production' && format('v{0}', steps.version.outputs.version) || format('alpha-{0}-{1}', steps.version.outputs.version, steps.git.outputs.sha) }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-frontend:v{1}-{2}', steps.tags.outputs.repo_owner, steps.version.outputs.version, steps.git.outputs.sha) || '' }}
+            ${{ steps.tags.outputs.mode == 'production' && format('ghcr.io/{0}/freshharvest-market-frontend:latest', steps.tags.outputs.repo_owner) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

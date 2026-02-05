@@ -8,7 +8,7 @@ metadata:
   name: staging
   labels:
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     cost-center: qa
   annotations:
     description: "Staging environment for final testing before production"

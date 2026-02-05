@@ -1,6 +1,6 @@
-# Electronic Paradise Helm Chart
+# FreshHarvest Market Helm Chart
 
-This Helm chart packages the Electronic Paradise e-commerce platform for Kubernetes deployment.
+This Helm chart packages the FreshHarvest Market organic food marketplace for Kubernetes deployment.
 
 ## Overview
 
@@ -25,7 +25,7 @@ This chart deploys all 7 microservices (auth, user, product, order, payment, gat
 
 ```bash
 # Install to staging namespace
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   --namespace staging \
   --create-namespace \
   -f values-staging.yaml
@@ -35,7 +35,7 @@ helm install electronic-paradise . \
 
 ```bash
 # Install to prod namespace
-helm install electronic-paradise . \
+helm install freshharvest-market . \
   --namespace prod \
   --create-namespace \
   -f values-prod.yaml
@@ -72,12 +72,12 @@ services:
 
 ```bash
 # Upgrade staging
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace staging \
   -f values-staging.yaml
 
 # Upgrade production
-helm upgrade electronic-paradise . \
+helm upgrade freshharvest-market . \
   --namespace prod \
   -f values-prod.yaml
 ```
@@ -86,16 +86,16 @@ helm upgrade electronic-paradise . \
 
 ```bash
 # Uninstall from staging
-helm uninstall electronic-paradise --namespace staging
+helm uninstall freshharvest-market --namespace staging
 
 # Uninstall from production
-helm uninstall electronic-paradise --namespace prod
+helm uninstall freshharvest-market --namespace prod
 ```
 
 ## Chart Structure
 
 ```
-electronic-paradise/
+freshharvest-market/
 ├── Chart.yaml              # Chart metadata
 ├── values.yaml             # Default values
 ├── values-staging.yaml     # Staging overrides

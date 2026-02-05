@@ -1,6 +1,6 @@
 # Start Here — "Fly-through" Guide
 
-> **Your role-based navigation hub for Electronic Paradise**
+> **Your role-based navigation hub for FreshHarvest Market**
 
 ---
 
@@ -34,7 +34,7 @@ This repo is intentionally documented from multiple viewpoints:
 
 ## Quick orientation (5 minutes)
 
-- **What this is**: an MVP e-commerce app designed as a **learning system** for “enterprise-ish” patterns (microservices, gateway, distributed workflows, rollback/compensation).
+- **What this is**: FreshHarvest Market - an organic food marketplace designed as a **learning system** for “enterprise-ish” patterns (microservices, gateway, distributed workflows, rollback/compensation).
 - **What users can do (MVP)**: signup, login, browse products, manage a cart (frontend-only), add wallet balance, checkout (order + payment + stock), view order history.
 - **Where the code lives**:
   - Frontend: `frontend/`

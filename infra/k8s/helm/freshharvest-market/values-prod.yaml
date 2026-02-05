@@ -1,5 +1,5 @@
 # Production Environment Values
-# Usage: helm install electronic-paradise . -f values-prod.yaml -n prod
+# Usage: helm install freshharvest-market . -f values-prod.yaml -n prod
 
 global:
   environment: prod
@@ -72,12 +72,12 @@ services:
 ingress:
   enabled: true
   hosts:
-    - host: electronic-paradise.com
+    - host: freshharvest-market.com
       paths:
         - path: /
           pathType: Prefix
           service: frontend
-    - host: api.electronic-paradise.com
+    - host: api.freshharvest-market.com
       paths:
         - path: /api(/|$)(.*)
           pathType: ImplementationSpecific
@@ -90,8 +90,8 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   # tls:
   #   - hosts:
-  #       - electronic-paradise.com
-  #       - api.electronic-paradise.com
-  #     secretName: electronic-paradise-tls
+  #       - freshharvest-market.com
+  #       - api.freshharvest-market.com
+  #     secretName: freshharvest-market-tls
 
 ---

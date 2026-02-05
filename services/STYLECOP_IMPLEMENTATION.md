@@ -2,7 +2,7 @@
 
 ## Overview
 
-StyleCop has been successfully implemented across **all backend services** in the Electronic-Paradise project. This document provides details about the implementation and how to use it.
+StyleCop has been successfully implemented across **all backend services** in the FreshHarvest-Market project. This document provides details about the implementation and how to use it.
 
 ## Services with StyleCop
 
@@ -56,7 +56,7 @@ Each service now has a `.build/` folder at `services/<service-name>/src/.build/`
 
 ### 4. **stylecop.json**
 - Configures StyleCop analyzer behavior
-- Company name: Electronic-Paradise
+- Company name: FreshHarvest-Market
 - Copyright text included
 - Using directives placement: inside namespace
 
@@ -64,7 +64,7 @@ Each service now has a `.build/` folder at `services/<service-name>/src/.build/`
 ```json
 {
   "documentationRules": {
-    "companyName": "Electronic-Paradise",
+    "companyName": "FreshHarvest-Market",
     "copyrightText": "Copyright (c) {companyName}. All rights reserved."
   },
   "orderingRules": {

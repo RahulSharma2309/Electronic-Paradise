@@ -221,7 +221,7 @@ Kubernetes has a special secret type: `kubernetes.io/dockerconfigjson` that stor
      imagePullSecrets:
        - name: ghcr-secret  # References the secret
      containers:
-       - image: ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.0.0
+       - image: ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.0.0
    ```
 
 3. When creating a pod, kubelet:
@@ -681,7 +681,7 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/RahulSharma2309/Electronic-Paradise
+    repoURL: https://github.com/RahulSharma2309/FreshHarvest-Market
     targetRevision: main  # Git branch/tag
     path: infra/k8s/staging/deployments/auth-service  # Folder with YAMLs
   
@@ -861,9 +861,9 @@ Internet
    ↓
 Ingress Controller (Nginx pod)
    ↓ (routes based on rules)
-   ├─→ frontend:80 (electronic-paradise.local/)
-   ├─→ gateway:80  (electronic-paradise-api.local/api)
-   └─→ auth:80     (electronic-paradise-api.local/auth)
+   ├─→ frontend:80 (freshharvest-market.local/)
+   ├─→ gateway:80  (freshharvest-market-api.local/api)
+   └─→ auth:80     (freshharvest-market-api.local/auth)
 ```
 
 ---
@@ -907,13 +907,13 @@ This installs:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: electronic-paradise-ingress
+  name: freshharvest-market-ingress
   namespace: staging
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: electronic-paradise.local  # Frontend
+    - host: freshharvest-market.local  # Frontend
       http:
         paths:
           - path: /
@@ -924,7 +924,7 @@ spec:
                 port:
                   number: 80
     
-    - host: electronic-paradise-api.local  # Backend APIs
+    - host: freshharvest-market-api.local  # Backend APIs
       http:
         paths:
           - path: /api/auth
@@ -954,17 +954,17 @@ spec:
 
 **How Routing Works:**
 
-**Request:** `http://electronic-paradise.local/`
-1. Browser resolves `electronic-paradise.local` → 127.0.0.1 (via hosts file)
+**Request:** `http://freshharvest-market.local/`
+1. Browser resolves `freshharvest-market.local` → 127.0.0.1 (via hosts file)
 2. Hits Ingress Controller on localhost:80
-3. Ingress Controller checks `Host` header: `electronic-paradise.local`
+3. Ingress Controller checks `Host` header: `freshharvest-market.local`
 4. Matches rule → backend: `frontend:80`
 5. Forwards request to frontend Service
 6. Service routes to frontend Pod
 
-**Request:** `http://electronic-paradise-api.local/api/auth/login`
+**Request:** `http://freshharvest-market-api.local/api/auth/login`
 1. Resolves to localhost
-2. Host: `electronic-paradise-api.local`
+2. Host: `freshharvest-market-api.local`
 3. Path: `/api/auth/login`
 4. Matches `/api/auth` rule → `auth-service:80`
 5. Nginx rewrites path (if configured)
@@ -980,29 +980,29 @@ spec:
 ### 6.4: Hosts File (DNS)
 
 **Problem:**
-`electronic-paradise.local` is not a real domain. DNS servers don't know about it.
+`freshharvest-market.local` is not a real domain. DNS servers don't know about it.
 
 **Solution: Local DNS Override**
 Windows hosts file: `C:\Windows\System32\drivers\etc\hosts`
 
 Add:
 ```
-127.0.0.1 electronic-paradise.local
-127.0.0.1 electronic-paradise-api.local
+127.0.0.1 freshharvest-market.local
+127.0.0.1 freshharvest-market-api.local
 ```
 
 **How it works:**
-1. Browser tries to resolve `electronic-paradise.local`
+1. Browser tries to resolve `freshharvest-market.local`
 2. OS checks hosts file first (before DNS)
 3. Finds entry → returns 127.0.0.1
 4. Browser connects to localhost
-5. Ingress Controller receives request with `Host: electronic-paradise.local`
+5. Ingress Controller receives request with `Host: freshharvest-market.local`
 
 **Production Alternative:**
 Buy a real domain, configure DNS:
 ```
-A Record: electronic-paradise.com → LoadBalancer IP
-A Record: api.electronic-paradise.com → LoadBalancer IP
+A Record: freshharvest-market.com → LoadBalancer IP
+A Record: api.freshharvest-market.com → LoadBalancer IP
 ```
 
 ---
@@ -1412,7 +1412,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/RahulSharma2309/Electronic-Paradise
+        repoURL: https://github.com/RahulSharma2309/FreshHarvest-Market
         targetRevision: main
         path: 'infra/k8s/staging/deployments/{{service}}-service'
       destination:

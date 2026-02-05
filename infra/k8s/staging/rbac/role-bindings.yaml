@@ -11,7 +11,7 @@ metadata:
   labels:
     app: auth-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   # Who gets the permissions
   - kind: ServiceAccount
@@ -33,7 +33,7 @@ metadata:
   labels:
     app: user-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: user-service-sa
@@ -53,7 +53,7 @@ metadata:
   labels:
     app: product-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: product-service-sa
@@ -73,7 +73,7 @@ metadata:
   labels:
     app: order-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: order-service-sa
@@ -93,7 +93,7 @@ metadata:
   labels:
     app: payment-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: payment-service-sa
@@ -113,7 +113,7 @@ metadata:
   labels:
     app: gateway
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: gateway-sa

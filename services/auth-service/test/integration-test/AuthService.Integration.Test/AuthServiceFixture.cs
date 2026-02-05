@@ -36,8 +36,8 @@ public class AuthServiceFixture : IAsyncLifetime
                     { "ConnectionStrings:DefaultConnection", "Server=(localdb)\\MSSQLLocalDB;Database=AuthServiceTestDb;Trusted_Connection=True;MultipleActiveResultSets=true" },
                     { "ServiceUrls:UserService", "http://user-service-mock:3001" },
                     { "Jwt:Key", "your-super-secret-key-that-should-be-at-least-32-characters-long-for-security" },
-                    { "Jwt:Issuer", "Electronic-Paradise" },
-                    { "Jwt:Audience", "Electronic-Paradise-Users" }
+                    { "Jwt:Issuer", "FreshHarvest-Market" },
+                    { "Jwt:Audience", "FreshHarvest-Market-Users" }
                 });
             });
 

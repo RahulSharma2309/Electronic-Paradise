@@ -9,7 +9,7 @@ metadata:
   labels:
     app: {{ $serviceName }}-service
     environment: {{ $.Values.global.environment }}
-    {{- include "electronic-paradise.labels" $ | nindent 4 }}
+    {{- include "freshharvest-market.labels" $ | nindent 4 }}
 spec:
   replicas: {{ $service.replicas }}
   selector:
@@ -21,7 +21,7 @@ spec:
       labels:
         app: {{ $serviceName }}-service
         environment: {{ $.Values.global.environment }}
-        {{- include "electronic-paradise.labels" $ | nindent 8 }}
+        {{- include "freshharvest-market.labels" $ | nindent 8 }}
     spec:
       {{- if $.Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -32,7 +32,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ $serviceName }}-service
-        image: {{ include "electronic-paradise.image" (dict "Values" $.Values "repository" $service.image.repository "tag" $service.image.tag) }}
+        image: {{ include "freshharvest-market.image" (dict "Values" $.Values "repository" $service.image.repository "tag" $service.image.tag) }}
         imagePullPolicy: {{ $service.image.pullPolicy }}
         ports:
         - containerPort: {{ $service.service.port }}

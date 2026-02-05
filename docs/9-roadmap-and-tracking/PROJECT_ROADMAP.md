@@ -277,7 +277,7 @@ Examples:
 **Implementation Notes:**
 - Excluded .github/** from analysis
 - Organization: rahulsharma2309
-- Project Key: RahulSharma2309_Electronic-Paradise
+- Project Key: RahulSharma2309_FreshHarvest-Market
 - SHA pinning warnings suppressed (deliberate architectural decision)
 
 ---
@@ -481,7 +481,7 @@ Examples:
 - [x] Document Helm usage - ✅ **DONE** (comprehensive HELM_GUIDE.md)
 
 **Implementation Notes:**
-- ✅ Complete Helm chart structure in `infra/k8s/helm/electronic-paradise/`
+- ✅ Complete Helm chart structure in `infra/k8s/helm/freshharvest-market/`
 - ✅ Templates for all 7 services (deployment, service)
 - ✅ Templates for RBAC, ConfigMaps, Secrets, Ingress
 - ✅ Helper functions for labels, image references, etc.
