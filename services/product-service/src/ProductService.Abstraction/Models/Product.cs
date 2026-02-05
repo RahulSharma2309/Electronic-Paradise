@@ -31,9 +31,14 @@ public class Product
     public int Stock { get; set; }
 
     /// <summary>
-    /// Gets or sets the product category.
+    /// Gets or sets the category ID.
     /// </summary>
-    public string? Category { get; set; }
+    public Guid? CategoryId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the category navigation.
+    /// </summary>
+    public Category? Category { get; set; }
 
     /// <summary>
     /// Gets or sets the brand or manufacturer name.
@@ -51,9 +56,9 @@ public class Product
     public string? Unit { get; set; }
 
     /// <summary>
-    /// Gets or sets the image URL.
+    /// Gets or sets the product images (gallery + primary).
     /// </summary>
-    public string? ImageUrl { get; set; }
+    public List<ProductImage> Images { get; set; } = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether the product is active/visible.
@@ -79,4 +84,14 @@ public class Product
     /// Gets or sets the optional extended metadata for the product.
     /// </summary>
     public ProductMetadata? Metadata { get; set; }
+
+    /// <summary>
+    /// Gets or sets queryable attributes/specifications for the product.
+    /// </summary>
+    public List<ProductAttribute> Attributes { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets tags for the product (many-to-many).
+    /// </summary>
+    public List<ProductTag> ProductTags { get; set; } = new();
 }

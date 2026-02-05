@@ -13,13 +13,23 @@ export default function OrderHistory({ userId, products = [] }) {
 
   const productNameById = useMemo(() => {
     if (!Array.isArray(products)) return new Map();
-    return new Map(products.map((p) => [p.id, p.name]));
+    return new Map(
+      products
+        .map((p) => {
+          const id = p?.id ?? p?.Id;
+          const name = p?.name ?? p?.Name;
+          if (!id || !name) return null;
+          return [String(id).toLowerCase(), String(name)];
+        })
+        .filter(Boolean)
+    );
   }, [products]);
 
   const normalizeOrderItem = (item) => {
     if (!item) return null;
+    const productId = item.productId ?? item.ProductId;
     return {
-      productId: item.productId ?? item.ProductId,
+      productId,
       quantity: item.quantity ?? item.Quantity ?? 0,
       unitPrice: item.unitPrice ?? item.UnitPrice ?? item.price ?? item.Price ?? 0,
     };
@@ -358,14 +368,19 @@ export default function OrderHistory({ userId, products = [] }) {
                       <tr key={index}>
                         <td>
                           {(() => {
-                            const id = item.productId ? String(item.productId) : "";
-                            const name =
-                              item.productId && productNameById.has(item.productId)
-                                ? productNameById.get(item.productId)
-                                : null;
+                            const id = item?.productId ? String(item.productId) : "";
+                            const key = id ? id.toLowerCase() : "";
+                            const name = key && productNameById.has(key) ? productNameById.get(key) : null;
 
                             if (name) return name;
-                            return id ? `${id.substring(0, 8)}...` : "-";
+                            if (!id) return "-";
+
+                            return (
+                              <span className="order-product-unknown">
+                                Unknown product{" "}
+                                <span className="order-product-id-hint">({id.substring(0, 8)}…)</span>
+                              </span>
+                            );
                           })()}
                         </td>
                         <td>{item.quantity}</td>

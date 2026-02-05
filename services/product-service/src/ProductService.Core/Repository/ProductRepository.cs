@@ -31,7 +31,12 @@ public class ProductRepository : IProductRepository
         _logger.LogDebug("Fetching all products from database");
         try
         {
-            var products = await _db.Products.ToListAsync();
+            var products = await _db.Products
+                .AsNoTracking()
+                .Include(p => p.Category)
+                .Include(p => p.Certification)
+                .Include(p => p.Images)
+                .ToListAsync();
             _logger.LogDebug("Retrieved {ProductCount} products from database", products.Count);
             return products;
         }
@@ -48,7 +53,15 @@ public class ProductRepository : IProductRepository
         _logger.LogDebug("Fetching product {ProductId} from database", id);
         try
         {
-            var product = await _db.Products.FindAsync(id);
+            var product = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.Certification)
+                .Include(p => p.Metadata)
+                .Include(p => p.Images)
+                .Include(p => p.Attributes)
+                .Include(p => p.ProductTags)
+                .ThenInclude(pt => pt.Tag)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {
                 _logger.LogDebug("Product {ProductId} not found in database", id);
@@ -82,6 +95,74 @@ public class ProductRepository : IProductRepository
             _logger.LogError(ex, "Error adding product {ProductName} to database", p.Name);
             throw;
         }
+    }
+
+    /// <inheritdoc />
+    public async Task<Category> GetOrCreateCategoryAsync(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Category name is required", nameof(name));
+        }
+
+        var trimmed = name.Trim();
+        var slug = ToSlug(trimmed);
+
+        var existing = await _db.Categories.FirstOrDefaultAsync(c => c.Slug == slug);
+        if (existing != null)
+        {
+            return existing;
+        }
+
+        var created = new Category
+        {
+            Name = trimmed,
+            Slug = slug,
+            CreatedAt = DateTime.UtcNow,
+            IsActive = true,
+        };
+
+        _db.Categories.Add(created);
+        await _db.SaveChangesAsync();
+        return created;
+    }
+
+    /// <inheritdoc />
+    public async Task<List<Tag>> GetOrCreateTagsAsync(IEnumerable<string> tagNames)
+    {
+        var names = tagNames
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Select(t => t.Trim())
+            .Where(t => t.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (names.Count == 0)
+        {
+            return new List<Tag>();
+        }
+
+        var slugs = names.Select(ToSlug).ToList();
+        var existing = await _db.Tags.Where(t => slugs.Contains(t.Slug)).ToListAsync();
+        var existingSlugs = existing.Select(t => t.Slug).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var name in names)
+        {
+            var slug = ToSlug(name);
+            if (existingSlugs.Contains(slug))
+            {
+                continue;
+            }
+
+            existing.Add(new Tag
+            {
+                Name = name,
+                Slug = slug,
+            });
+        }
+
+        await _db.SaveChangesAsync();
+        return existing;
     }
 
     /// <inheritdoc />
@@ -176,5 +257,27 @@ public class ProductRepository : IProductRepository
             _logger.LogError(ex, "Error releasing {Quantity} units of product {ProductId}", quantity, id);
             throw;
         }
+    }
+
+    private static string ToSlug(string value)
+    {
+        var lower = value.Trim().ToLowerInvariant();
+        var chars = lower.Select(c =>
+        {
+            if (char.IsLetterOrDigit(c))
+            {
+                return c;
+            }
+
+            return '-';
+        }).ToArray();
+
+        var slug = new string(chars);
+        while (slug.Contains("--", StringComparison.Ordinal))
+        {
+            slug = slug.Replace("--", "-", StringComparison.Ordinal);
+        }
+
+        return slug.Trim('-');
     }
 }

@@ -27,7 +27,9 @@ namespace Ep.Platform.Hosting
             using var scope = host.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<TContext>();
 
-            if (applyMigrations)
+            // Migrations are only supported for relational providers.
+            // For in-memory/testing providers, fall back to EnsureCreated.
+            if (applyMigrations && db.Database.IsRelational())
             {
                 await db.Database.MigrateAsync(cancellationToken);
             }

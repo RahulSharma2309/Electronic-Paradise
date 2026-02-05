@@ -78,6 +78,28 @@ public class ProductServiceImpl : IProductService
         {
             var product = _mapper.ToEntity(request);
             ValidateForCreate(product);
+
+            // Normalize taxonomy: resolve Category (string request -> Category row -> FK)
+            if (!string.IsNullOrWhiteSpace(request.Category))
+            {
+                product.Category = await _repo.GetOrCreateCategoryAsync(request.Category);
+            }
+
+            // Normalize tags: resolve tags and create join rows (request.Metadata.Tags)
+            if (request.Metadata?.Tags != null && request.Metadata.Tags.Length > 0)
+            {
+                var tags = await _repo.GetOrCreateTagsAsync(request.Metadata.Tags);
+                foreach (var tag in tags)
+                {
+                    product.ProductTags.Add(new ProductTag
+                    {
+                        ProductId = product.Id,
+                        TagId = tag.Id,
+                        Tag = tag,
+                    });
+                }
+            }
+
             await _repo.AddAsync(product);
             _logger.LogInformation("Product created successfully: {ProductId}, Name: {ProductName}", product.Id, product.Name);
             return _mapper.ToDetailResponse(product);

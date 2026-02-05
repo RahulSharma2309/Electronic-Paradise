@@ -198,6 +198,12 @@
   background: rgba(239, 232, 220, 0.35);
 }
 
+.order-product-id-hint {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
 /* Order Footer */
 .order-footer {
   padding: 20px;

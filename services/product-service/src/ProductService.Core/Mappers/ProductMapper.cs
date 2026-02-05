@@ -1,3 +1,4 @@
+using System.Text.Json;
 using ProductService.Abstraction.DTOs.Requests;
 using ProductService.Abstraction.DTOs.Responses;
 using ProductService.Abstraction.Models;
@@ -12,6 +13,12 @@ public class ProductMapper : IProductMapper
     /// <inheritdoc/>
     public ProductResponse ToResponse(Product product)
     {
+        var primaryImageUrl = product.Images
+            .OrderByDescending(i => i.IsPrimary)
+            .ThenBy(i => i.SortOrder)
+            .Select(i => i.Url)
+            .FirstOrDefault();
+
         return new ProductResponse
         {
             Id = product.Id,
@@ -19,19 +26,26 @@ public class ProductMapper : IProductMapper
             Description = product.Description,
             Price = product.Price,
             Stock = product.Stock,
-            Category = product.Category,
+            Category = product.Category?.Name,
             Brand = product.Brand,
             Unit = product.Unit,
-            ImageUrl = product.ImageUrl,
+            ImageUrl = primaryImageUrl,
             IsActive = product.IsActive,
             HasCertification = product.Certification != null,
             CertificationType = product.Certification?.CertificationType,
+            CreatedAt = product.CreatedAt,
         };
     }
 
     /// <inheritdoc/>
     public ProductDetailResponse ToDetailResponse(Product product)
     {
+        var primaryImageUrl = product.Images
+            .OrderByDescending(i => i.IsPrimary)
+            .ThenBy(i => i.SortOrder)
+            .Select(i => i.Url)
+            .FirstOrDefault();
+
         CertificationResponse? certification = null;
         if (product.Certification != null)
         {
@@ -69,11 +83,54 @@ public class ProductMapper : IProductMapper
             metadata = new MetadataResponse
             {
                 Id = product.Metadata.Id,
-                Attributes = product.Metadata.GetAttributes(),
-                Tags = product.Metadata.Tags,
                 Slug = product.Metadata.Slug,
                 SeoMetadata = seoMetadata,
             };
+        }
+
+        // Build tags + attributes from normalized tables (keeps response contract stable).
+        var tags = product.ProductTags
+            .Select(pt => pt.Tag?.Name)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Select(t => t!)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var attributes = product.Attributes.Count == 0
+            ? null
+            : product.Attributes
+                .Select(a =>
+                {
+                    object? value = a.ValueString != null
+                        ? a.ValueString
+                        : a.ValueNumber.HasValue
+                            ? a.ValueNumber.Value
+                            : a.ValueBoolean.HasValue
+                                ? a.ValueBoolean.Value
+                                : null;
+
+                    return new { a.Key, Value = value };
+                })
+                .Where(x => x.Value != null)
+                .ToDictionary(x => x.Key, x => x.Value!, StringComparer.OrdinalIgnoreCase);
+
+        if (attributes != null && attributes.Count == 0)
+        {
+            attributes = null;
+        }
+
+        if (metadata == null && (tags.Length > 0 || attributes != null))
+        {
+            metadata = new MetadataResponse
+            {
+                Id = Guid.Empty,
+            };
+        }
+
+        if (metadata != null)
+        {
+            metadata.Tags = tags.Length == 0 ? null : tags;
+            metadata.Attributes = attributes;
         }
 
         return new ProductDetailResponse
@@ -83,11 +140,11 @@ public class ProductMapper : IProductMapper
             Description = product.Description,
             Price = product.Price,
             Stock = product.Stock,
-            Category = product.Category,
+            Category = product.Category?.Name,
             Brand = product.Brand,
             Sku = product.Sku,
             Unit = product.Unit,
-            ImageUrl = product.ImageUrl,
+            ImageUrl = primaryImageUrl,
             IsActive = product.IsActive,
             CreatedAt = product.CreatedAt,
             UpdatedAt = product.UpdatedAt,
@@ -105,11 +162,9 @@ public class ProductMapper : IProductMapper
             Description = request.Description,
             Price = request.Price,
             Stock = request.Stock,
-            Category = request.Category,
             Brand = request.Brand,
             Sku = request.Sku,
             Unit = request.Unit,
-            ImageUrl = request.ImageUrl,
             IsActive = request.IsActive,
             CreatedAt = DateTime.UtcNow,
         };
@@ -133,22 +188,15 @@ public class ProductMapper : IProductMapper
             };
         }
 
-        // Map metadata if provided
+        // Map metadata if provided (SEO/slug)
         if (request.Metadata != null)
         {
             product.Metadata = new ProductMetadata
             {
                 ProductId = product.Id,
-                Tags = request.Metadata.Tags,
                 Slug = request.Metadata.Slug,
                 CreatedAt = DateTime.UtcNow,
             };
-
-            // Set attributes if provided
-            if (request.Metadata.Attributes != null && request.Metadata.Attributes.Count > 0)
-            {
-                product.Metadata.SetAttributes(request.Metadata.Attributes);
-            }
 
             // Set SEO metadata if provided
             if (request.Metadata.SeoMetadata != null)
@@ -160,6 +208,56 @@ public class ProductMapper : IProductMapper
                     Keywords = request.Metadata.SeoMetadata.Keywords,
                     CanonicalUrl = request.Metadata.SeoMetadata.CanonicalUrl,
                 });
+            }
+        }
+
+        // Map primary image from legacy ImageUrl field (stored as ProductImage row)
+        if (!string.IsNullOrWhiteSpace(request.ImageUrl))
+        {
+            product.Images.Add(new ProductImage
+            {
+                ProductId = product.Id,
+                Url = request.ImageUrl!,
+                IsPrimary = true,
+                SortOrder = 0,
+                CreatedAt = DateTime.UtcNow,
+            });
+        }
+
+        // Map flexible attributes (legacy request.Metadata.Attributes -> ProductAttributes)
+        if (request.Metadata?.Attributes != null && request.Metadata.Attributes.Count > 0)
+        {
+            foreach (var kvp in request.Metadata.Attributes)
+            {
+                var value = kvp.Value;
+                var attr = new ProductAttribute
+                {
+                    ProductId = product.Id,
+                    Key = kvp.Key,
+                    Group = "General",
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                switch (value)
+                {
+                    case null:
+                        break;
+                    case bool b:
+                        attr.ValueBoolean = b;
+                        break;
+                    case byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal:
+                        attr.ValueNumber = Convert.ToDecimal(value);
+                        break;
+                    case string s:
+                        attr.ValueString = s;
+                        break;
+                    default:
+                        // For arrays/objects, store JSON for now (still queryable by key).
+                        attr.ValueString = JsonSerializer.Serialize(value);
+                        break;
+                }
+
+                product.Attributes.Add(attr);
             }
         }
 
@@ -190,11 +288,6 @@ public class ProductMapper : IProductMapper
             product.Stock = request.Stock.Value;
         }
 
-        if (request.Category != null)
-        {
-            product.Category = request.Category;
-        }
-
         if (request.Brand != null)
         {
             product.Brand = request.Brand;
@@ -212,7 +305,23 @@ public class ProductMapper : IProductMapper
 
         if (request.ImageUrl != null)
         {
-            product.ImageUrl = request.ImageUrl;
+            // Update primary image (store in ProductImages table)
+            foreach (var img in product.Images.Where(i => i.IsPrimary))
+            {
+                img.IsPrimary = false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.ImageUrl))
+            {
+                product.Images.Add(new ProductImage
+                {
+                    ProductId = product.Id,
+                    Url = request.ImageUrl,
+                    IsPrimary = true,
+                    SortOrder = 0,
+                    CreatedAt = DateTime.UtcNow,
+                });
+            }
         }
 
         if (request.IsActive.HasValue)

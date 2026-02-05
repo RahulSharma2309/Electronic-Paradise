@@ -53,6 +53,19 @@ export default function WishlistPage({ items = [], onRemove, onAddToCart }) {
               ♥
             </button>
 
+            <div className="product-image-wrap" aria-hidden={!product.imageUrl}>
+              {product.imageUrl ? (
+                <img
+                  className="product-image"
+                  src={product.imageUrl}
+                  alt={product.name || "Product"}
+                  loading="lazy"
+                />
+              ) : (
+                <div className="product-image placeholder" aria-hidden="true" />
+              )}
+            </div>
+
             <h4>{product.name || "Product"}</h4>
             {product.description && (
               <div className="product-description">{product.description}</div>

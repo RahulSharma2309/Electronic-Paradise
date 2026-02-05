@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "./common/Button";
+import { formatINR } from "../utils/formatters";
 import "../styles/components/products.css";
 
 export default function ProductList({
@@ -65,6 +66,18 @@ export default function ProductList({
               ? "♥"
               : "♡"}
           </button>
+          <div className="product-image-wrap" aria-hidden={!product.imageUrl}>
+            {product.imageUrl ? (
+              <img
+                className="product-image"
+                src={product.imageUrl}
+                alt={product.name}
+                loading="lazy"
+              />
+            ) : (
+              <div className="product-image placeholder" aria-hidden="true" />
+            )}
+          </div>
           <h4>{product.name}</h4>
           <div className="trust-row" aria-label="Trust indicators">
             <span className="trust-pill">🌱 Organic</span>
@@ -74,7 +87,7 @@ export default function ProductList({
           {product.description && (
             <div className="product-description">{product.description}</div>
           )}
-          <div className="product-price">₹{product.price.toFixed(2)}</div>
+          <div className="product-price">{formatINR(product.price || 0)}</div>
           <div className={`product-stock ${getStockClassName(product.stock)}`}>
             Stock: {product.stock}
           </div>
