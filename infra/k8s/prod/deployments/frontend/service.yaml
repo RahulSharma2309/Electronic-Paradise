@@ -1,4 +1,4 @@
-﻿# Using NodePort to expose frontend externally
+# Using NodePort to expose frontend externally
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ metadata:
   labels:
     app: frontend
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   type: NodePort
   ports:

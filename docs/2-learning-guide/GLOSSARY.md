@@ -1,4 +1,4 @@
-# Glossary (Plain Language)
+# Glossary (Plain Language) - FreshHarvest Market
 
 This glossary keeps words consistent across docs. It’s intentionally non-academic.
 
@@ -38,4 +38,15 @@ This glossary keeps words consistent across docs. It’s intentionally non-acade
 - **Logs**: Text records of what happened.
 - **Metrics**: Numbers over time (request count, latency, error rate).
 - **Tracing**: A “map” of one request as it travels across services (distributed tracing).
+
+---
+
+## FreshHarvest Market domain terms
+
+- **Organic Certification**: A verified label (e.g., India Organic, USDA Organic) indicating the product meets organic farming standards.
+- **Farm Origin**: The source farm or region where the organic produce was grown.
+- **Pack Size**: The quantity/weight option for a product (e.g., 250g, 500g, 1 kg).
+- **Freshness Date / Expiry**: The date by which a perishable product should be consumed.
+- **Seasonal Availability**: Products that are only available during specific seasons (e.g., mangoes in summer).
+- **Perishable Goods**: Products with limited shelf life that require special handling (refrigeration, quick delivery).
 

@@ -2,6 +2,7 @@ using Ep.Platform.DependencyInjection;
 using Ep.Platform.Hosting;
 using ProductService.Core.Business;
 using ProductService.Core.Data;
+using ProductService.Core.Mappers;
 using ProductService.Core.Repository;
 
 namespace ProductService.API;
@@ -36,6 +37,9 @@ public class Startup
         // Register business and repository
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductService, ProductServiceImpl>();
+
+        // Register mapper
+        services.AddScoped<IProductMapper, ProductMapper>();
     }
 
     /// <summary>

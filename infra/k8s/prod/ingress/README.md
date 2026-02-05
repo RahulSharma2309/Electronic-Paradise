@@ -5,8 +5,8 @@ This directory contains the Ingress configuration for the production environment
 ## Overview
 
 The Ingress routes external traffic to:
-- **Frontend**: `electronic-paradise.com` → `frontend` service
-- **API Gateway**: `api.electronic-paradise.com` → `gateway` service
+- **Frontend**: `freshharvest-market.com` → `frontend` service
+- **API Gateway**: `api.freshharvest-market.com` → `gateway` service
 
 ## Features
 
@@ -59,8 +59,8 @@ Point your DNS records to the Ingress Controller's external IP:
 kubectl get service -n ingress-nginx ingress-nginx-controller
 
 # Create DNS records:
-# A record: electronic-paradise.com → <EXTERNAL-IP>
-# A record: api.electronic-paradise.com → <EXTERNAL-IP>
+# A record: freshharvest-market.com → <EXTERNAL-IP>
+# A record: api.freshharvest-market.com → <EXTERNAL-IP>
 ```
 
 ## Rate Limiting

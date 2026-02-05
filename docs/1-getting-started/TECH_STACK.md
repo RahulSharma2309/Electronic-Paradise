@@ -1,7 +1,8 @@
-# 🛠️ E-Commerce Application - Complete Tech Stack
+# 🛠️ FreshHarvest Market - Complete Tech Stack
 
-> **Last Updated:** January 11, 2026  
-> **Status:** MVP Complete + Testing + CI/CD (76% complete)
+> **Last Updated:** January 2026  
+> **Status:** MVP Complete + Testing + CI/CD (76% complete)  
+> **Brand:** FreshHarvest Market - Organic Food E-Commerce Platform
 
 ---
 
@@ -92,11 +93,11 @@
 
 **Databases:**
 
-- ✅ `authdb` - Authentication service
-- ✅ `userdb` - User profiles and wallet
-- ✅ `productdb` - Product catalog
-- ✅ `orderdb` - Orders and order items
-- ✅ `paymentdb` - Payment transactions
+- ✅ `EP_Local_AuthDb` - Authentication service
+- ✅ `EP_Local_UserDb` - User profiles and wallet (INR ₹)
+- ✅ `EP_Local_ProductDb` - Organic product catalog (with certifications)
+- ✅ `EP_Local_OrderDb` - Orders and order items
+- ✅ `EP_Local_PaymentDb` - Payment transactions
 
 ---
 
@@ -746,8 +747,9 @@ By completing this tech stack implementation, you'll learn:
 
 ---
 
-**Your tech stack is designed to maximize learning while minimizing costs, using industry-standard, in-demand technologies!** 🚀
+**FreshHarvest Market's tech stack is designed to maximize learning while minimizing costs, using industry-standard, in-demand technologies!** 🌱🚀
 
 **Total Investment:** $0 - $50/month depending on cloud choice  
 **Job Market Value:** Very High (all in-demand technologies)  
-**Learning Time:** 7-10 months for complete mastery
+**Learning Time:** 7-10 months for complete mastery  
+**Domain:** Organic Food E-Commerce with Certification Tracking

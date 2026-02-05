@@ -1,6 +1,6 @@
 # 🚀 CI/CD Documentation
 
-Complete documentation for the Continuous Integration and Continuous Deployment (CI/CD) pipeline for Electronic Paradise.
+Complete documentation for the Continuous Integration and Continuous Deployment (CI/CD) pipeline for FreshHarvest Market.
 
 ---
 
@@ -82,14 +82,14 @@ infra/
 
 **Production images (merge to main):**
 ```
-ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3
-ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3-abc1234
-ghcr.io/rahulsharma2309/electronic-paradise-auth:latest
+ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.2.3
+ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.2.3-abc1234
+ghcr.io/rahulsharma2309/freshharvest-market-auth:latest
 ```
 
 **Alpha images (feature branches with PublishBuild=true):**
 ```
-ghcr.io/rahulsharma2309/electronic-paradise-auth:alpha-1.2.3-abc1234
+ghcr.io/rahulsharma2309/freshharvest-market-auth:alpha-1.2.3-abc1234
 ```
 
 ### Version Calculation

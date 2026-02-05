@@ -1,4 +1,4 @@
-# Kubernetes Files Reference - Electronic Paradise
+# Kubernetes Files Reference - FreshHarvest Market
 
 > **Complete reference guide for all Kubernetes manifest files**
 
@@ -31,7 +31,7 @@ metadata:
   name: staging                    # Namespace name
   labels:
     environment: staging           # Environment label
-    managed-by: electronic-paradise # Management label
+    managed-by: freshharvest-market # Management label
     cost-center: qa               # Cost tracking label
   annotations:
     description: "Staging environment for final testing before production"
@@ -87,7 +87,7 @@ metadata:
   labels:
     app: auth-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 ```
 
 **Usage:**

@@ -5,8 +5,8 @@ This directory contains the Ingress configuration for the staging environment.
 ## Overview
 
 The Ingress routes external traffic to:
-- **Frontend**: `staging.electronic-paradise.local` → `frontend` service
-- **API Gateway**: `api.staging.electronic-paradise.local` → `gateway` service
+- **Frontend**: `staging.freshharvest-market.local` → `frontend` service
+- **API Gateway**: `api.staging.freshharvest-market.local` → `gateway` service
 
 ## Features
 
@@ -22,13 +22,13 @@ The Ingress routes external traffic to:
 Add these entries to your `/etc/hosts` file (Windows: `C:\Windows\System32\drivers\etc\hosts`):
 
 ```
-127.0.0.1 staging.electronic-paradise.local
-127.0.0.1 api.staging.electronic-paradise.local
+127.0.0.1 staging.freshharvest-market.local
+127.0.0.1 api.staging.freshharvest-market.local
 ```
 
 Then access:
-- Frontend: http://staging.electronic-paradise.local
-- API: http://api.staging.electronic-paradise.local/api
+- Frontend: http://staging.freshharvest-market.local
+- API: http://api.staging.freshharvest-market.local/api
 
 ### Option 2: Using Port Forward
 
@@ -45,17 +45,17 @@ Then access via `localhost:8080` with proper Host headers.
 ### Option 3: Direct Port Access (Docker Desktop)
 
 Docker Desktop exposes the Ingress Controller on `localhost`:
-- Frontend: http://localhost (with Host header: `staging.electronic-paradise.local`)
-- API: http://localhost (with Host header: `api.staging.electronic-paradise.local`)
+- Frontend: http://localhost (with Host header: `staging.freshharvest-market.local`)
+- API: http://localhost (with Host header: `api.staging.freshharvest-market.local`)
 
 ## Testing
 
 ```bash
 # Test frontend
-curl -H "Host: staging.electronic-paradise.local" http://localhost
+curl -H "Host: staging.freshharvest-market.local" http://localhost
 
 # Test API gateway
-curl -H "Host: api.staging.electronic-paradise.local" http://localhost/api/health
+curl -H "Host: api.staging.freshharvest-market.local" http://localhost/api/health
 ```
 
 ## Rate Limiting

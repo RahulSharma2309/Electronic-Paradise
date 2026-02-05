@@ -1,6 +1,6 @@
-# 🎓 Learning Guide
+# 🎓 Learning Guide - FreshHarvest Market
 
-> **Master full-stack development through this project**
+> **Master full-stack development through the organic food marketplace project**
 
 ---
 

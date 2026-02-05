@@ -20,34 +20,5 @@ for i in $(seq 1 $WAIT_TIMEOUT); do
   fi
 done
 
-# Wait for dependent services: product and payment HTTP health
-echo "[entrypoint] waiting for product service http://product-service/api/health"
-for i in $(seq 1 60); do
-  if curl -sfS http://product-service/api/health >/dev/null 2>&1; then
-    echo "[entrypoint] product service ready"
-    break
-  fi
-  echo "[entrypoint] waiting for product service... ($i)"
-  sleep 1
-  if [ "$i" -eq 60 ]; then
-    echo "[entrypoint] timed out waiting for product service"
-    exit 1
-  fi
-done
-
-echo "[entrypoint] waiting for payment service http://payment-service/api/health"
-for i in $(seq 1 60); do
-  if curl -sfS http://payment-service/api/health >/dev/null 2>&1; then
-    echo "[entrypoint] payment service ready"
-    break
-  fi
-  echo "[entrypoint] waiting for payment service... ($i)"
-  sleep 1
-  if [ "$i" -eq 60 ]; then
-    echo "[entrypoint] timed out waiting for payment service"
-    exit 1
-  fi
-done
-
 echo "[entrypoint] starting app: $APP_DLL"
 exec dotnet "$APP_DLL"

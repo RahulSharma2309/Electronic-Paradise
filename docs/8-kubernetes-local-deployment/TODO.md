@@ -1,6 +1,6 @@
 # Local Kubernetes Deployment - TODO List
 
-> **Learning Goal**: Deploy Electronic Paradise to local Docker Desktop K8s using GitOps with ArgoCD
+> **Learning Goal**: Deploy FreshHarvest Market to local Docker Desktop K8s using GitOps with ArgoCD
 
 📖 For detailed explanations of each step, see [LEARNING.md](./LEARNING.md)
 
@@ -100,7 +100,7 @@
 ### ☐ 2.3: Create Service Accounts
 
 **Tasks:**
-- [ ] Navigate to repo: `cd C:\Users\Lenovo\source\repos\Electronic-Paradise`
+- [ ] Navigate to repo: `cd C:\Users\Lenovo\source\repos\FreshHarvest-Market`
 - [ ] Apply RBAC configs for staging:
   ```powershell
   kubectl apply -f infra/k8s/staging/rbac/ -n staging
@@ -225,7 +225,7 @@
 **Tasks:**
 - [ ] In ArgoCD UI: Settings → Repositories → Connect Repo
 - [ ] Choose connection method: HTTPS
-- [ ] Repository URL: `https://github.com/RahulSharma2309/Electronic-Paradise`
+- [ ] Repository URL: `https://github.com/RahulSharma2309/FreshHarvest-Market`
 - [ ] Leave credentials empty (public repo)
 - [ ] Click "Connect"
 - [ ] Status should show "Successful"
@@ -242,7 +242,7 @@
   - **Application Name**: `auth-service-staging`
   - **Project**: `default`
   - **Sync Policy**: `Manual` (we'll enable auto later)
-  - **Repository URL**: `https://github.com/RahulSharma2309/Electronic-Paradise`
+  - **Repository URL**: `https://github.com/RahulSharma2309/FreshHarvest-Market`
   - **Revision**: `main`
   - **Path**: `infra/k8s/staging/deployments/auth-service`
   - **Cluster URL**: `https://kubernetes.default.svc` (select from dropdown)
@@ -347,13 +347,13 @@ Repeat 5.2 for each service:
 - [ ] Open file: `C:\Windows\System32\drivers\etc\hosts`
 - [ ] Add these lines at the end:
   ```
-  127.0.0.1 electronic-paradise.local
-  127.0.0.1 electronic-paradise-api.local
+  127.0.0.1 freshharvest-market.local
+  127.0.0.1 freshharvest-market-api.local
   ```
 - [ ] Save and close
 - [ ] Verify DNS works:
   ```powershell
-  ping electronic-paradise.local
+  ping freshharvest-market.local
   ```
   - Should respond from 127.0.0.1
 
@@ -364,9 +364,9 @@ Repeat 5.2 for each service:
 ### ☐ 6.4: Test Application Access
 
 **Tasks:**
-- [ ] Open browser: http://electronic-paradise.local
+- [ ] Open browser: http://freshharvest-market.local
   - Should show frontend (may take a minute to load)
-- [ ] Open browser: http://electronic-paradise-api.local/api/health
+- [ ] Open browser: http://freshharvest-market-api.local/api/health
   - Should show gateway health endpoint
 - [ ] Check logs in Lens:
   - Click on frontend pod → Logs tab
@@ -644,7 +644,7 @@ For each staging application in ArgoCD UI:
 ### ☐ 12.1: End-to-End Flow Test
 
 **Tasks:**
-- [ ] Access frontend: http://electronic-paradise.local
+- [ ] Access frontend: http://freshharvest-market.local
 - [ ] Test user flows:
   - [ ] Sign up new user
   - [ ] Login

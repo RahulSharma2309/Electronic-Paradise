@@ -1,4 +1,4 @@
-﻿---
+---
 # Roles for Production Environment
 
 # Standard Service Role (same permissions as staging)
@@ -8,7 +8,7 @@ metadata:
   name: service-role
   namespace: prod
   labels:
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     environment: production
 rules:
   # Read ConfigMaps (for application configuration)
@@ -44,7 +44,7 @@ metadata:
   name: deployment-role
   namespace: prod
   labels:
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     environment: production
 rules:
   # Full access to Deployments

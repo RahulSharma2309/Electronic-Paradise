@@ -1,76 +1,76 @@
-using System.Text;
-using Ep.Platform.Security;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-
-namespace Ep.Platform.DependencyInjection;
-
-public static class JwtAuthenticationExtensions
+namespace Ep.Platform.DependencyInjection
 {
+    using System.Text;
+    using Ep.Platform.Security;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
+
     /// <summary>
-    /// Configures JWT bearer authentication using the "Jwt" section by default.
+    /// Provides DI extension methods for configuring JWT authentication.
     /// </summary>
-    public static IServiceCollection AddEpJwtAuth(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string sectionName = "Jwt")
+    public static class JwtAuthenticationExtensions
     {
-        var section = configuration.GetSection(sectionName);
-        var options = section.Get<JwtOptions>() ?? new JwtOptions();
-
-        if (string.IsNullOrWhiteSpace(options.Key))
-            throw new InvalidOperationException($"Jwt configuration section '{sectionName}' must include a non-empty Key.");
-        if (string.IsNullOrWhiteSpace(options.Issuer))
-            throw new InvalidOperationException($"Jwt configuration section '{sectionName}' must include a non-empty Issuer.");
-        if (string.IsNullOrWhiteSpace(options.Audience))
-            throw new InvalidOperationException($"Jwt configuration section '{sectionName}' must include a non-empty Audience.");
-
-        services.Configure<JwtOptions>(section);
-
-        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key));
-
-        services.AddAuthentication(authOptions =>
+        /// <summary>
+        /// Configures JWT bearer authentication using the "Jwt" section by default.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="sectionName">The configuration section name containing JWT settings.</param>
+        /// <returns>The same service collection to allow call chaining.</returns>
+        public static IServiceCollection AddEpJwtAuth(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            string sectionName = "Jwt")
         {
-            authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, bearerOptions =>
-        {
-            bearerOptions.RequireHttpsMetadata = options.RequireHttpsMetadata;
-            bearerOptions.SaveToken = true;
-            bearerOptions.TokenValidationParameters = new TokenValidationParameters
+            var section = configuration.GetSection(sectionName);
+            var options = section.Get<JwtOptions>() ?? new JwtOptions();
+
+            if (string.IsNullOrWhiteSpace(options.Key))
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = options.Issuer,
-                ValidAudience = options.Audience,
-                IssuerSigningKey = signingKey
-            };
-        });
+                throw new InvalidOperationException(
+                    $"Jwt configuration section '{sectionName}' must include a non-empty Key.");
+            }
 
-        return services;
+            if (string.IsNullOrWhiteSpace(options.Issuer))
+            {
+                throw new InvalidOperationException(
+                    $"Jwt configuration section '{sectionName}' must include a non-empty Issuer.");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.Audience))
+            {
+                throw new InvalidOperationException(
+                    $"Jwt configuration section '{sectionName}' must include a non-empty Audience.");
+            }
+
+            services.Configure<JwtOptions>(section);
+
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key));
+
+            services.AddAuthentication(authOptions =>
+                {
+                    authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, bearerOptions =>
+                {
+                    bearerOptions.RequireHttpsMetadata = options.RequireHttpsMetadata;
+                    bearerOptions.SaveToken = true;
+                    bearerOptions.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = options.Issuer,
+                        ValidAudience = options.Audience,
+                        IssuerSigningKey = signingKey,
+                    };
+                });
+
+            return services;
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AuthResponseDto.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="AuthResponseDto.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

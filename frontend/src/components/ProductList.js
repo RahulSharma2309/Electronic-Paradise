@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import Button from "./common/Button";
+import { formatINR } from "../utils/formatters";
 import "../styles/components/products.css";
 
-export default function ProductList({ products, onAdd }) {
+export default function ProductList({
+  products,
+  onAdd,
+  isWishlisted,
+  onToggleWishlist,
+}) {
   const [quantities, setQuantities] = useState({});
 
   const handleQtyChange = (id, value, max) => {
@@ -17,18 +23,71 @@ export default function ProductList({ products, onAdd }) {
   };
 
   if (products.length === 0) {
-    return <div>No products available</div>;
+    return (
+      <div className="empty-state">
+        <div className="empty-illustration" aria-hidden="true" />
+        <h3 className="empty-title">No products to show yet</h3>
+        <p className="empty-sub">
+          Try a different search term, or check back—fresh listings arrive in
+          seasons.
+        </p>
+      </div>
+    );
   }
 
   return (
     <div className="product-list">
       {products.map((product) => (
         <div className="product-card" key={product.id}>
+          <button
+            type="button"
+            className={`wishlist-toggle ${
+              typeof isWishlisted === "function" && isWishlisted(product.id)
+                ? "is-active"
+                : ""
+            }`}
+            onClick={() =>
+              typeof onToggleWishlist === "function"
+                ? onToggleWishlist(product)
+                : null
+            }
+            aria-label={`${
+              typeof isWishlisted === "function" && isWishlisted(product.id)
+                ? "Remove from wishlist"
+                : "Add to wishlist"
+            }: ${product.name}`}
+            title={
+              typeof isWishlisted === "function" && isWishlisted(product.id)
+                ? "Remove from wishlist"
+                : "Add to wishlist"
+            }
+          >
+            {typeof isWishlisted === "function" && isWishlisted(product.id)
+              ? "♥"
+              : "♡"}
+          </button>
+          <div className="product-image-wrap" aria-hidden={!product.imageUrl}>
+            {product.imageUrl ? (
+              <img
+                className="product-image"
+                src={product.imageUrl}
+                alt={product.name}
+                loading="lazy"
+              />
+            ) : (
+              <div className="product-image placeholder" aria-hidden="true" />
+            )}
+          </div>
           <h4>{product.name}</h4>
+          <div className="trust-row" aria-label="Trust indicators">
+            <span className="trust-pill">🌱 Organic</span>
+            <span className="trust-pill">💧 Farm-trust</span>
+            <span className="trust-pill">☀️ Seasonal</span>
+          </div>
           {product.description && (
             <div className="product-description">{product.description}</div>
           )}
-          <div className="product-price">₹{product.price.toFixed(2)}</div>
+          <div className="product-price">{formatINR(product.price || 0)}</div>
           <div className={`product-stock ${getStockClassName(product.stock)}`}>
             Stock: {product.stock}
           </div>

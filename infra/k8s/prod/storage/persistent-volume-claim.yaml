@@ -9,7 +9,7 @@ metadata:
   labels:
     app: mssql
     environment: prod
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   accessModes:
     - ReadWriteOnce

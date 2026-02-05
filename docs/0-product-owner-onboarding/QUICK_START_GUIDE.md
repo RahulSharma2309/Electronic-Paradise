@@ -1,6 +1,6 @@
 # 🚀 Quick Start Guide for New Product Owners
 
-> **Your step-by-step guide to getting started and navigating all the documents**
+> **Your step-by-step guide to getting started and navigating all the documents at FreshHarvest Market**
 
 ---
 
@@ -237,7 +237,7 @@ Iteration Checklist (tracking)
 3. Check related user flow in `5-user-flows/`
 4. Review the sprint section in Sprint-by-Sprint Guide
 
-**Example:** Understanding "Product Variants"
+**Example:** Understanding "Product Variants" (pack sizes for organic products)
 - PBI: `4-epics-and-pbis/EPIC_1/EPIC_1_PBI_1_2.md`
 - Epic: `4-epics-and-pbis/EPIC_1/EPIC_1.md`
 - Sprint Guide: See Sprint 2 section
@@ -249,8 +249,8 @@ Iteration Checklist (tracking)
 2. Check [Project Roadmap](../9-roadmap-and-tracking/PROJECT_ROADMAP.md) - Detailed view
 3. Review [Sprint-by-Sprint Guide](SPRINT_BY_SPRINT_GUIDE.md) - Sprint-by-sprint view
 
-**Example:** What's after Epic 1?
-- Product Roadmap shows: Epic 2 (Order Management)
+**Example:** What's after Epic 1 (Enhanced Product Catalog)?
+- Product Roadmap shows: Epic 2 (Advanced Order Management)
 - Project Roadmap shows: Detailed PBIs
 - Sprint Guide shows: Sprint-by-sprint progression
 
@@ -371,12 +371,12 @@ When reading documents, think:
 
 You'll know you're ready when you can:
 
-- [ ] Explain what we're building in 2 minutes
+- [ ] Explain what FreshHarvest Market is building in 2 minutes
 - [ ] Know where we are in the roadmap
 - [ ] Understand what's coming in the next sprint
 - [ ] Review a PBI and understand acceptance criteria
 - [ ] Participate meaningfully in sprint planning
-- [ ] Answer basic questions about the product
+- [ ] Answer basic questions about the organic food marketplace
 - [ ] Navigate the documents confidently
 
 ---

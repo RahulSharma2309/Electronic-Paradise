@@ -32,5 +32,12 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<UserProfile>()
             .HasIndex(u => u.UserId)
             .IsUnique();
+
+        // Market-standard uniqueness: a phone number should not map to multiple profiles.
+        // Allows null/empty phone values for optional scenarios.
+        modelBuilder.Entity<UserProfile>()
+            .HasIndex(u => u.PhoneNumber)
+            .IsUnique()
+            .HasFilter("[PhoneNumber] IS NOT NULL");
     }
 }

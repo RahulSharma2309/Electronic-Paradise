@@ -1,6 +1,6 @@
 # Kubernetes Concepts - Deep Dive
 
-> **Detailed explanation of all Kubernetes concepts used in Electronic Paradise**
+> **Detailed explanation of all Kubernetes concepts used in FreshHarvest Market**
 
 ## Table of Contents
 

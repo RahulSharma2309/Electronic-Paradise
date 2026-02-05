@@ -1,6 +1,6 @@
-# 🎯 E-Commerce Application - Complete Project Overview
+# 🌱 FreshHarvest Market - Complete Project Overview
 
-> **Your comprehensive guide to building a production-grade e-commerce platform while mastering full-stack development**
+> **Your comprehensive guide to building a production-grade organic food marketplace while mastering full-stack development**
 
 ---
 
@@ -20,18 +20,18 @@
 
 ### What Is This Project?
 
-A **production-grade, full-stack e-commerce platform** for Electronics & Smart Devices, built from the ground up using modern microservices architecture, cloud-native technologies, and industry best practices.
+**FreshHarvest Market** - A **production-grade, full-stack organic food e-commerce platform** delivering certified organic products from trusted farms to your doorstep. Built from the ground up using modern microservices architecture, cloud-native technologies, and industry best practices.
 
 ### Why This Project?
 
 **Dual Purpose:**
-1. **Build a Market-Standard E-Commerce Product:** Complete with all essential features (auth, products, cart, orders, payments, reviews, etc.)
+1. **Build a Market-Standard E-Commerce Product:** Complete organic food marketplace with all essential features (auth, products, cart, orders, payments, reviews, certifications, etc.)
 2. **Master Full-Stack Engineering:** Learn by doing through 10+ design patterns, microservices, React, Kubernetes, CI/CD, and observability
 
 ### What Makes It Unique?
 
 - ✅ **Learning-Optimized:** Every technology choice maximizes learning opportunities
-- ✅ **Real-World Complexity:** Actual challenges you'd face in production
+- ✅ **Real-World Complexity:** Actual challenges you'd face in production (certifications, freshness tracking, origin verification)
 - ✅ **Portfolio-Worthy:** Senior-level project for interviews
 - ✅ **Zero to Minimal Cost:** $0-50/month using open-source tools
 - ✅ **Structured Roadmap:** 864 story points across 10 epics, 35 sprints
@@ -50,13 +50,13 @@ A **production-grade, full-stack e-commerce platform** for Electronics & Smart D
 **What's Built:**
 - ✅ 5 Microservices (Auth, User, Product, Order, Payment)
 - ✅ API Gateway (YARP)
-- ✅ React Frontend (18.x)
+- ✅ React Frontend (18.x) with organic green theme
 - ✅ Docker Compose Orchestration
 - ✅ JWT Authentication
 - ✅ User Registration & Login
-- ✅ Product Catalog
+- ✅ Organic Product Catalog
 - ✅ Shopping Cart (frontend)
-- ✅ Checkout with Wallet Payment
+- ✅ Checkout with Wallet Payment (INR ₹)
 - ✅ Order History
 - ✅ Payment Processing
 - ✅ Comprehensive Documentation
@@ -125,24 +125,27 @@ A **production-grade, full-stack e-commerce platform** for Electronics & Smart D
 
 ---
 
-### Product: Electronics & Smart Devices
+### Product: Certified Organic Food & Groceries
 
-**Why Electronics?**
+**Why Organic Food?**
 - ✅ Maximum design pattern opportunities (10+)
-- ✅ Real-world complexity (variants, specs, comparisons)
-- ✅ Rich feature set (reviews, recommendations, search)
+- ✅ Real-world complexity (certifications, freshness, origin tracking, pack variants)
+- ✅ Rich feature set (reviews, recommendations, search by certification)
 - ✅ Universally understood (relatable in interviews)
-- ✅ Scalability challenges (images, traffic spikes)
+- ✅ Scalability challenges (perishable inventory, seasonal products, traffic spikes)
+- ✅ Unique domain challenges (expiry dates, cold chain, organic certification verification)
 
 **Categories:**
-- 📱 Smartphones
-- 💻 Laptops
-- ⌚ Smart Watches
-- 📟 Tablets
-- 🎧 Audio Devices
-- 📷 Cameras
-- 🎮 Gaming Devices
-- 🖥️ Accessories
+- 🍎 Fresh Fruits
+- 🥬 Fresh Vegetables
+- 🌾 Grains & Pulses
+- 🥛 Dairy & Eggs
+- 🍃 Herbs & Spices
+
+**Certifications Supported:**
+- 🇮🇳 India Organic (FSSAI)
+- 🇺🇸 USDA Organic
+- 🇪🇺 EU Organic
 
 **For detailed product strategy, see:** [`docs/PRODUCT_STRATEGY.md`](PRODUCT_STRATEGY.md)
 
@@ -291,8 +294,8 @@ Located in: [`docs/github-import/`](github-import/)
 **Step 2: Run the MVP**
 ```bash
 # Clone repository
-git clone https://github.com/YOUR-USERNAME/E-Commerce.git
-cd E-Commerce
+git clone https://github.com/YOUR-USERNAME/FreshHarvest-Market.git
+cd FreshHarvest-Market
 
 # Start all services
 cd infra
@@ -302,7 +305,7 @@ docker-compose up --build -d
 docker-compose ps
 
 # Access application
-# Frontend: http://localhost:3000
+# Frontend: http://localhost:3000 (FreshHarvest Market)
 # API Gateway: http://localhost:5000
 ```
 
@@ -354,9 +357,9 @@ docker-compose ps
 ### Recommended Sequence
 
 #### Month 1-2: Enhanced Product Features
-- **Epic 1:** Product Type System, Variants, Pricing
+- **Epic 1:** Product Categories, Pack Variants, Certifications, Pricing
 - **Learn:** Factory, Builder, Strategy patterns
-- **Focus:** Backend design patterns
+- **Focus:** Backend design patterns for organic food domain
 
 #### Month 3-4: Order Management
 - **Epic 2:** Order State Machine, Validation, Saga
@@ -502,12 +505,13 @@ docker-compose ps
   - Live deployment (optional)
 
 #### Interview Readiness ✅
-- System design: Can design e-commerce from scratch
+- System design: Can design organic food marketplace from scratch
 - Coding: Can implement design patterns
 - Architecture: Can explain microservices decisions
 - DevOps: Can discuss K8s deployment
 - Testing: Can explain TDD approach
 - Security: Can discuss OWASP Top 10
+- Domain expertise: Can discuss certification tracking, inventory freshness, perishable goods handling
 
 #### Career Readiness ✅
 - Senior Full-Stack Engineer level
@@ -634,11 +638,12 @@ $50k-70k  →    $70-95k     →  $110-150k  →  $130-180k+
 
 ---
 
-**Welcome to your journey to Senior Full-Stack Engineer! 🚀**
+**Welcome to your journey to Senior Full-Stack Engineer with FreshHarvest Market! 🌱🚀**
 
-**Last Updated:** December 26, 2025  
-**Version:** 2.0.0  
-**Status:** Roadmap Complete, Development Ready
+**Last Updated:** January 2026  
+**Version:** 3.0.0  
+**Status:** Roadmap Complete, Development Ready  
+**Brand:** FreshHarvest Market - Pure, Certified, Delivered Fresh
 
 ---
 

@@ -1,6 +1,6 @@
-# 🚀 Getting Started
+# 🚀 Getting Started with FreshHarvest Market
 
-> **Quick setup and project understanding**
+> **Quick setup and project understanding for the organic food marketplace**
 
 ---
 

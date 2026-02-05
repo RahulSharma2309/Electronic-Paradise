@@ -26,8 +26,8 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-// Ensure database is created (for development)
-await app.EnsureDatabaseAsync<AppDbContext>(applyMigrations: false);
+// Apply EF Core migrations on startup (market-ready local setup)
+await app.EnsureDatabaseAsync<AppDbContext>(applyMigrations: true);
 
 startup.Configure(app, app.Environment);
 

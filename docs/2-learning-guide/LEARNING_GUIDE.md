@@ -1,4 +1,4 @@
-# 📖 MY_Practice E‑Commerce — A Read‑Like‑a‑Novel Learning Guide
+# 📖 FreshHarvest Market — A Read‑Like‑a‑Novel Learning Guide
 
 > **Goal:** Help a learning developer understand **what**, **why**, and **how** this project works — end-to-end — without “just doing it because AI said so”.
 >
@@ -55,7 +55,7 @@ This MVP is an e-commerce “skeleton” that focuses on learning:
 - **Users have a profile + wallet**
   - They can **add balance**
   - Wallet is used as the payment method in checkout
-- **Users can browse a product catalog**
+- **Users can browse an organic product catalog** (fruits, vegetables, grains, dairy, herbs)
 - **Users can build a cart** (currently frontend-only)
 - **Users can place an order**
   - Stock is reserved
@@ -63,7 +63,7 @@ This MVP is an e-commerce “skeleton” that focuses on learning:
   - Failures trigger “undo” steps (refund)
 - **Users can view order history**
 
-In other words: it’s the minimum set of workflows that lets you practice “real” microservice coordination and error handling.
+In other words: it’s the minimum set of workflows that lets you practice “real” microservice coordination and error handling, using the domain of certified organic food.
 
 ---
 
@@ -76,7 +76,7 @@ In other words: it’s the minimum set of workflows that lets you practice “re
 - **Backend services** (`services/`):
   - `auth-service`: user credentials + JWT
   - `user-service`: user profile + wallet
-  - `product-service`: products + stock
+  - `product-service`: organic products + stock + certifications
   - `order-service`: orchestrates checkout/order workflow
   - `payment-service`: processes wallet payments + records transactions
 - **Data**: SQL Server; “database-per-service” pattern (each service has its own database)
@@ -109,7 +109,7 @@ The key “epic-level” capabilities in MVP terms are:
 
 - **Identity epic**: signup + login (Auth Service)
 - **Customer account epic**: profile + wallet top-up (User Service)
-- **Catalog epic**: view products (Product Service)
+- **Catalog epic**: view organic products with certifications (Product Service)
 - **Purchase epic**: checkout/order (Order + Payment + Product + User services)
 - **Post-purchase epic**: view order history (Order Service)
 
@@ -225,15 +225,15 @@ Key file:
 
 Important endpoints:
 
-- `GET /api/products` — list products
-- `GET /api/products/{id}` — get product
+- `GET /api/products` — list organic products
+- `GET /api/products/{id}` — get organic product details with certifications
 - `POST /api/products` — create product (with validation)
 - `POST /api/products/{id}/reserve` — reserve stock (decrement)
 - `POST /api/products/{id}/release` — release stock (increment; used by compensation/rollback flows)
 
 What to learn:
 
-- Stock reservation is the “resource lock” pattern in e-commerce.
+- Stock reservation is the “resource lock” pattern in organic food e-commerce, especially important for perishable items.
 - In real production you’d worry about race conditions; EF Core + a single DB transaction is the first step.
 
 ---

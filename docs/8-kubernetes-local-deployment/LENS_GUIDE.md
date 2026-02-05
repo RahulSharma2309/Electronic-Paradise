@@ -424,16 +424,16 @@ Endpoints:
 - **Age**: Creation time
 
 **Click on Ingress** → See:
-- **Hosts**: Domain names (electronic-paradise.local)
+- **Hosts**: Domain names (freshharvest-market.local)
 - **Paths**: URL paths and backend services
 - **TLS**: SSL/TLS configuration (if any)
 
 **Example:**
 ```
-Host: electronic-paradise.local
+Host: freshharvest-market.local
   Path: /           → frontend:80
   
-Host: electronic-paradise-api.local
+Host: freshharvest-market-api.local
   Path: /api/auth   → auth-service:80
   Path: /api/users  → user-service:80
   Path: /api        → gateway:80

@@ -1,0 +1,58 @@
+# ============================================================================
+# Docker Compose Override - Connect to Local SQL Server
+# ============================================================================
+# Use this when you want to run Docker containers but connect to your local 
+# SQL Server instead of the Docker mssql container.
+#
+# Usage:
+#   docker-compose -f docker-compose.yml -f docker-compose.local-db.yml up
+#
+# Prerequisites:
+#   1. Run infra/sql/setup-databases.sql in SSMS
+#   2. SQL Server must accept TCP/IP connections on port 1433
+#   3. SQL Server Configuration Manager -> Enable TCP/IP protocol
+# ============================================================================
+
+services:
+  # Remove mssql dependency - we're using local SQL Server
+  # The mssql service from base docker-compose.yml will still be defined
+  # but services won't depend on it
+
+  auth-service:
+    depends_on: []  # Remove mssql dependency
+    environment:
+      # host.docker.internal = your Windows machine from inside Docker
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_AuthDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  product-service:
+    depends_on: []  # Remove mssql dependency
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_ProductDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  payment-service:
+    depends_on: []  # Remove mssql dependency
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_PaymentDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  order-service:
+    depends_on:
+      - product-service
+      - payment-service
+      - user-service
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_OrderDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__ProductService=http://product-service:80
+      - ServiceUrls__PaymentService=http://payment-service:80
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  user-service:
+    depends_on: []  # Remove mssql dependency
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_UserDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development

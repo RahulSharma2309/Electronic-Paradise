@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Collections.Generic;
 using System.Net.Http.Json;
-using AuthService.Abstraction.DTOs;
+using AuthService.Abstraction.DTOs.Requests;
+using AuthService.Abstraction.DTOs.Responses;
 using Moq;
 using Moq.Protected;
 using System.Threading;
@@ -35,8 +36,8 @@ public class AuthServiceFixture : IAsyncLifetime
                     { "ConnectionStrings:DefaultConnection", "Server=(localdb)\\MSSQLLocalDB;Database=AuthServiceTestDb;Trusted_Connection=True;MultipleActiveResultSets=true" },
                     { "ServiceUrls:UserService", "http://user-service-mock:3001" },
                     { "Jwt:Key", "your-super-secret-key-that-should-be-at-least-32-characters-long-for-security" },
-                    { "Jwt:Issuer", "Electronic-Paradise" },
-                    { "Jwt:Audience", "Electronic-Paradise-Users" }
+                    { "Jwt:Issuer", "FreshHarvest-Market" },
+                    { "Jwt:Audience", "FreshHarvest-Market-Users" }
                 });
             });
 
@@ -123,7 +124,7 @@ public class AuthServiceFixture : IAsyncLifetime
 
     public async Task<string> RegisterAndLoginUser(string email, string password, string fullName, string phoneNumber, string address)
     {
-        var registerDto = new RegisterDto
+        var registerDto = new RegisterRequest
         {
             Email = email,
             Password = password,
@@ -136,11 +137,11 @@ public class AuthServiceFixture : IAsyncLifetime
         var registerResponse = await Client.PostAsJsonAsync("/api/auth/register", registerDto);
         registerResponse.EnsureSuccessStatusCode();
 
-        var loginDto = new LoginDto { Email = email, Password = password };
+        var loginDto = new LoginRequest { Email = email, Password = password };
         var loginResponse = await Client.PostAsJsonAsync("/api/auth/login", loginDto);
         loginResponse.EnsureSuccessStatusCode();
 
-        var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var authResponse = await loginResponse.Content.ReadFromJsonAsync<AuthResponse>();
         return authResponse!.Token;
     }
 }

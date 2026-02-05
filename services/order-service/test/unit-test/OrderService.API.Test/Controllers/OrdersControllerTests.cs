@@ -2,8 +2,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using OrderService.Abstraction.DTOs;
-using OrderService.Abstraction.Models;
+using OrderService.Abstraction.DTOs.Requests;
+using OrderService.Abstraction.DTOs.Responses;
 using OrderService.API.Controllers;
 using OrderService.Core.Business;
 using Xunit;
@@ -16,20 +16,20 @@ public class OrdersControllerTests
     public async Task CreateOrder_WhenServiceThrowsArgumentException_ShouldReturnBadRequest()
     {
         // Arrange
-        var service = new Mock<IOrderService>();
-        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderDto>()))
+        var service = new Mock<IOrderService>(MockBehavior.Strict);
+        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderRequest>()))
             .ThrowsAsync(new ArgumentException("Order must contain items"));
 
         var controller = new OrdersController(service.Object, NullLogger<OrdersController>.Instance);
 
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto>(),
+            Items = new List<CreateOrderItemRequest>(),
         };
 
         // Act
-        var result = await controller.CreateOrder(dto);
+        var result = await controller.CreateOrder(request);
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
@@ -39,20 +39,20 @@ public class OrdersControllerTests
     public async Task CreateOrder_WhenServiceThrowsKeyNotFoundException_ShouldReturnNotFound()
     {
         // Arrange
-        var service = new Mock<IOrderService>();
-        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderDto>()))
+        var service = new Mock<IOrderService>(MockBehavior.Strict);
+        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderRequest>()))
             .ThrowsAsync(new KeyNotFoundException("User profile not found"));
 
         var controller = new OrdersController(service.Object, NullLogger<OrdersController>.Instance);
 
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
         };
 
         // Act
-        var result = await controller.CreateOrder(dto);
+        var result = await controller.CreateOrder(request);
 
         // Assert
         result.Should().BeOfType<NotFoundObjectResult>();
@@ -62,20 +62,20 @@ public class OrdersControllerTests
     public async Task CreateOrder_WhenServiceThrowsInvalidOperationException_ShouldReturnConflict()
     {
         // Arrange
-        var service = new Mock<IOrderService>();
-        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderDto>()))
+        var service = new Mock<IOrderService>(MockBehavior.Strict);
+        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderRequest>()))
             .ThrowsAsync(new InvalidOperationException("Insufficient stock"));
 
         var controller = new OrdersController(service.Object, NullLogger<OrdersController>.Instance);
 
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
         };
 
         // Act
-        var result = await controller.CreateOrder(dto);
+        var result = await controller.CreateOrder(request);
 
         // Assert
         result.Should().BeOfType<ConflictObjectResult>();
@@ -85,20 +85,20 @@ public class OrdersControllerTests
     public async Task CreateOrder_WhenServiceThrowsHttpRequestException_ShouldReturn503()
     {
         // Arrange
-        var service = new Mock<IOrderService>();
-        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderDto>()))
+        var service = new Mock<IOrderService>(MockBehavior.Strict);
+        service.Setup(s => s.CreateOrderAsync(It.IsAny<CreateOrderRequest>()))
             .ThrowsAsync(new HttpRequestException("Service unavailable"));
 
         var controller = new OrdersController(service.Object, NullLogger<OrdersController>.Instance);
 
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
         };
 
         // Act
-        var result = await controller.CreateOrder(dto);
+        var result = await controller.CreateOrder(request);
 
         // Assert
         var obj = result.Should().BeOfType<ObjectResult>().Subject;
@@ -109,9 +109,9 @@ public class OrdersControllerTests
     public async Task GetOrder_WhenServiceReturnsNull_ShouldReturnNotFound()
     {
         // Arrange
-        var service = new Mock<IOrderService>();
+        var service = new Mock<IOrderService>(MockBehavior.Strict);
         service.Setup(s => s.GetOrderAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Order?)null);
+            .ReturnsAsync((OrderDetailResponse?)null);
 
         var controller = new OrdersController(service.Object, NullLogger<OrdersController>.Instance);
 
@@ -122,6 +122,4 @@ public class OrdersControllerTests
         result.Should().BeOfType<NotFoundResult>();
     }
 }
-
-
 

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture.AutoMoq" Version="$(AutoFixtureVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreTestingVersion)" />
   </ItemGroup>
 
   <ItemGroup>

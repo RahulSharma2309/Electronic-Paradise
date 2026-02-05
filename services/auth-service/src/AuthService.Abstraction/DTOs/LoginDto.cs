@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LoginDto.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="LoginDto.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Product Service manages the product catalog, inventory, and stock operations for Electronic-Paradise.
+The Product Service manages the product catalog, inventory, and stock operations for FreshHarvest-Market.
 
 ### Responsibilities
 

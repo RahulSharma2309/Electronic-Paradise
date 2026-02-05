@@ -1,6 +1,6 @@
-# Kubernetes Implementation Details - Electronic Paradise
+# Kubernetes Implementation Details - FreshHarvest Market
 
-> **Detailed documentation of how Kubernetes is implemented in Electronic Paradise**
+> **Detailed documentation of how Kubernetes is implemented in FreshHarvest Market**
 
 ## Table of Contents
 
@@ -380,7 +380,7 @@ infra/k8s/
 
 ## Service Architecture
 
-### Services in Electronic Paradise
+### Services in FreshHarvest Market
 
 1. **auth-service** - Authentication and authorization
 2. **user-service** - User profiles and wallet management

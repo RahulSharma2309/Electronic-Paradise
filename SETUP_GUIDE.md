@@ -1,6 +1,6 @@
 # 🚀 Complete Setup Guide - Run Locally on Any Machine
 
-This guide will walk you through setting up and running the Electronic Paradise e-commerce platform on your local machine, step by step.
+This guide will walk you through setting up and running the FreshHarvest Market organic food marketplace on your local machine, step by step.
 
 ## 📋 Prerequisites
 
@@ -23,7 +23,7 @@ Open a terminal (PowerShell on Windows, Terminal on Mac/Linux) and run:
 
 ```bash
 git clone <repository-url>
-cd Electronic-Paradise
+cd FreshHarvest-Market
 ```
 
 Replace `<repository-url>` with the actual repository URL.

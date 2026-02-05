@@ -1,4 +1,4 @@
-﻿---
+---
 # ConfigMaps for Production Environment
 
 # Auth Service ConfigMap
@@ -10,7 +10,7 @@ metadata:
   labels:
     app: auth-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -30,7 +30,7 @@ metadata:
   labels:
     app: user-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -50,7 +50,7 @@ metadata:
   labels:
     app: product-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -70,7 +70,7 @@ metadata:
   labels:
     app: order-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -90,7 +90,7 @@ metadata:
   labels:
     app: payment-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -110,7 +110,7 @@ metadata:
   labels:
     app: gateway
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
   # Note: HTTP is safe for internal cluster communication
@@ -131,7 +131,7 @@ metadata:
   labels:
     app: frontend
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 data:
   # Note: REACT_APP_API_BASE is typically set at build time
   # This is for reference - you may need to rebuild the image with this value

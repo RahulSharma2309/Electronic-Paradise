@@ -1,4 +1,4 @@
-# Electronic Paradise - Staging Environment
+# FreshHarvest Market - Staging Environment
 # Add these entries to your hosts file: C:\Windows\System32\drivers\etc\hosts
 # 
 # Instructions:
@@ -7,19 +7,19 @@
 # 3. Add the lines below at the end of the file
 # 4. Save and close
 
-127.0.0.1 staging.electronic-paradise.local
-127.0.0.1 api.staging.electronic-paradise.local
-127.0.0.1 auth.staging.electronic-paradise.local
-127.0.0.1 user.staging.electronic-paradise.local
-127.0.0.1 product.staging.electronic-paradise.local
-127.0.0.1 order.staging.electronic-paradise.local
-127.0.0.1 payment.staging.electronic-paradise.local
+127.0.0.1 staging.freshharvest-market.local
+127.0.0.1 api.staging.freshharvest-market.local
+127.0.0.1 auth.staging.freshharvest-market.local
+127.0.0.1 user.staging.freshharvest-market.local
+127.0.0.1 product.staging.freshharvest-market.local
+127.0.0.1 order.staging.freshharvest-market.local
+127.0.0.1 payment.staging.freshharvest-market.local
 
 # After adding these entries, you can access:
-# - Frontend: http://staging.electronic-paradise.local
-# - Gateway: http://api.staging.electronic-paradise.local/swagger
-# - Auth Service: http://auth.staging.electronic-paradise.local/swagger
-# - User Service: http://user.staging.electronic-paradise.local/swagger
-# - Product Service: http://product.staging.electronic-paradise.local/swagger
-# - Order Service: http://order.staging.electronic-paradise.local/swagger
-# - Payment Service: http://payment.staging.electronic-paradise.local/swagger
+# - Frontend: http://staging.freshharvest-market.local
+# - Gateway: http://api.staging.freshharvest-market.local/swagger
+# - Auth Service: http://auth.staging.freshharvest-market.local/swagger
+# - User Service: http://user.staging.freshharvest-market.local/swagger
+# - Product Service: http://product.staging.freshharvest-market.local/swagger
+# - Order Service: http://order.staging.freshharvest-market.local/swagger
+# - Payment Service: http://payment.staging.freshharvest-market.local/swagger

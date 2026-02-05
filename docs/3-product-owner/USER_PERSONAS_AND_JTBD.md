@@ -4,85 +4,86 @@ This document defines **who** we build for and **what jobs** they hire the produ
 
 ---
 
-## Persona 1: “Fast Shopper” (Primary)
+## Persona 1: “Fast Home Cook” (Primary)
 
-- **Profile:** Busy customer who wants a reliable purchase quickly.
+- **Profile:** Busy customer who wants fresh organic essentials quickly and reliably.
 - **Goals**
-  - Find a good product without overthinking.
-  - Checkout without surprises.
-  - Track order status clearly.
+  - Restock weekly staples without spending time comparing.
+  - Checkout without surprises (stock, price, wallet balance).
+  - Receive confidence that the order is real and will be fulfilled.
 - **Pain Points**
-  - Unclear stock or confusing pricing.
-  - Checkout failures and poor error messages.
-  - Not knowing whether an order actually went through.
+  - Items show as available but end up out of stock during checkout.
+  - Trust uncertainty: “Is this really organic?” / “Will this be fresh?”
+  - Checkout failures and unclear error messages.
 - **JTBD**
-  - “When I need a device quickly, help me buy confidently so I don’t waste time comparing irrelevant details.”
+  - “When I need organic groceries quickly, help me checkout with confidence so I can get back to my day.”
 
 **Product implications**
-- Fast product discovery, stable checkout, clear order confirmation and history.
+- Fast discovery, simple categories, stable checkout, clear order confirmation and history.
 
 ---
 
-## Persona 2: “Spec Comparator” (Primary)
+## Persona 2: “Trust Seeker” (Primary)
 
-- **Profile:** Enthusiast who cares about RAM/storage/screen specs, variants, and price changes.
+- **Profile:** Customer who is willing to pay more for organic, but only when they can verify trust signals.
 - **Goals**
-  - Compare similar products and variants.
-  - Filter by exact technical needs.
-  - See real reviews and ratings.
+  - Verify certification and origin before buying.
+  - Understand what “organic” means for each item (certification type, farm, practices).
+  - Avoid counterfeit/ambiguous labeling.
 - **Pain Points**
-  - Missing or inconsistent specs across products.
-  - Hard to compare or filter on important attributes.
-  - Hidden variant pricing/stock.
+  - Labels feel vague (“organic” without proof).
+  - No origin/farm details or certification visibility.
+  - Can’t filter by certification type, origin, or dietary preferences.
 - **JTBD**
-  - “When I’m buying electronics, help me compare options by specs and price so I can choose the best value.”
+  - “When I buy organic, help me verify trust signals so I can pay confidently without doubt.”
 
 **Product implications**
-- Attribute/spec system, variant selector, comparison table, review/rating system.
+- Certification details surfaced, origin/farm story, clear tags, and filters (certification/origin/seasonal).
 
 ---
 
-## Persona 3: “Returning Customer” (Secondary)
+## Persona 3: “Seasonal Planner” (Secondary)
 
-- **Profile:** Someone who already trusts the store and shops repeatedly.
+- **Profile:** Customer who plans meals and prefers seasonal produce and “what’s fresh this week”.
 - **Goals**
-  - Reorder or buy accessories easily.
-  - Use saved preferences (future).
-  - Get value from promotions (future).
+  - Find seasonal items and build weekly baskets.
+  - Discover new produce when it’s in season.
+  - Track budget and avoid waste (buy the right quantity).
 - **Pain Points**
-  - Re-finding past items is annoying.
-  - No reminders for price drops (future wishlist).
+  - Hard to see seasonal availability and freshness signals.
+  - Doesn’t know what’s best right now (no “seasonal picks” curation).
+  - Wants lightweight planning support (filters, simple sorting, reorder).
 - **JTBD**
-  - “When I return, help me pick up where I left off so I can buy again with minimal effort.”
+  - “When I plan my weekly groceries, help me find seasonal organic items so I can eat better and waste less.”
 
 **Product implications**
-- Better order history UX, wishlist, recommendations, saved preferences.
+- Seasonal collections, better filters/sorting, wishlist, and a strong order history/reorder experience.
 
 ---
 
 ## Persona 4: “Catalog Admin / Ops” (Future)
 
-- **Profile:** Admin responsible for product listings, pricing, inventory, and issue resolution.
+- **Profile:** Admin responsible for organic catalog accuracy: categories, inventory, images, and certifications.
 - **Goals**
-  - Maintain accurate product data and prices.
-  - See inventory risk early (low stock).
-  - Handle cancellations/refunds safely.
+  - Maintain accurate product data (unit, origin, certification type/number).
+  - Ensure images and descriptions are consistent and trustworthy.
+  - Prevent overselling and handle customer issues safely.
 - **Pain Points**
-  - No visibility into stock risk.
-  - Hard to manage pricing rules or media assets.
-  - No operational dashboard.
+  - No tooling to manage certifications/media at scale.
+  - Limited visibility into stock risk and freshness/expiry (future).
+  - No operational dashboard or audit trail.
 - **JTBD**
-  - “When I manage the store, help me keep catalog and inventory accurate so customers don’t experience broken journeys.”
+  - “When I manage the organic catalog, help me keep trust signals accurate so customers don’t lose confidence.”
 
 **Product implications**
-- Admin dashboard, inventory alerts, pricing management, media management.
+- Admin dashboard, inventory alerts, certification/media management, auditability.
 
 ---
 
 ## Primary JTBD Summary (Roadmap Driver)
 
-1. **Discover:** Find relevant products quickly (search/filter/specs).
-2. **Decide:** Compare and understand value (variants/specs/comparison/reviews).
-3. **Buy:** Checkout reliably with clear outcomes (validation, payment reliability).
-4. **Track:** Understand what happens after purchase (state machine, notifications later).
+1. **Discover:** Find relevant organic products quickly (search/filter/categories).
+2. **Trust:** Verify organic credibility (certification, origin/farm, clear labeling).
+3. **Buy:** Checkout reliably with clear outcomes (validation, wallet/payment reliability).
+4. **Track:** Understand what happens after purchase (order history now; lifecycle + notifications later).
 

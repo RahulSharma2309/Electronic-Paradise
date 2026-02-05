@@ -14,6 +14,22 @@ export const useAuth = () => {
   );
   const [isValidating, setIsValidating] = useState(true);
 
+  // Allow the API client to signal that the token became invalid (401).
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      localStorage.removeItem(STORAGE_KEYS.TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.USER_ID);
+      setToken(null);
+      setUserId(null);
+      setIsValidating(false);
+    };
+
+    window.addEventListener("ep:auth-unauthorized", handleUnauthorized);
+    return () => {
+      window.removeEventListener("ep:auth-unauthorized", handleUnauthorized);
+    };
+  }, []);
+
   // Validate token on mount
   useEffect(() => {
     const validateToken = async () => {
@@ -40,12 +56,21 @@ export const useAuth = () => {
         }
         setIsValidating(false);
       } catch (error) {
-        // Token is invalid or expired, clear auth
-        console.error("Token validation failed:", error);
-        localStorage.removeItem(STORAGE_KEYS.TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.USER_ID);
-        setToken(null);
-        setUserId(null);
+        const status = error?.response?.status;
+
+        // Only clear auth on a real "unauthorized" response.
+        // Network errors / transient backend issues should not force-log-out users on refresh.
+        if (status === 401 || status === 403) {
+          console.error("Token validation failed (unauthorized):", error);
+          localStorage.removeItem(STORAGE_KEYS.TOKEN);
+          localStorage.removeItem(STORAGE_KEYS.USER_ID);
+          setToken(null);
+          setUserId(null);
+          setIsValidating(false);
+          return;
+        }
+
+        console.error("Token validation failed (non-auth error):", error);
         setIsValidating(false);
       }
     };

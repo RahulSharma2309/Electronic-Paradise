@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UserProfileDto.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="UserProfileDto.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

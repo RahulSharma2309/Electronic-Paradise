@@ -1,4 +1,4 @@
-﻿---
+---
 # Frontend Kubernetes Service for Staging
 # Using NodePort to expose frontend externally (accessible from outside cluster)
 apiVersion: v1
@@ -9,7 +9,7 @@ metadata:
   labels:
     app: frontend
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   type: NodePort  # Exposes service on each node's IP at a static port
   ports:

@@ -1,60 +1,48 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-
-namespace Ep.Platform.Security;
-
-/// <summary>
-/// JWT token generator implementation
-/// </summary>
-public class JwtTokenGenerator : IJwtTokenGenerator
+namespace Ep.Platform.Security
 {
-    private readonly JwtOptions _options;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
 
-    public JwtTokenGenerator(IOptions<JwtOptions> options)
+    /// <summary>
+    /// JWT token generator implementation.
+    /// </summary>
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        _options = options.Value;
-    }
+        private readonly JwtOptions options;
 
-    public string GenerateToken(Dictionary<string, string> claims, TimeSpan? expires = null)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_options.Key);
-        
-        var claimsList = claims.Select(kvp => new Claim(kvp.Key, kvp.Value)).ToArray();
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JwtTokenGenerator"/> class.
+        /// </summary>
+        /// <param name="options">The JWT options.</param>
+        public JwtTokenGenerator(IOptions<JwtOptions> options)
         {
-            Subject = new ClaimsIdentity(claimsList),
-            Expires = DateTime.UtcNow.Add(expires ?? TimeSpan.FromHours(6)),
-            Issuer = _options.Issuer,
-            Audience = _options.Audience,
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
-        };
+            this.options = options.Value;
+        }
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        /// <inheritdoc />
+        public string GenerateToken(Dictionary<string, string> claims, TimeSpan? expires = null)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(this.options.Key);
+
+            var claimsList = claims.Select(kvp => new Claim(kvp.Key, kvp.Value)).ToArray();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claimsList),
+                Expires = DateTime.UtcNow.Add(expires ?? TimeSpan.FromHours(6)),
+                Issuer = this.options.Issuer,
+                Audience = this.options.Audience,
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature),
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
-# 📋 GitHub Epic & PBI Import Guide
+# 📋 GitHub Epic & PBI Import Guide - FreshHarvest Market
 
-> **Complete guide to importing Epics and PBIs into GitHub Issues and Projects**
+> **Complete guide to importing Epics and PBIs into GitHub Issues and Projects for the organic food marketplace**
 
 ---
 
@@ -32,7 +32,7 @@ This guide provides **4 different methods** to import the roadmap into GitHub:
 
 ### Step 1: Create Labels
 
-1. Go to your repository: `https://github.com/YOUR-USERNAME/E-Commerce`
+1. Go to your repository: `https://github.com/YOUR-USERNAME/FreshHarvest-Market`
 2. Click **Issues** → **Labels** → **New label**
 
 **Create Epic Labels:**
@@ -116,7 +116,7 @@ For each PBI, create an issue using this template:
 ```markdown
 ## 📝 Description
 
-Implement product hierarchy for electronics (Smartphones, Laptops, Tablets, Accessories, Wearables)
+Implement product hierarchy for organic food (Fresh Fruits, Fresh Vegetables, Grains & Pulses, Dairy & Eggs, Herbs & Spices)
 
 ## 🎯 Epic
 
@@ -129,9 +129,9 @@ Epic 1: Enhanced Product Domain & Design Patterns
 ## 🎯 Acceptance Criteria
 
 - [ ] Create abstract Product base class
-- [ ] Implement ProductType enum with all categories
-- [ ] Create specific product classes (Smartphone, Laptop, etc.)
-- [ ] Add category-specific attributes (screen size, RAM, storage, etc.)
+- [ ] Implement ProductType enum with all organic categories
+- [ ] Create specific product classes (Fruit, Vegetable, Grain, etc.)
+- [ ] Add category-specific attributes (origin, certification, expiry date, etc.)
 - [ ] Update database schema with inheritance (TPH or TPT)
 - [ ] Create migrations
 - [ ] Update Product Service API
@@ -177,7 +177,7 @@ None (first PBI)
 1. Click **Projects** (repository level or organization level)
 2. Click **New project**
 3. Select **Board** or **Table** view
-4. Name: "E-Commerce Roadmap"
+4. Name: "FreshHarvest Market Roadmap"
 
 **Configure Columns (if Board view):**
 
@@ -236,7 +236,7 @@ Create a file `create_labels.sh`:
 ```bash
 #!/bin/bash
 
-REPO="YOUR-USERNAME/E-Commerce"
+REPO="YOUR-USERNAME/FreshHarvest-Market"
 
 # Epic labels
 gh label create "Epic 1: Product Domain" --repo $REPO --color "FF6B6B" --description "Enhanced Product Domain & Design Patterns"
@@ -283,7 +283,7 @@ Create a file `create_issues.sh`:
 ```bash
 #!/bin/bash
 
-REPO="YOUR-USERNAME/E-Commerce"
+REPO="YOUR-USERNAME/FreshHarvest-Market"
 
 # Read CSV and create issues
 while IFS=',' read -r epic_id epic_title pbi_id pbi_title story_points description ac_1 ac_2 ac_3 ac_4 task_1 task_2
@@ -342,13 +342,13 @@ bash create_issues.sh
 
 ```bash
 # Create project (requires GitHub CLI with project extension)
-gh project create --owner YOUR-USERNAME --title "E-Commerce Roadmap" --body "Complete roadmap for production-grade e-commerce"
+gh project create --owner YOUR-USERNAME --title "FreshHarvest Market Roadmap" --body "Complete roadmap for production-grade organic food marketplace"
 
 # Get project number
 gh project list --owner YOUR-USERNAME
 
 # Add issues to project (replace PROJECT_NUMBER)
-gh project item-add PROJECT_NUMBER --owner YOUR-USERNAME --url "https://github.com/YOUR-USERNAME/E-Commerce/issues/1"
+gh project item-add PROJECT_NUMBER --owner YOUR-USERNAME --url "https://github.com/YOUR-USERNAME/FreshHarvest-Market/issues/1"
 # Repeat for all issues, or use a loop
 ```
 
@@ -389,7 +389,7 @@ export GITHUB_TOKEN="your_token_here"
 set GITHUB_TOKEN=your_token_here
 
 # Run script
-python github_import.py --repo YOUR-USERNAME/E-Commerce --csv epics_and_pbis.csv
+python github_import.py --repo YOUR-USERNAME/FreshHarvest-Market --csv epics_and_pbis.csv
 ```
 
 **Script Features:**
@@ -410,11 +410,11 @@ python github_import.py --repo YOUR-USERNAME/E-Commerce --csv epics_and_pbis.csv
 ### Step 1: Set up Postman
 
 1. Install Postman: https://www.postman.com/downloads/
-2. Create new collection: "GitHub E-Commerce Import"
+2. Create new collection: "GitHub FreshHarvest Market Import"
 3. Set collection variable:
    - `GITHUB_TOKEN`: your personal access token
    - `REPO_OWNER`: YOUR-USERNAME
-   - `REPO_NAME`: E-Commerce
+   - `REPO_NAME`: FreshHarvest-Market
 
 ### Step 2: Create Label Request
 
@@ -533,7 +533,7 @@ jobs:
         if: github.event.action == 'assigned'
         uses: alex-page/github-project-automation-plus@v0.8.1
         with:
-          project: E-Commerce Roadmap
+          project: FreshHarvest Market Roadmap
           column: In Progress
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -541,7 +541,7 @@ jobs:
         if: github.event.action == 'closed'
         uses: alex-page/github-project-automation-plus@v0.8.1
         with:
-          project: E-Commerce Roadmap
+          project: FreshHarvest Market Roadmap
           column: Done
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```

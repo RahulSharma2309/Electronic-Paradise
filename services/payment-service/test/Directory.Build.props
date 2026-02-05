@@ -1,5 +1,5 @@
 <Project>
-  <!-- Import from src/.build folder -->
-  <Import Project="$(MSBuildThisFileDirectory)../src/.build/test.props" Condition="Exists('$(MSBuildThisFileDirectory)../src/.build/test.props')" />
+  <!-- Import from parent .build folder -->
+  <Import Project="$(MSBuildThisFileDirectory)../.build/test.props" Condition="Exists('$(MSBuildThisFileDirectory)../.build/test.props')" />
 </Project>
 

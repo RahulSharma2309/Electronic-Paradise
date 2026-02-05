@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Order Service is the **orchestration layer** that coordinates User, Product, and Payment services to complete order transactions in Electronic-Paradise.
+The Order Service is the **orchestration layer** that coordinates User, Product, and Payment services to complete order transactions in FreshHarvest-Market.
 
 ### Responsibilities
 

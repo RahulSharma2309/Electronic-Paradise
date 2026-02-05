@@ -7,6 +7,8 @@ This folder contains **product-management and product-ownership documents** for 
 - `docs/Functionality/` (end-to-end user flows)
 - `docs/Services/` (service-level architecture)
 
+> **Product scope:** **FreshHarvest Market** — an **organic farming e-commerce** experience (farm-to-home, trust-first shopping).
+
 ---
 
 ## 📚 Start Here
@@ -37,8 +39,10 @@ This folder contains **product-management and product-ownership documents** for 
 
 ## 🔗 Related (Existing) Docs
 
-- **Project overview:** `docs/PROJECT_OVERVIEW.md`  
-- **Engineering roadmap:** `docs/PROJECT_ROADMAP.md`  
-- **Iteration checklist:** `docs/ITERATION_CHECKLIST.md`  
-- **Product category rationale:** `docs/PRODUCT_STRATEGY.md`  
+- **Project overview:** `docs/1-getting-started/PROJECT_OVERVIEW.md`  
+- **Engineering roadmap:** `docs/9-roadmap-and-tracking/PROJECT_ROADMAP.md`  
+- **Iteration checklist:** `docs/9-roadmap-and-tracking/ITERATION_CHECKLIST.md`  
+- **User flows:** `docs/5-user-flows/`  
+- **Service docs:** `docs/7-services/`  
+- **Architecture:** `docs/6-architecture/`  
 

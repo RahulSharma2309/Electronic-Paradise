@@ -1,6 +1,6 @@
-# 📱 Product Strategy: Electronics & Smart Devices E-Commerce
+# 🥬 Product Strategy: FreshHarvest Market - Organic Food E-Commerce
 
-> **Why we chose Electronics as our product category and how it maximizes learning opportunities**
+> **Why we chose Organic Food as our product category and how it maximizes learning opportunities**
 
 ---
 
@@ -16,17 +16,16 @@ We needed a product category that would:
 5. ✅ Have **scalability challenges**
 6. ✅ Offer **rich feature opportunities**
 
-### Why Electronics & Smart Devices?
+### Why Organic Food & Groceries?
 
 **Selected Product Categories:**
-- 📱 Smartphones
-- 💻 Laptops
-- ⌚ Smart Watches
-- 📟 Tablets
-- 🎧 Audio Devices (Headphones, Earbuds, Speakers)
-- 📷 Cameras & Accessories
-- 🎮 Gaming Devices
-- 🖥️ Computer Accessories
+- 🍎 Fresh Fruits (Organic Apples, Mangoes, Bananas, etc.)
+- 🥬 Fresh Vegetables (Organic Spinach, Tomatoes, etc.)
+- 🌾 Grains & Pulses (Organic Rice, Lentils, Millets)
+- 🥛 Dairy & Eggs (Organic Milk, Paneer, Free-Range Eggs)
+- 🌿 Herbs & Spices (Fresh Herbs, Organic Turmeric, etc.)
+- 🍯 Natural Sweeteners (Organic Honey, Jaggery)
+- 🥜 Dry Fruits & Nuts (Organic Almonds, Cashews)
 
 ---
 
@@ -34,24 +33,24 @@ We needed a product category that would:
 
 ### 1. Factory Pattern - Product Type Creation
 
-**Scenario:** Different product types with specific attributes
+**Scenario:** Different organic product types with specific attributes
 
 ```
 Product Creation:
-├── Smartphone Factory
-│   ├── Screen Size
-│   ├── Camera Specs
-│   ├── Battery Capacity
-│   └── Processor Type
-├── Laptop Factory
-│   ├── Screen Size
-│   ├── RAM
-│   ├── Storage
-│   └── Graphics Card
-└── Smart Watch Factory
-    ├── Display Type
-    ├── Battery Life
-    └── Fitness Features
+├── Fresh Fruit Factory
+│   ├── Origin Farm
+│   ├── Certification (India Organic, USDA)
+│   ├── Harvest Date
+│   └── Shelf Life
+├── Vegetable Factory
+│   ├── Origin Farm
+│   ├── Organic Certification
+│   ├── Pack Size
+│   └── Freshness Index
+└── Dairy Factory
+    ├── Farm Source
+    ├── Production Date
+    └── Expiry Date
 ```
 
 **Learning Value:** Abstract Factory for product families, Simple Factory for basic creation
@@ -60,24 +59,24 @@ Product Creation:
 
 ### 2. Builder Pattern - Product Variants
 
-**Scenario:** Configurable products with many options
+**Scenario:** Configurable organic products with pack sizes and options
 
-**Example: Laptop Builder**
+**Example: Organic Mango Builder**
 ```
-Laptop Configuration:
-├── Base Model: MacBook Pro 14"
-├── Processor: M3 / M3 Pro / M3 Max
-├── RAM: 8GB / 16GB / 32GB / 64GB
-├── Storage: 512GB / 1TB / 2TB / 4TB / 8TB
-├── Color: Space Gray / Silver
-└── AppleCare: Yes / No
+Organic Mango Configuration:
+├── Base Product: Alphonso Mango (Maharashtra)
+├── Pack Size: 500g / 1kg / 2kg / 5kg
+├── Certification: India Organic / USDA Organic
+├── Ripeness: Ready to Eat / Ripen at Home
+├── Gift Packaging: Yes / No
+└── Express Delivery: Yes / No
 ```
 
 **Real-world Complexity:**
-- Not all combinations are valid
-- Price changes with each option
+- Not all combinations are valid (seasonal availability)
+- Price changes with pack size
 - SKU generation for each variant
-- Stock tracking per variant
+- Stock tracking per variant with expiry dates
 
 **Learning Value:** Fluent API, validation, complex object construction
 
@@ -89,14 +88,14 @@ Laptop Configuration:
 
 **Pricing Strategies:**
 ```
-1. Regular Pricing: Base price
-2. Sale Pricing: 20% off
-3. Bundle Pricing: Buy laptop + mouse, get 10% off
-4. Seasonal Pricing: Black Friday 40% off
-5. Member Pricing: Premium members get 5% off
-6. Flash Sale: Limited time, limited quantity
-7. Clearance Pricing: Old models, 50% off
-8. Student Discount: 15% off with verification
+1. Regular Pricing: Base price per kg/pack
+2. Seasonal Pricing: Mangoes in summer at regular price, off-season premium
+3. Bundle Pricing: Buy fruits + vegetables basket, get 10% off
+4. Festival Pricing: Diwali/Pongal special organic hampers
+5. Member Pricing: Premium subscribers get 5% off
+6. Near Expiry Sale: Items expiring in 2 days, 40% off
+7. Bulk Pricing: 5kg+ orders at wholesale rates
+8. First-Time Customer: 15% off first order
 ```
 
 **Learning Value:** Open/Closed Principle, runtime strategy switching, business rules
@@ -110,21 +109,21 @@ Laptop Configuration:
 **Observable Events:**
 ```
 Stock Events:
-├── Low Stock Alert → Admin Notification
+├── Low Stock Alert → Admin Notification (reorder from farm)
 ├── Out of Stock → Admin + Notification Service
-├── Restock → Wishlist Users Notification
-└── Price Drop → Wishlist Users Email
+├── Fresh Stock Arrival → Wishlist Users Notification
+└── Near Expiry Alert → Discount trigger + User notification
 
 Order Events:
 ├── Order Placed → User Email + SMS
-├── Order Shipped → User Notification
-├── Order Delivered → User Notification + Review Request
-└── Order Cancelled → User + Admin Notification
+├── Order Out for Delivery → User Notification
+├── Order Delivered → User Notification + Freshness Review Request
+└── Order Cancelled → User + Admin Notification + Stock Release
 
 User Events:
-├── New Product Launch → All Users Newsletter
-├── Wishlist Price Drop → Specific Users
-└── Abandoned Cart → User Reminder (24 hours)
+├── New Seasonal Product → All Users Newsletter
+├── Wishlist Product Available → Specific Users
+└── Abandoned Cart → User Reminder (6 hours - perishables urgency)
 ```
 
 **Learning Value:** Event-driven architecture, loose coupling, multiple subscribers
@@ -133,23 +132,23 @@ User Events:
 
 ### 5. Decorator Pattern - Product Add-ons
 
-**Scenario:** Optional features that enhance the base product
+**Scenario:** Optional services that enhance the organic purchase
 
-**Example: Smartphone Purchase**
+**Example: Organic Fruit Basket Purchase**
 ```
-Base Product: iPhone 15 Pro - $999
-├── + Extended Warranty (2 years) - $199
-├── + AppleCare+ - $149
-├── + Screen Protector - $29
-├── + Phone Case - $49
-├── + Wireless Charger - $39
-└── Total: $1,464
+Base Product: Organic Fruit Basket (2kg) - ₹599
+├── + Express Delivery (2 hours) - ₹49
+├── + Premium Gift Packaging - ₹79
+├── + Freshness Guarantee (replace if not fresh) - ₹29
+├── + Recipe Card Pack - ₹19
+├── + Reusable Jute Bag - ₹49
+└── Total: ₹824
 ```
 
 **Other Examples:**
-- Laptop: Extended Warranty, Software Bundle, Mouse, Bag
-- Headphones: Extended Warranty, Carrying Case
-- Camera: Lens, Memory Card, Tripod
+- Vegetables: Pre-cut option, Express delivery, Ice pack
+- Dairy: Same-day delivery, Temperature-controlled packaging
+- Grains: Vacuum packaging, Storage container
 
 **Learning Value:** Composition over inheritance, runtime feature addition, pricing aggregation
 
@@ -164,23 +163,23 @@ Base Product: iPhone 15 Pro - $999
 Order States:
 ├── Pending
 │   ├── Can: Process, Cancel
-│   └── Cannot: Ship, Deliver, Refund
-├── Processing
-│   ├── Can: Ship, Cancel
+│   └── Cannot: Dispatch, Deliver, Refund
+├── Processing (Picking Fresh)
+│   ├── Can: Dispatch, Cancel
 │   └── Cannot: Modify Items, Refund
-├── Shipped
+├── Out for Delivery
 │   ├── Can: Deliver, Track
-│   └── Cannot: Cancel, Modify
+│   └── Cannot: Cancel (perishables committed)
 ├── Delivered
-│   ├── Can: Return (within 15 days), Review
+│   ├── Can: Report Quality Issue (within 24 hours), Review
 │   └── Cannot: Cancel
-├── Returned
-│   ├── Can: Refund
-│   └── Cannot: Ship again
+├── Quality Issue Reported
+│   ├── Can: Refund, Replace
+│   └── Cannot: Redeliver same items
 ├── Refunded
 │   └── Terminal State
 └── Cancelled
-    └── Terminal State
+    └── Terminal State (stock released)
 ```
 
 **Learning Value:** Finite state machines, business rule enforcement, valid transitions
@@ -194,33 +193,36 @@ Order States:
 **Validation Chain:**
 ```
 Order Validation Pipeline:
-1. Stock Availability Validator
+1. Stock & Freshness Validator
    ├── Check each item in stock
    ├── Check sufficient quantity
+   ├── Verify items not near expiry
    └── Reserve stock temporarily
 
 2. Wallet Balance Validator
-   ├── Check user balance
+   ├── Check user balance (INR ₹)
    ├── Compare with order total
    └── Account for holds
 
-3. Address Validator
+3. Delivery Address Validator
    ├── Validate completeness
-   ├── Validate format
-   └── Check delivery availability
+   ├── Check delivery pincode serviceable
+   └── Verify cold chain availability for dairy
 
 4. Product Availability Validator
-   ├── Check product not discontinued
-   └── Check product active
+   ├── Check product in season
+   ├── Check not discontinued
+   └── Check organic certification valid
 
 5. Pricing Validator
    ├── Verify price hasn't changed
-   └── Verify discounts still valid
+   ├── Verify seasonal discounts still valid
+   └── Check minimum order value met
 
-6. Fraud Detection Validator
-   ├── Check order patterns
-   ├── Check IP location
-   └── Check payment history
+6. Delivery Slot Validator
+   ├── Check delivery slots available
+   ├── Verify express delivery feasibility
+   └── Check perishable delivery window
 ```
 
 **Learning Value:** Pipeline pattern, sequential processing, early exit, error accumulation
@@ -234,9 +236,9 @@ Order Validation Pipeline:
 **Payment Methods:**
 ```
 Payment Gateways:
-├── Internal Wallet
+├── Internal Wallet (INR ₹)
 │   └── Direct database transaction
-├── Credit/Debit Card (Stripe)
+├── Credit/Debit Card (Razorpay)
 │   ├── Tokenization
 │   ├── 3D Secure
 │   └── Webhook callbacks
@@ -248,10 +250,10 @@ Payment Gateways:
 │   ├── Bank selection
 │   ├── Redirect flow
 │   └── Return URL handling
-└── Buy Now Pay Later (Klarna)
-    ├── Credit check
-    ├── Installment plans
-    └── Interest calculation
+└── Cash on Delivery
+    ├── Order value limit
+    ├── COD fee calculation
+    └── Delivery confirmation required
 ```
 
 **Learning Value:** Third-party integration, interface standardization, external system abstraction
@@ -321,18 +323,18 @@ Failure Scenarios:
 
 ### 1. Product Catalog Features
 
-#### Variants & Configurations
-- **Scenario:** iPhone 15 Pro in 4 colors, 3 storage options, with/without carrier lock
-- **Complexity:** 24 variants, different pricing, stock tracking per variant
-- **Learning:** SKU management, inventory tracking, pricing matrix
+#### Variants & Pack Sizes
+- **Scenario:** Organic Alphonso Mango in 500g, 1kg, 2kg, 5kg packs with different certifications
+- **Complexity:** Multiple variants, different pricing per kg, stock tracking with expiry dates
+- **Learning:** SKU management, inventory tracking, pricing matrix, expiry management
 
 #### Specifications & Filters
-- **Scenario:** Filter laptops by RAM, storage, processor, screen size, price
+- **Scenario:** Filter products by certification, origin, price, category, freshness
 - **Complexity:** Multiple filter combinations, faceted search, performance optimization
 - **Learning:** Database indexing, query optimization, Elasticsearch integration
 
 #### Image Gallery
-- **Scenario:** Multiple product images, 360° view, zoom capability
+- **Scenario:** Multiple product images showing freshness, farm origin, certification labels
 - **Complexity:** Image optimization, CDN integration, lazy loading
 - **Learning:** File upload, image processing, storage strategies
 
@@ -341,23 +343,23 @@ Failure Scenarios:
 ### 2. Shopping Features
 
 #### Smart Search
-- **Scenario:** "15 inch laptop under $1000 with 16GB RAM"
+- **Scenario:** "organic mangoes from Maharashtra under ₹300/kg"
 - **Complexity:** Natural language processing, fuzzy matching, suggestions
 - **Learning:** Elasticsearch, autocomplete, relevance scoring
 
 #### Product Comparison
-- **Scenario:** Compare 3 smartphones side-by-side
-- **Complexity:** Attribute alignment, highlighting differences, responsive design
+- **Scenario:** Compare organic vs non-organic, different farm origins
+- **Complexity:** Attribute alignment, certification comparison, responsive design
 - **Learning:** Complex UI components, data normalization
 
 #### Recommendations
-- **Scenario:** "Customers who bought iPhone also bought AirPods"
+- **Scenario:** "Customers who bought organic spinach also bought organic tomatoes"
 - **Complexity:** Collaborative filtering, association rules, real-time recommendations
 - **Learning:** Recommendation algorithms, data analytics
 
-#### Wishlist & Price Tracking
-- **Scenario:** Save products, get notified when price drops
-- **Complexity:** Price history tracking, notification service, observer pattern
+#### Wishlist & Seasonal Tracking
+- **Scenario:** Save seasonal products, get notified when in season
+- **Complexity:** Seasonal availability tracking, notification service, observer pattern
 - **Learning:** Background jobs, notifications, data tracking
 
 ---
@@ -365,18 +367,18 @@ Failure Scenarios:
 ### 3. Order Management Features
 
 #### Order Modifications
-- **Scenario:** User wants to add an item to order before it ships
-- **Complexity:** Payment adjustment, stock re-validation, state management
+- **Scenario:** User wants to add items before order is dispatched
+- **Complexity:** Payment adjustment, stock re-validation, freshness check
 - **Learning:** Saga pattern, compensation, state machine
 
-#### Returns & Refunds
-- **Scenario:** Return laptop within 15 days, automatic refund
-- **Complexity:** Return window calculation, condition checking, reverse logistics
+#### Quality Issues & Refunds
+- **Scenario:** Report quality issue within 24 hours, instant refund
+- **Complexity:** Short return window (perishables), photo evidence, instant processing
 - **Learning:** Business rules, time-based logic, refund processing
 
 #### Order Tracking
-- **Scenario:** Real-time order status updates
-- **Complexity:** Multiple carriers, API integration, real-time updates
+- **Scenario:** Real-time delivery tracking with temperature monitoring
+- **Complexity:** Delivery partner integration, cold chain tracking, real-time updates
 - **Learning:** SignalR, webhook handling, external API integration
 
 ---
@@ -384,12 +386,12 @@ Failure Scenarios:
 ### 4. Pricing Features
 
 #### Dynamic Discounts
-- **Scenario:** Black Friday sale, bundle discounts, member pricing
-- **Complexity:** Multiple discount types, stacking rules, expiry
+- **Scenario:** Festival sales, seasonal discounts, near-expiry pricing
+- **Complexity:** Multiple discount types, stacking rules, time-based expiry
 - **Learning:** Strategy pattern, business rules engine
 
 #### Promotional Codes
-- **Scenario:** Coupon codes with various restrictions
+- **Scenario:** First-order discount, referral codes, festival specials
 - **Complexity:** Validation rules, usage limits, expiry dates
 - **Learning:** Validation logic, database constraints
 
@@ -397,28 +399,28 @@ Failure Scenarios:
 
 ### 5. Inventory Management
 
-#### Low Stock Alerts
-- **Scenario:** Alert admin when laptop stock < 5 units
-- **Complexity:** Threshold configuration, notification routing
-- **Learning:** Observer pattern, background jobs
+#### Low Stock & Freshness Alerts
+- **Scenario:** Alert admin when organic tomatoes stock < 10kg or expiring in 2 days
+- **Complexity:** Threshold configuration, expiry tracking, notification routing
+- **Learning:** Observer pattern, background jobs, scheduled tasks
 
-#### Stock Reservation
-- **Scenario:** Hold stock during checkout for 10 minutes
-- **Complexity:** Temporary holds, automatic release, deadlock prevention
+#### Stock Reservation with Freshness
+- **Scenario:** Hold fresh stock during checkout for 10 minutes, prioritize by expiry
+- **Complexity:** Temporary holds, FIFO for expiry, automatic release
 - **Learning:** Distributed locking, timeouts, cleanup jobs
 
 ---
 
 ### 6. User Features
 
-#### Reviews & Ratings
-- **Scenario:** Verified buyers can review, others can read
-- **Complexity:** Verification check, moderation, aggregation
+#### Reviews & Freshness Ratings
+- **Scenario:** Verified buyers can rate freshness and quality
+- **Complexity:** Verification check, freshness score, photo reviews
 - **Learning:** Service-to-service calls, rating calculations
 
 #### User Preferences
-- **Scenario:** Save favorite brands, notification preferences
-- **Complexity:** Profile management, personalization
+- **Scenario:** Save favorite farms, dietary preferences, certification preferences
+- **Complexity:** Profile management, personalization, dietary filters
 - **Learning:** User data modeling, preference storage
 
 ---
@@ -442,17 +444,17 @@ Failure Scenarios:
 
 ## 🆚 Comparison with Other Product Categories
 
-### Why NOT Groceries?
+### Why NOT Electronics?
 
 **Pros:**
-- High order frequency
-- Perishability adds complexity
+- High ticket value
+- Complex specifications
 
 **Cons:**
-- ❌ Less variant complexity (no RAM/storage options)
-- ❌ Fewer design pattern opportunities
-- ❌ Less interesting technically
-- ❌ Lower ticket value (less realistic transactions)
+- ❌ Lower order frequency (less repeat business patterns)
+- ❌ No freshness/expiry complexity
+- ❌ Less urgency in delivery (no perishables)
+- ❌ Saturated market for learning projects
 
 ---
 
@@ -463,10 +465,10 @@ Failure Scenarios:
 - Style categories
 
 **Cons:**
-- ❌ Fewer technical specifications
+- ❌ No freshness/expiry management
 - ❌ Less objective comparison (subjective preferences)
-- ❌ Virtual try-on adds complexity but is very advanced
-- ❌ Less relevant for backend-focused learning
+- ❌ No cold chain/delivery urgency
+- ❌ Less relevant for real-time inventory patterns
 
 ---
 
@@ -497,47 +499,47 @@ Failure Scenarios:
 
 ---
 
-## ✅ Electronics: The Perfect Choice
+## ✅ Organic Food: The Perfect Choice
 
 ### Advantages
 
 #### 1. Maximum Design Patterns (10+)
-- ✅ Factory (product types)
-- ✅ Builder (variants)
-- ✅ Strategy (pricing)
-- ✅ Observer (notifications)
-- ✅ Decorator (add-ons)
-- ✅ State (order lifecycle)
-- ✅ Chain (validation)
-- ✅ Adapter (payments)
-- ✅ Facade (checkout)
-- ✅ Saga (distributed transactions)
+- ✅ Factory (product types - fruits, vegetables, dairy)
+- ✅ Builder (variants - pack sizes, certifications)
+- ✅ Strategy (pricing - seasonal, bulk, near-expiry)
+- ✅ Observer (notifications - freshness alerts, seasonal availability)
+- ✅ Decorator (add-ons - express delivery, gift packaging)
+- ✅ State (order lifecycle with freshness tracking)
+- ✅ Chain (validation - freshness, delivery slots)
+- ✅ Adapter (payments - Razorpay, UPI, COD)
+- ✅ Facade (checkout with cold chain)
+- ✅ Saga (distributed transactions with expiry consideration)
 
 #### 2. Real-World Complexity
-- ✅ Technical specifications (quantifiable)
-- ✅ Objective comparisons possible
-- ✅ Multiple variants per product
-- ✅ Complex pricing scenarios
-- ✅ High-value transactions (realistic payment handling)
+- ✅ Freshness tracking (unique challenge)
+- ✅ Expiry management (time-sensitive inventory)
+- ✅ Seasonal availability patterns
+- ✅ Farm-to-table traceability
+- ✅ Cold chain logistics
 
 #### 3. Rich Feature Set
-- ✅ Product comparison essential
-- ✅ Reviews highly valuable
-- ✅ Search and filters critical
-- ✅ Recommendations make sense
-- ✅ Warranty and insurance relevant
+- ✅ Certification verification essential
+- ✅ Freshness reviews valuable
+- ✅ Origin and farm filters critical
+- ✅ Seasonal recommendations make sense
+- ✅ Subscription boxes relevant
 
 #### 4. Scalability Challenges
-- ✅ Large product catalog
-- ✅ High traffic during sales
-- ✅ Complex inventory management
-- ✅ Image-heavy (CDN needed)
+- ✅ High order frequency (repeat customers)
+- ✅ Time-sensitive inventory management
+- ✅ Complex delivery scheduling
+- ✅ Real-time freshness tracking
 
-#### 5. Universally Understood
-- ✅ Everyone uses electronics
-- ✅ Easy to explain in interviews
-- ✅ Relatable user experiences
-- ✅ Industry relevance (tech companies)
+#### 5. Growing Market Relevance
+- ✅ Organic food is a growing industry
+- ✅ Relatable user experiences (everyone eats)
+- ✅ Health-conscious trend
+- ✅ India's organic market growing rapidly
 
 ---
 
@@ -546,25 +548,26 @@ Failure Scenarios:
 ### Revenue Streams
 
 1. **Direct Sales**
-   - Product markup
-   - Typical margin: 10-30%
+   - Organic product markup
+   - Typical margin: 20-40%
 
-2. **Extended Warranties**
-   - High-margin add-on
-   - Typical margin: 50-70%
+2. **Premium Services**
+   - Express delivery
+   - Freshness guarantee
+   - Typical margin: 60-80%
 
-3. **Premium Memberships**
-   - Fast shipping
-   - Exclusive deals
-   - Early access to launches
+3. **Subscription Boxes**
+   - Weekly organic basket delivery
+   - Farm-fresh subscription
+   - Premium member discounts
 
-4. **Affiliate Links**
-   - Accessory recommendations
-   - Software bundles
+4. **Farm Partnerships**
+   - Direct farm sourcing
+   - Exclusive farm products
 
-5. **Advertisements**
-   - Sponsored products
-   - Banner ads
+5. **Gift Hampers**
+   - Festival organic hampers
+   - Corporate gifting
 
 ---
 
@@ -572,55 +575,55 @@ Failure Scenarios:
 
 ### 1. Product Data Model
 
-**Challenge:** How to store diverse products with different attributes?
+**Challenge:** How to store diverse organic products with certifications and freshness data?
 
 **Solutions to Learn:**
-- Entity-Attribute-Value (EAV) pattern
-- Table-Per-Hierarchy (TPH)
-- Table-Per-Type (TPT)
-- JSON columns for flexible attributes
+- Entity-Attribute-Value (EAV) for certifications
+- Table-Per-Hierarchy (TPH) for product categories
+- Table-Per-Type (TPT) for specific attributes
+- JSON columns for flexible farm metadata
 
 ---
 
 ### 2. Search Performance
 
-**Challenge:** Fast search across millions of products with complex filters
+**Challenge:** Fast search across products with certification, origin, and freshness filters
 
 **Solutions to Learn:**
 - Elasticsearch integration
 - Database indexing strategies
-- Caching strategies
+- Caching strategies with short TTL (freshness)
 - Query optimization
 
 ---
 
-### 3. Inventory Management
+### 3. Inventory & Freshness Management
 
-**Challenge:** Real-time stock tracking, reservations, concurrent orders
+**Challenge:** Real-time stock tracking with expiry dates, FIFO allocation, concurrent orders
 
 **Solutions to Learn:**
 - Pessimistic locking
-- Optimistic locking
+- Optimistic locking with expiry consideration
 - Distributed locking (Redis)
-- Event sourcing
+- Event sourcing for freshness tracking
 
 ---
 
 ### 4. Pricing Complexity
 
-**Challenge:** Multiple pricing strategies, discounts, taxes
+**Challenge:** Seasonal pricing, near-expiry discounts, bulk rates, GST
 
 **Solutions to Learn:**
 - Strategy pattern
 - Pricing rules engine
 - Discount stacking logic
-- Tax calculation APIs
+- GST calculation for food items (0-5%)
 
 ---
 
 ### 5. Image Management
 
-**Challenge:** Multiple high-resolution images per product
+**Challenge:** Product images, farm photos, certification documents
 
 **Solutions to Learn:**
 - Object storage (Azure Blob, MinIO)
@@ -657,19 +660,19 @@ Failure Scenarios:
 ## 📈 Scalability Scenarios
 
 ### Traffic Spikes
-- **Scenario:** New iPhone launch
-- **Challenge:** 100x normal traffic
+- **Scenario:** Festival season (Diwali, Pongal) organic hamper orders
+- **Challenge:** 10x normal traffic
 - **Solutions:** Kubernetes auto-scaling, Redis caching, read replicas
 
-### Flash Sales
-- **Scenario:** Limited quantity, high demand
-- **Challenge:** Overselling, race conditions
-- **Solutions:** Queue systems, distributed locks, optimistic concurrency
+### Flash Sales (Seasonal Launch)
+- **Scenario:** Mango season launch, limited first harvest
+- **Challenge:** Overselling, race conditions, freshness allocation
+- **Solutions:** Queue systems, distributed locks, FIFO expiry management
 
-### Global Expansion
-- **Scenario:** Multiple regions, currencies, languages
-- **Challenge:** Latency, data residency
-- **Solutions:** Multi-region deployment, CDN, localization
+### City Expansion
+- **Scenario:** Multiple cities, different delivery zones
+- **Challenge:** Delivery partner integration, cold chain logistics
+- **Solutions:** Multi-zone deployment, local warehouse integration
 
 ---
 
@@ -677,37 +680,37 @@ Failure Scenarios:
 
 ### System Design Questions
 
-**"Design an e-commerce system"**
+**"Design an organic food delivery system"**
 - You can walk through YOUR actual implementation
 - Explain microservices architecture
-- Discuss design patterns used
+- Discuss freshness management unique to perishables
 - Talk about scalability solutions
 
-**"How would you handle inventory?"**
-- Explain your stock reservation system
-- Discuss concurrency handling
-- Talk about Saga pattern for rollbacks
+**"How would you handle perishable inventory?"**
+- Explain your stock reservation with expiry tracking
+- Discuss FIFO allocation for freshness
+- Talk about Saga pattern for rollbacks with freshness constraints
 
-**"How would you implement search?"**
+**"How would you implement product search with certifications?"**
 - Elasticsearch integration
-- Fuzzy matching
-- Faceted filters
+- Certification-based filtering
+- Origin and freshness facets
 - Performance optimization
 
 ---
 
 ## 🎯 Conclusion
 
-**Electronics & Smart Devices** is the optimal product category because:
+**Organic Food (FreshHarvest Market)** is the optimal product category because:
 
-1. ✅ **Maximizes Learning:** 10+ design patterns, complex features
-2. ✅ **Real-World Relevance:** Actual industry challenges
-3. ✅ **Portfolio Value:** Impressive project for interviews
-4. ✅ **Scalability:** Realistic performance challenges
-5. ✅ **Universal Appeal:** Everyone understands electronics
-6. ✅ **Technical Depth:** From frontend to distributed systems
+1. ✅ **Maximizes Learning:** 10+ design patterns, freshness complexity
+2. ✅ **Real-World Relevance:** Growing organic food industry in India
+3. ✅ **Portfolio Value:** Unique project (not another electronics store)
+4. ✅ **Scalability:** Time-sensitive inventory challenges
+5. ✅ **Universal Appeal:** Everyone eats, health-conscious trend
+6. ✅ **Technical Depth:** From frontend to distributed systems with perishable logistics
 
-**Result:** A portfolio project that demonstrates Senior Engineer capabilities across full stack, backend, frontend, DevOps, and cloud-native technologies.
+**Result:** A portfolio project that demonstrates Senior Engineer capabilities across full stack, backend, frontend, DevOps, and cloud-native technologies with unique domain challenges.
 
 ---
 
@@ -715,6 +718,6 @@ Failure Scenarios:
 
 **Design Patterns Used:** 10+  
 **Technical Complexity:** Very High  
-**Career Impact:** Maximum (showcases advanced skills)  
-**Interview Value:** Extremely High (real-world system design)
+**Career Impact:** Maximum (showcases advanced skills + unique domain)  
+**Interview Value:** Extremely High (differentiated system design)
 

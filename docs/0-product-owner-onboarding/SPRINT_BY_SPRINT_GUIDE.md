@@ -1,4 +1,4 @@
-# 📅 Sprint-by-Sprint Guide - Product Evolution
+# 📅 Sprint-by-Sprint Guide - FreshHarvest Market Evolution
 
 > **See exactly what happens in each sprint, what users will experience, and what you need to focus on as Product Owner**
 
@@ -28,26 +28,26 @@
 
 **✅ MVP Complete (Sprint 0)**
 - Basic e-commerce functionality working
-- Users can: sign up, browse, add to cart, checkout, view orders
+- Users can: sign up, browse organic products, add to cart, checkout, view orders
 
 **🚧 Next: Epic 1 - Enhanced Product Domain**
 - Starting with Sprint 1
-- Goal: Make catalog feel like a real electronics store
+- Goal: Make catalog feel like a premium organic food marketplace
 
 ---
 
 ## 🗓️ Sprint Overview (All 35 Sprints)
 
 ### Q1: Enhanced Catalog (Sprints 1-6)
-**Theme:** Make product browsing and selection feel like electronics commerce
+**Theme:** Make product browsing and selection feel like premium organic food commerce
 
 | Sprint | Theme | What Users See |
 |--------|-------|----------------|
-| 1 | Categories | Products organized by type (Smartphones, Laptops, etc.) |
-| 2 | Variants | Can select color/storage options, see different prices |
-| 3 | Pricing + Specs | See discounts clearly, view product specifications |
-| 4 | Media + Search | Product galleries, search and filter functionality |
-| 5 | Inventory + Reviews | Stock alerts, customer reviews and ratings |
+| 1 | Categories | Products organized by type (Fresh Fruits, Vegetables, Grains, Dairy, Herbs) |
+| 2 | Variants | Can select pack sizes (1kg, 5kg, 10kg), see different prices |
+| 3 | Pricing + Attributes | See discounts clearly, view product attributes (certifications, origin, expiry) |
+| 4 | Media + Search | Product galleries, search and filter by certification/origin |
+| 5 | Inventory + Reviews | Stock/freshness alerts, customer reviews and ratings |
 | 6 | Wishlist + Compare | Save items, compare products side-by-side |
 
 ### Q2: Trustworthy Orders (Sprints 7-11)
@@ -110,16 +110,16 @@
 
 **What users can do:**
 - Register and log in
-- Browse products (basic list)
+- Browse organic products (basic list)
 - Add items to cart
-- Checkout using wallet payment
+- Checkout using wallet payment (₹ INR)
 - View order history
 - Add money to wallet
 
 **What's working:**
 - 5 microservices (Auth, User, Product, Order, Payment)
 - API Gateway
-- Basic frontend
+- Basic frontend with organic theme
 - Docker setup
 
 **Status:** ✅ Complete
@@ -141,24 +141,21 @@
 
 **After Sprint 1:**
 - Products organized into categories:
-  - 📱 Smartphones
-  - 💻 Laptops
-  - ⌚ Smart Watches
-  - 📟 Tablets
-  - 🎧 Audio Devices
-  - 📷 Cameras
-  - 🎮 Gaming Devices
-  - 🖥️ Computer Accessories
+  - 🍎 Fresh Fruits
+  - 🥬 Fresh Vegetables
+  - 🌾 Grains & Pulses
+  - 🥛 Dairy & Eggs
+  - 🍃 Herbs & Spices
 - Can browse by category
 - Can filter by category
-- Product detail pages show category
+- Product detail pages show category and organic certifications
 
 **User Journey:**
 1. User visits homepage
-2. Sees category navigation (like Amazon's department menu)
-3. Clicks "Smartphones"
-4. Sees only smartphones
-5. Can filter further within category
+2. Sees category navigation (like BigBasket's department menu)
+3. Clicks "Fresh Fruits"
+4. Sees only organic fruits
+5. Can filter further within category (by certification, origin)
 
 #### What You Need to Focus On (PO)
 
@@ -176,9 +173,9 @@
 
 **Demo Script:**
 1. Show homepage with category navigation
-2. Click "Smartphones" category
-3. Show filtered product list
-4. Click a product
+2. Click "Fresh Fruits" category
+3. Show filtered product list (organic mangoes, apples, etc.)
+4. Click a product (e.g., Organic Alphonso Mangoes)
 5. Show product detail with category displayed
 6. Show category filter working
 
@@ -203,26 +200,28 @@
 
 **Before Sprint 2:**
 - Products are single items
-- No color/storage options
+- No pack size options
 - Can't see different configurations
 
 **After Sprint 2:**
 - Products have variants:
-  - **Example:** iPhone 15 Pro
-    - Colors: Space Gray, Silver, Gold, Blue
-    - Storage: 128GB, 256GB, 512GB, 1TB
-    - Total: 16 variants (4 colors × 4 storage)
+  - **Example:** Organic Basmati Rice
+    - Pack Sizes: 1kg, 5kg, 10kg, 25kg
+    - Total: 4 variants
+  - **Example:** Organic Alphonso Mangoes
+    - Pack Sizes: 1 dozen, 2 dozen, 5 dozen
+    - Quality Grades: Premium, Standard
 - Can select variant on product page
-- Price changes based on variant
+- Price changes based on variant (bulk discounts)
 - Stock shown per variant
 - SKU (Stock Keeping Unit) for each variant
 
 **User Journey:**
-1. User opens iPhone 15 Pro product page
-2. Sees variant selector (Color and Storage dropdowns)
-3. Selects "Space Gray" and "256GB"
-4. Price updates: $999 → $1,099
-5. Stock shows: "In Stock" or "Only 3 left"
+1. User opens Organic Basmati Rice product page
+2. Sees variant selector (Pack Size dropdown)
+3. Selects "5kg"
+4. Price updates: ₹250 → ₹1,150 (with bulk discount)
+5. Stock shows: "In Stock" or "Only 5 packs left"
 6. Adds to cart with selected variant
 
 #### What You Need to Focus On (PO)
@@ -242,10 +241,10 @@
 - What about variant images?
 
 **Demo Script:**
-1. Open product with variants (e.g., iPhone)
-2. Show variant selector
-3. Change color → price/stock updates
-4. Change storage → price/stock updates
+1. Open product with variants (e.g., Organic Basmati Rice)
+2. Show variant selector (pack sizes)
+3. Change pack size → price/stock updates
+4. Show bulk discount applied
 5. Add to cart
 6. Show cart with variant selected
 7. Show checkout with correct variant
@@ -261,10 +260,10 @@
 
 ---
 
-### Sprint 3: Pricing + Specs
+### Sprint 3: Pricing + Product Attributes
 
 **Epic:** Epic 1 - Enhanced Product Domain  
-**PBI:** PBI 1.3 - Dynamic Pricing, PBI 1.4 - Product Specifications  
+**PBI:** PBI 1.3 - Dynamic Pricing, PBI 1.4 - Product Attributes  
 **Story Points:** 13 + 13 = 26
 
 #### What Users Will Experience
@@ -275,24 +274,26 @@
 - Understand pricing strategies:
   - Regular price
   - Sale price
-  - Bundle discounts
-  - Seasonal pricing
+  - Bulk discounts (buy more, save more)
+  - Seasonal pricing (mango season discounts)
 - Transparent pricing display
 
-**Specifications:**
-- Product detail pages show specifications:
-  - **Smartphone:** Screen size, RAM, Storage, Camera, Battery
-  - **Laptop:** Processor, RAM, Storage, Graphics, Screen size
-  - **Watch:** Display type, Battery life, Fitness features
-- Specs organized by category
-- Can filter products by specs
+**Product Attributes:**
+- Product detail pages show detailed attributes:
+  - **All Products:** Origin farm, Organic certification (India Organic, USDA, EU)
+  - **Fresh Produce:** Harvest date, Expiry date, Freshness indicator
+  - **Grains/Pulses:** Nutritional info, Cooking time, Storage instructions
+  - **Dairy:** Fat content, Shelf life, Storage temperature
+- Attributes organized by category
+- Can filter products by certification, origin
 
 **User Journey:**
 1. User opens product page
-2. Sees pricing: "Was $1,199, Now $999 (17% OFF)"
-3. Scrolls to specifications section
-4. Sees detailed specs organized clearly
-5. Can filter other products by similar specs
+2. Sees pricing: "Was ₹599, Now ₹449 (25% OFF - Mango Season)"
+3. Scrolls to attributes section
+4. Sees certifications: "🇮🇳 India Organic Certified"
+5. Sees origin: "Ratnagiri, Maharashtra"
+6. Can filter other products by certification
 
 #### What You Need to Focus On (PO)
 
@@ -302,33 +303,35 @@
 - [ ] Price calculation is correct
 - [ ] Pricing rules are testable
 
-**Specs Acceptance Criteria:**
-- [ ] Products have specifications
-- [ ] Specs displayed on product page
-- [ ] Can filter by specifications
-- [ ] Specs organized by category
+**Attributes Acceptance Criteria:**
+- [ ] Products have attributes (certifications, origin, expiry)
+- [ ] Attributes displayed on product page
+- [ ] Can filter by certification and origin
+- [ ] Attributes organized by category
 
 **Questions to Ask:**
 - What pricing strategies do we support?
-- How are specs stored? (flexible or fixed?)
-- Can specs vary by product type?
-- How do we handle missing specs?
+- How are attributes stored? (flexible or fixed?)
+- Can attributes vary by product type?
+- How do we handle missing attributes?
+- Which certifications do we support?
 
 **Demo Script:**
-1. Show product with sale price
+1. Show product with seasonal sale price
 2. Explain discount calculation
-3. Show specifications section
-4. Filter products by spec (e.g., "16GB RAM")
+3. Show attributes section (certifications, origin, expiry)
+4. Filter products by certification (e.g., "India Organic")
 5. Show filtered results
 
 **Success Metrics:**
 - Users trust pricing
-- Users can compare products by specs
+- Users can verify organic certifications
+- Users can filter by origin/certification
 - Pricing calculations are accurate
 
 **Related Documents:**
 - [PBI 1.3](../4-epics-and-pbis/EPIC_1/EPIC_1_PBI_1_3.md) - Dynamic Pricing
-- [PBI 1.4](../4-epics-and-pbis/EPIC_1/EPIC_1_PBI_1_4.md) - Product Specifications
+- [PBI 1.4](../4-epics-and-pbis/EPIC_1/EPIC_1_PBI_1_4.md) - Product Attributes
 
 ---
 
@@ -342,33 +345,33 @@
 
 **Media:**
 - Product pages have image galleries
-- Multiple images per product
+- Multiple images per product (farm photos, product photos)
 - Can zoom images
 - Primary image displayed
 - Image carousel/slider
 
 **Search & Filter:**
 - Search bar in header
-- Can search by product name, brand, description
+- Can search by product name, farm, description
 - Advanced filters:
-  - Category
+  - Category (Fruits, Vegetables, Grains, Dairy, Herbs)
   - Price range
-  - Brand
-  - Specifications (RAM, storage, etc.)
+  - Certification (India Organic, USDA, EU Organic)
+  - Origin (state/region)
 - Sort options:
   - Price: Low to High
   - Price: High to Low
-  - Newest First
+  - Freshness: Newest First
   - Best Rated
 - Pagination (show 20 products per page)
 
 **User Journey:**
-1. User types "laptop" in search
+1. User types "organic mangoes" in search
 2. Sees search results
-3. Applies filters: "Price: $500-$1000", "RAM: 16GB"
+3. Applies filters: "Price: ₹200-₹500", "Certification: India Organic"
 4. Sorts by "Price: Low to High"
 5. Clicks product
-6. Sees image gallery with zoom
+6. Sees image gallery with zoom (farm and product photos)
 7. Can browse through images
 
 #### What You Need to Focus On (PO)
@@ -391,15 +394,16 @@
 - How many images per product?
 - Image storage location? (local or cloud?)
 - Search performance requirements?
-- What filters are most important?
+- What filters are most important for organic products?
 - How many results per page?
+- Do we show farm/origin photos?
 
 **Demo Script:**
-1. Search "laptop"
-2. Apply multiple filters
-3. Sort results
+1. Search "organic mangoes"
+2. Apply filters: certification, price range
+3. Sort results by freshness
 4. Click product
-5. Show image gallery
+5. Show image gallery (product + farm photos)
 6. Zoom an image
 7. Navigate through images
 
@@ -424,12 +428,13 @@
 #### What Users Will Experience
 
 **Inventory:**
-- Stock status displayed clearly:
-  - "In Stock"
-  - "Only 3 left"
+- Stock and freshness status displayed clearly:
+  - "Fresh Stock Available"
+  - "Only 5kg left - Order soon!"
   - "Out of Stock"
-  - "Backorder Available"
+  - "Next Batch: Tomorrow"
 - Low stock alerts
+- Freshness indicators (harvested date, expiry)
 - Stock updates in real-time
 
 **Reviews & Ratings:**
@@ -440,7 +445,7 @@
 - Can read reviews:
   - Review title
   - Rating
-  - Review text
+  - Review text (freshness, taste, packaging quality)
   - Reviewer name (or "Verified Buyer")
   - Date
 - Can write reviews (if purchased)
@@ -448,10 +453,10 @@
 
 **User Journey:**
 1. User opens product page
-2. Sees stock status: "Only 2 left - Order soon!"
+2. Sees stock status: "Only 5kg left - Order soon! Harvested 2 days ago"
 3. Scrolls to reviews section
 4. Sees average rating: 4.5/5 (127 reviews)
-5. Reads a few reviews
+5. Reads reviews about freshness and quality
 6. After purchase, can leave review
 
 #### What You Need to Focus On (PO)
@@ -476,17 +481,17 @@
 - How are ratings calculated?
 
 **Demo Script:**
-1. Show product with low stock alert
+1. Show product with low stock alert and freshness indicator
 2. Show reviews section
-3. Read a review
+3. Read a review about freshness/quality
 4. Show rating breakdown
 5. (If purchased) Show review form
 6. Submit review
 7. Show review appears
 
 **Success Metrics:**
-- Users trust stock information
-- Reviews help decision-making
+- Users trust stock and freshness information
+- Reviews help decision-making about quality
 - Review submission works
 
 **Related Documents:**
@@ -515,8 +520,9 @@
 - Can select products to compare (up to 4)
 - Comparison page shows:
   - Side-by-side product details
-  - Specifications comparison
-  - Price comparison
+  - Certification comparison
+  - Price per kg comparison
+  - Origin comparison
   - Rating comparison
 - Highlights differences
 - Can only compare similar products (same category)
@@ -575,25 +581,26 @@
 **After Sprint 6, Epic 1 is complete!**
 
 **What we've built:**
-- ✅ Professional product catalog
-- ✅ Categories and types
-- ✅ Product variants
-- ✅ Dynamic pricing
-- ✅ Product specifications
-- ✅ Image galleries
-- ✅ Search and filtering
-- ✅ Inventory management
+- ✅ Professional organic product catalog
+- ✅ Categories (Fruits, Vegetables, Grains, Dairy, Herbs)
+- ✅ Product variants (pack sizes)
+- ✅ Dynamic pricing (bulk discounts, seasonal pricing)
+- ✅ Product attributes (certifications, origin, freshness)
+- ✅ Image galleries (product + farm photos)
+- ✅ Search and filtering by certification/origin
+- ✅ Inventory management with freshness tracking
 - ✅ Reviews and ratings
 - ✅ Wishlist
 - ✅ Product comparison
 
 **What users can do:**
-- Find products easily
-- Compare options
-- Make informed decisions
+- Find organic products easily
+- Verify certifications (India Organic, USDA, EU)
+- Compare products by price, certification, origin
+- Make informed decisions about quality
 - Save items for later
-- Read reviews
-- Trust the pricing
+- Read reviews about freshness and quality
+- Trust the pricing and authenticity
 
 **Next:** Epic 2 - Advanced Order Management
 

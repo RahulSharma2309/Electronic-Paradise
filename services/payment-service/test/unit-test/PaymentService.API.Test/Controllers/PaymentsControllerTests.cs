@@ -2,8 +2,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using PaymentService.Abstraction.DTOs;
-using PaymentService.Abstraction.Models;
+using PaymentService.Abstraction.DTOs.Requests;
+using PaymentService.Abstraction.DTOs.Responses;
 using PaymentService.API.Controllers;
 using PaymentService.Core.Business;
 using Xunit;
@@ -17,20 +17,19 @@ public class PaymentsControllerTests
     {
         // Arrange
         var service = new Mock<IPaymentService>();
-        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentDto>()))
+        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentRequest>()))
             .ThrowsAsync(new ArgumentException("Amount must be greater than 0"));
 
         var controller = new PaymentsController(service.Object, NullLogger<PaymentsController>.Instance);
-        var dto = new ProcessPaymentDto
+        var request = new ProcessPaymentRequest
         {
             OrderId = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
-            UserProfileId = Guid.NewGuid(),
             Amount = 0,
         };
 
         // Act
-        var result = await controller.ProcessPayment(dto);
+        var result = await controller.ProcessPayment(request);
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
@@ -41,20 +40,19 @@ public class PaymentsControllerTests
     {
         // Arrange
         var service = new Mock<IPaymentService>();
-        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentDto>()))
+        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentRequest>()))
             .ThrowsAsync(new KeyNotFoundException());
 
         var controller = new PaymentsController(service.Object, NullLogger<PaymentsController>.Instance);
-        var dto = new ProcessPaymentDto
+        var request = new ProcessPaymentRequest
         {
             OrderId = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
-            UserProfileId = Guid.NewGuid(),
             Amount = 10,
         };
 
         // Act
-        var result = await controller.ProcessPayment(dto);
+        var result = await controller.ProcessPayment(request);
 
         // Assert
         result.Should().BeOfType<NotFoundObjectResult>();
@@ -65,20 +63,19 @@ public class PaymentsControllerTests
     {
         // Arrange
         var service = new Mock<IPaymentService>();
-        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentDto>()))
+        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentRequest>()))
             .ThrowsAsync(new InvalidOperationException("Insufficient wallet balance"));
 
         var controller = new PaymentsController(service.Object, NullLogger<PaymentsController>.Instance);
-        var dto = new ProcessPaymentDto
+        var request = new ProcessPaymentRequest
         {
             OrderId = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
-            UserProfileId = Guid.NewGuid(),
             Amount = 10,
         };
 
         // Act
-        var result = await controller.ProcessPayment(dto);
+        var result = await controller.ProcessPayment(request);
 
         // Assert
         result.Should().BeOfType<ConflictObjectResult>();
@@ -89,20 +86,19 @@ public class PaymentsControllerTests
     {
         // Arrange
         var service = new Mock<IPaymentService>();
-        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentDto>()))
+        service.Setup(s => s.ProcessPaymentAsync(It.IsAny<ProcessPaymentRequest>()))
             .ThrowsAsync(new HttpRequestException("User service down"));
 
         var controller = new PaymentsController(service.Object, NullLogger<PaymentsController>.Instance);
-        var dto = new ProcessPaymentDto
+        var request = new ProcessPaymentRequest
         {
             OrderId = Guid.NewGuid(),
             UserId = Guid.NewGuid(),
-            UserProfileId = Guid.NewGuid(),
             Amount = 10,
         };
 
         // Act
-        var result = await controller.ProcessPayment(dto);
+        var result = await controller.ProcessPayment(request);
 
         // Assert
         var obj = result.Should().BeOfType<ObjectResult>().Subject;
@@ -115,7 +111,7 @@ public class PaymentsControllerTests
         // Arrange
         var service = new Mock<IPaymentService>();
         service.Setup(s => s.GetPaymentStatusAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((PaymentRecord?)null);
+            .ReturnsAsync((PaymentStatusResponse?)null);
 
         var controller = new PaymentsController(service.Object, NullLogger<PaymentsController>.Instance);
 

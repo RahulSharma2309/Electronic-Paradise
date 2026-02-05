@@ -2,6 +2,7 @@ using Ep.Platform.DependencyInjection;
 using Ep.Platform.Hosting;
 using UserService.Core.Business;
 using UserService.Core.Data;
+using UserService.Core.Mappers;
 using UserService.Core.Repository;
 
 namespace UserService.API;
@@ -36,6 +37,9 @@ public class Startup
         // Register business and repository services
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserServiceImpl>();
+
+        // Register mapper
+        services.AddScoped<IUserProfileMapper, UserProfileMapper>();
     }
 
     /// <summary>

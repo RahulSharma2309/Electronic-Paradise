@@ -7,7 +7,7 @@ metadata:
   labels:
     app: user-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   replicas: 3
   selector:
@@ -19,14 +19,14 @@ spec:
       labels:
         app: user-service
         environment: production
-        managed-by: electronic-paradise
+        managed-by: freshharvest-market
     spec:
       imagePullSecrets:
         - name: ghcr-secret
       serviceAccountName: user-service-sa
       containers:
       - name: user-service
-        image: ghcr.io/rahulsharma2309/electronic-paradise-user:v1.2.0
+        image: ghcr.io/rahulsharma2309/freshharvest-market-user:v1.2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 80

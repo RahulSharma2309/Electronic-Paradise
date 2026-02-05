@@ -1,9 +1,9 @@
-# Engineering Playbook — Patterns & Decisions (Practical, Layman-Friendly)
+# Engineering Playbook — FreshHarvest Market Patterns & Decisions (Practical, Layman-Friendly)
 
 This document answers questions like:
 
 - “If I connect two microservices, should I use **HTTP** or a **service bus**? Why?”
-- “If we build a **catalog**, what patterns should we apply and what’s the benefit?”
+- “If we build an **organic product catalog**, what patterns should we apply and what’s the benefit?”
 - “How do we keep data consistent across services without a shared database?”
 
 It’s written for people learning enterprise systems: **simple language first**, then the deeper technical reasoning.
@@ -88,13 +88,14 @@ Hybrid is common:
 
 ---
 
-## 2) “We need a catalog next” — recommended patterns and why
+## 2) “We need an organic product catalog next” — recommended patterns and why
 
 Catalog seems simple (“list products”), but it becomes hard when you add:
 
-- search, filters, sorting, pagination
-- price changes, stock changes, promotions
+- search, filters (certifications, origin, freshness), sorting, pagination
+- price changes, stock changes, seasonal promotions
 - high traffic and caching
+- freshness tracking and expiry alerts
 - eventual consistency (search index lags behind source-of-truth)
 
 ### 2.1 What we have now (MVP)

@@ -1,6 +1,6 @@
 # 🔧 Automation Scripts
 
-> **All automation scripts for Electronic Paradise**
+> **All automation scripts for FreshHarvest Market**
 
 ---
 
@@ -87,7 +87,7 @@ cd ..
 .\scripts\tag-images.ps1 -Alpha -Verbose
 
 # Verify tags created (doesn't push by default)
-docker images | Select-String "electronic-paradise"
+docker images | Select-String "freshharvest-market"
 ```
 
 **Note:** These scripts are the **BRAIN** (logic), CI is the **EXECUTOR** (automation). For daily local development, just use `docker-compose build`.
@@ -207,7 +207,7 @@ docker-compose logs -f auth-service
 ### Script Not Found
 ```powershell
 # Use VS Code tasks instead, or run manually:
-cd C:\path\to\Electronic-Paradise\infra
+cd C:\path\to\FreshHarvest-Market\infra
 $env:DOCKER_BUILDKIT='0'
 docker-compose build
 docker-compose up -d

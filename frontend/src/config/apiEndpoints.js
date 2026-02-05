@@ -23,7 +23,7 @@ export const API_ENDPOINTS = {
       `${BASE_PATH}/users/phone-exists/${encodeURIComponent(phoneNumber)}`,
     WALLET_DEBIT: (id) => `${BASE_PATH}/users/${id}/wallet/debit`,
     WALLET_CREDIT: (id) => `${BASE_PATH}/users/${id}/wallet/credit`,
-    ADD_BALANCE: `${BASE_PATH}/users/add-balance`,
+    ADD_BALANCE: (userId) => `${BASE_PATH}/users/${encodeURIComponent(userId)}/add-balance`,
   },
 
   // Product endpoints

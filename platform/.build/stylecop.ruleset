@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="FreshHarvest-Market StyleCop Rules" Description="Custom StyleCop rules for FreshHarvest-Market projects" ToolsVersion="16.0">
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
+    <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1649" Action="Warning" />
+    <Rule Id="SA1028" Action="Warning" />
+    <Rule Id="SA1413" Action="Warning" />
+    <Rule Id="SA1500" Action="Warning" />
+    <Rule Id="SA1503" Action="Warning" />
+    <Rule Id="SA1402" Action="Warning" />
+  </Rules>
+</RuleSet>

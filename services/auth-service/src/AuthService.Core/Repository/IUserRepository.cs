@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IUserRepository.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="IUserRepository.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -47,6 +47,13 @@ public interface IUserRepository
     /// <param name="user">The user entity with updated information.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task UpdateAsync(User user);
+
+    /// <summary>
+    /// Deletes a user by their unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the user to delete.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task DeleteAsync(Guid id);
 
     /// <summary>
     /// Persists all pending changes to the data store.

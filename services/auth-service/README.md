@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Authentication Service is a core microservice in the Electronic-Paradise e-commerce platform, responsible for user authentication, registration, password management, and JWT token generation.
+The Authentication Service is a core microservice in the FreshHarvest-Market e-commerce platform, responsible for user authentication, registration, password management, and JWT token generation.
 
 ### Responsibilities
 
@@ -150,8 +150,8 @@ The service uses **MSBuild property files** for centralized configuration:
 {
   "settings": {
     "documentationRules": {
-      "companyName": "Electronic-Paradise",
-      "copyrightText": "© Electronic-Paradise. All rights reserved."
+      "companyName": "FreshHarvest-Market",
+      "copyrightText": "© FreshHarvest-Market. All rights reserved."
     }
   }
 }
@@ -234,8 +234,8 @@ ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=authdb;User 
 
 # JWT Settings
 JwtOptions__Key=your-super-secret-key-that-should-be-at-least-32-characters-long-for-security
-JwtOptions__Issuer=Electronic-Paradise
-JwtOptions__Audience=Electronic-Paradise-Users
+JwtOptions__Issuer=FreshHarvest-Market
+JwtOptions__Audience=FreshHarvest-Market-Users
 
 # Service URLs
 ServiceUrls__UserService=http://localhost:5005

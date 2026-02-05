@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HealthController.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="HealthController.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

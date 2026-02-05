@@ -2,7 +2,8 @@ using System;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AuthService.Abstraction.DTOs;
+using AuthService.Abstraction.DTOs.Requests;
+using AuthService.Abstraction.DTOs.Responses;
 using FluentAssertions;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class AuthControllerIntegrationTests
         var password = "Password123!";
         var phoneNumber = $"+1{Random.Shared.NextInt64(1000000000, 9999999999)}";
 
-        var registerDto = new RegisterDto
+        var registerDto = new RegisterRequest
         {
             FullName = "Integration Test User",
             Email = email,
@@ -37,9 +38,9 @@ public class AuthControllerIntegrationTests
 
         var response = await _fixture.Client.PostAsJsonAsync("/api/auth/register", registerDto);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var content = await response.Content.ReadFromJsonAsync<AuthResponse>();
         content.Should().NotBeNull();
-        content!.Email.Should().Be(email);
+        content!.User.Email.Should().Be(email);
     }
 
     [Fact]
@@ -50,11 +51,11 @@ public class AuthControllerIntegrationTests
         var phoneNumber = $"+1{Random.Shared.NextInt64(1000000000, 9999999999)}";
         await _fixture.RegisterAndLoginUser(email, password, "Login Test User", phoneNumber, "456 Login Ave");
 
-        var loginDto = new LoginDto { Email = email, Password = password };
+        var loginDto = new LoginRequest { Email = email, Password = password };
         var response = await _fixture.Client.PostAsJsonAsync("/api/auth/login", loginDto);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var authResponse = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+        var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
         authResponse.Should().NotBeNull();
         authResponse!.Token.Should().NotBeEmpty();
     }

@@ -36,25 +36,24 @@ Frontend (React) → API Gateway → User Service
 
 ### Step 4: Frontend Sends Add Balance Request
 
-- **Request**: `POST /api/users/add-balance`
+- **Request**: `POST /api/users/{userId}/add-balance`
 - **Destination**: API Gateway (http://localhost:5000)
 - **Headers**: `Authorization: Bearer {token}`
 - **Payload**:
   ```json
   {
-    "UserId": "a93ac0d5-a5aa-4f57-a666-e3da19f5e389",  // Guid
     "Amount": 10000.00
   }
   ```
 
 ### Step 5: API Gateway Routes Request
 
-- Gateway receives: `POST /api/users/add-balance`
+- Gateway receives: `POST /api/users/{userId}/add-balance`
 - Route matching: Path matches `/api/users/{**catch-all}`
 - Cluster: Routes to `userCluster`
 - **Forwarded to**: User Service
-  - Local dev: `http://localhost:5005/api/users/add-balance`
-  - Docker: `http://user-service:80/api/users/add-balance`
+  - Local dev: `http://localhost:5005/api/users/{userId}/add-balance`
+  - Docker: `http://user-service:80/api/users/{userId}/add-balance`
 
 ### Step 6: User Service Processing
 
@@ -62,7 +61,7 @@ Frontend (React) → API Gateway → User Service
 
 #### 6a. Validate Input
 
-- Checks that `UserId` is not empty (Guid.Empty)
+- Reads `userId` from the route (Guid)
 - Checks that `Amount` > 0
 - Returns `400 Bad Request` if invalid
 

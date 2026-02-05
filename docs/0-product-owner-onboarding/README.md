@@ -1,6 +1,6 @@
 # 📚 Product Owner Onboarding Guide
 
-> **Welcome! This folder is your starting point as a new Product Owner/Manager**
+> **Welcome! This folder is your starting point as a new Product Owner/Manager at FreshHarvest Market**
 
 ---
 
@@ -19,7 +19,7 @@ This folder is specifically designed for:
 
 ### 1. [Product Overview - The Big Picture](PRODUCT_OVERVIEW_FOR_PO.md) ⭐ **START HERE**
 **Read this first!** This is your main guide that explains:
-- What we're building (in simple terms)
+- What we're building (in simple terms) - an organic food marketplace
 - Why we're building it
 - Where we are right now
 - How the final product will look
@@ -76,7 +76,7 @@ This folder is specifically designed for:
 
 ### Product Strategy & Vision
 - [Product Vision & Principles](../3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md) - Our North Star
-- [Product Strategy](../3-product-owner/PRODUCT_STRATEGY.md) - Why we chose electronics
+- [Product Strategy](../3-product-owner/PRODUCT_STRATEGY.md) - Why we chose organic food
 - [User Personas](../3-product-owner/USER_PERSONAS_AND_JTBD.md) - Who we build for
 
 ### Planning & Roadmap
@@ -99,11 +99,11 @@ This folder is specifically designed for:
 
 As you read these documents, you'll understand:
 
-1. **What We're Building:** An electronics e-commerce platform (like Amazon, but for learning)
-2. **Why We're Building It:** To learn advanced software engineering while building something real
+1. **What We're Building:** FreshHarvest Market - an organic food e-commerce platform delivering certified organic products
+2. **Why We're Building It:** To learn advanced software engineering while building something real that promotes healthy, sustainable food choices
 3. **How We Build It:** Using sprints, epics, and PBIs (Product Backlog Items)
 4. **Where We Are:** MVP is done, now building enhanced features
-5. **Where We're Going:** Production-grade platform with all modern features
+5. **Where We're Going:** Production-grade platform with all modern features for organic food commerce
 
 ---
 

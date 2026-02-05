@@ -1,4 +1,4 @@
-﻿---
+---
 # Gateway Kubernetes Service for Staging
 apiVersion: v1
 kind: Service
@@ -8,7 +8,7 @@ metadata:
   labels:
     app: gateway
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   type: ClusterIP
   ports:

@@ -8,7 +8,7 @@ metadata:
   name: prod
   labels:
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     cost-center: operations
   annotations:
     description: "Production environment - handle with care!"

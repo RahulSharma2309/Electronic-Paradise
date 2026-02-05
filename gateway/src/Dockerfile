@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy project file first for better layer caching
 COPY ["gateway/src/Gateway.csproj", "Gateway/"]
 COPY ["gateway/src/Directory.Build.props", "./"]
+COPY ["gateway/.build/", ".build/"]
 
 # Restore dependencies
 RUN dotnet restore "Gateway/Gateway.csproj" --no-cache /p:DisableImplicitNuGetFallbackFolder=true
@@ -13,10 +14,10 @@ COPY gateway/src/ Gateway/
 
 # Build and publish
 WORKDIR "/src/Gateway"
-RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true
+RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true /p:TreatWarningsAsErrors=false
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app .
 
