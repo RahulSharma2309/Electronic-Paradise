@@ -1,9 +1,11 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy Platform project (now accessible with repo-root context)
 COPY ["platform/Ep.Platform/Ep.Platform.csproj", "platform/Ep.Platform/"]
 COPY ["platform/Ep.Platform/", "platform/Ep.Platform/"]
+COPY ["platform/Directory.Build.props", "platform/"]
+COPY ["platform/.build/", "platform/.build/"]
 
 # Copy service .build folder with version definitions
 COPY ["services/auth-service/.build/", "services/auth-service/.build/"]
@@ -26,10 +28,10 @@ COPY ["services/auth-service/src/", "/src/services/auth-service/src/"]
 
 # Build and publish
 WORKDIR "/src/services/auth-service/src/AuthService.API"
-RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true
+RUN dotnet publish -c Release -o /app /p:UseAppHost=false /p:DisableImplicitNuGetFallbackFolder=true /p:TreatWarningsAsErrors=false
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app .
 
@@ -49,8 +51,8 @@ ENV ASPNETCORE_URLS=http://+:80
 ENV ConnectionStrings__DefaultConnection="Server=mssql,1433;Database=authdb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
 ENV ServiceUrls__UserService="http://user-service:80"
 ENV JwtOptions__Key="your-super-secret-key-that-should-be-at-least-32-characters-long-for-security"
-ENV JwtOptions__Issuer="Electronic-Paradise"
-ENV JwtOptions__Audience="Electronic-Paradise-Users"
+ENV JwtOptions__Issuer="FreshHarvest-Market"
+ENV JwtOptions__Audience="FreshHarvest-Market-Users"
 
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]

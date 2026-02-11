@@ -2,6 +2,7 @@ using Ep.Platform.DependencyInjection;
 using Ep.Platform.Hosting;
 using OrderService.Core.Business;
 using OrderService.Core.Data;
+using OrderService.Core.Mappers;
 using OrderService.Core.Repository;
 
 namespace OrderService.API;
@@ -41,6 +42,9 @@ public class Startup
         // Register business and repository
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderService, OrderServiceImpl>();
+
+        // Register mapper
+        services.AddScoped<IOrderMapper, OrderMapper>();
     }
 
     /// <summary>

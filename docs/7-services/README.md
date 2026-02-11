@@ -1,6 +1,6 @@
 # 📘 Service Documentation Index
 
-**Complete documentation for all microservices in the MVP E-Commerce application**
+**Complete documentation for all microservices in the FreshHarvest Market organic food marketplace**
 
 ---
 
@@ -408,7 +408,7 @@ For questions or feedback on the documentation:
 
 **Documentation Version:** 1.0  
 **Last Updated:** December 24, 2025  
-**Maintained By:** MVP E-Commerce Team  
+**Maintained By:** FreshHarvest Market Team  
 
 **Total Documentation Pages:** 6  
 **Total Services Documented:** 5 + Gateway  

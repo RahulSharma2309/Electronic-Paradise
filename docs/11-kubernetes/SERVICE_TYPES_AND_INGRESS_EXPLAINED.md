@@ -387,13 +387,13 @@ Think of Ingress as a **smart receptionist**:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: electronic-paradise-ingress
+  name: freshharvest-market-ingress
   namespace: staging
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-  - host: api.staging.electronic-paradise.local
+  - host: api.staging.freshharvest-market.local
     http:
       paths:
       - path: /api
@@ -416,7 +416,7 @@ spec:
 | Feature | Description |
 |---------|-------------|
 | **Access** | External (via domain name) |
-| **How to Access** | `https://api.electronic-paradise.com` |
+| **How to Access** | `https://api.freshharvest-market.com` |
 | **Routing** | Domain and path-based |
 | **SSL/TLS** | Built-in support |
 | **Use Case** | Production (recommended) |
@@ -430,7 +430,7 @@ spec:
 │    Service Type: LoadBalancer                           │
 │    Public IP: 35.123.45.67                              │
 │                                                         │
-│  Domain: api.electronic-paradise.com                    │
+│  Domain: api.freshharvest-market.com                    │
 │         │                                               │
 │         │ Routes based on path                          │
 │         ▼                                               │
@@ -447,7 +447,7 @@ spec:
          │ ✅ External users access via domain
          │
     Internet Users
-    └─ Browser: https://api.electronic-paradise.com/api/auth
+    └─ Browser: https://api.freshharvest-market.com/api/auth
 ```
 
 ### When to Use Ingress
@@ -503,7 +503,7 @@ When external users access services:
 ```
 Internet User
     │
-    │ https://api.electronic-paradise.com/api/auth/login
+    │ https://api.freshharvest-market.com/api/auth/login
     ▼
 DNS Resolution
     │
@@ -554,7 +554,7 @@ Response flows back through same path
 │         Your Local Machine                              │
 │                                                         │
 │  Windows Hosts File                                     │
-│  127.0.0.1 auth.staging.electronic-paradise.local      │
+│  127.0.0.1 auth.staging.freshharvest-market.local      │
 │         │                                               │
 │         │ Resolves to: localhost                        │
 │         ▼                                               │
@@ -586,7 +586,7 @@ Response flows back through same path
 ┌─────────────────────────────────────────────────────────┐
 │         Internet User                                    │
 │                                                         │
-│  Types: https://api.electronic-paradise.com            │
+│  Types: https://api.freshharvest-market.com            │
 │         │                                               │
 │         │ Step 1: DNS Query                             │
 │         ▼                                               │
@@ -649,14 +649,14 @@ Response flows back through same path
 
 **Content:**
 ```
-127.0.0.1 auth.staging.electronic-paradise.local
-127.0.0.1 api.staging.electronic-paradise.local
+127.0.0.1 auth.staging.freshharvest-market.local
+127.0.0.1 api.staging.freshharvest-market.local
 ```
 
 **How It Works:**
-1. Browser requests: `http://auth.staging.electronic-paradise.local`
+1. Browser requests: `http://auth.staging.freshharvest-market.local`
 2. Operating system checks hosts file first
-3. Finds: `127.0.0.1 auth.staging.electronic-paradise.local`
+3. Finds: `127.0.0.1 auth.staging.freshharvest-market.local`
 4. Resolves to: `localhost` (127.0.0.1)
 5. Request goes to: `http://localhost:80`
 6. Docker Desktop exposes Ingress Controller on `localhost:80`
@@ -681,9 +681,9 @@ A       auth    35.123.45.67  (Same IP)
 ```
 
 **How It Works:**
-1. Browser requests: `https://api.electronic-paradise.com`
+1. Browser requests: `https://api.freshharvest-market.com`
 2. Operating system queries DNS servers
-3. DNS servers look up: `api.electronic-paradise.com`
+3. DNS servers look up: `api.freshharvest-market.com`
 4. Returns: `35.123.45.67` (Load Balancer IP)
 5. Browser connects to: `https://35.123.45.67`
 6. Load Balancer routes to Ingress Controller
@@ -762,15 +762,15 @@ Browser → Internet DNS → Public IP → Cloud Load Balancer → Ingress → S
 ┌─────────────────────────────────────────────────────────┐
 │         Your Browser                                    │
 │                                                         │
-│  Types: http://auth.staging.electronic-paradise.local/swagger
+│  Types: http://auth.staging.freshharvest-market.local/swagger
 │         │                                               │
 │         │ Step 1: DNS Resolution                        │
 │         │ Checks hosts file:                            │
-│         │ 127.0.0.1 auth.staging.electronic-paradise.local
+│         │ 127.0.0.1 auth.staging.freshharvest-market.local
 │         │ Resolves to: localhost                        │
 │         ▼                                               │
 │  Request: http://localhost:80/swagger                   │
-│  Host Header: auth.staging.electronic-paradise.local    │
+│  Host Header: auth.staging.freshharvest-market.local    │
 │         │                                               │
 │         │ Step 2: Docker Desktop                        │
 │         │ Exposes Ingress Controller on localhost:80    │
@@ -787,7 +787,7 @@ Browser → Internet DNS → Public IP → Cloud Load Balancer → Ingress → S
 │         │                                               │
 │         │ Step 3: Ingress Routing                       │
 │         │ Reads Host header:                            │
-│         │ "auth.staging.electronic-paradise.local"      │
+│         │ "auth.staging.freshharvest-market.local"      │
 │         │ Checks Ingress rules:                         │
 │         │ Routes to: auth-service:80                    │
 │         │                                               │
@@ -832,11 +832,11 @@ Browser → Internet DNS → Public IP → Cloud Load Balancer → Ingress → S
 ┌─────────────────────────────────────────────────────────┐
 │         Internet User                                    │
 │                                                         │
-│  Types: https://api.electronic-paradise.com/api/auth/login
+│  Types: https://api.freshharvest-market.com/api/auth/login
 │         │                                               │
 │         │ Step 1: DNS Query                             │
 │         │ Browser queries DNS:                          │
-│         │ "What is api.electronic-paradise.com?"        │
+│         │ "What is api.freshharvest-market.com?"        │
 │         ▼                                               │
 │  Internet DNS Servers                                   │
 │         │                                               │
@@ -848,7 +848,7 @@ Browser → Internet DNS → Public IP → Cloud Load Balancer → Ingress → S
 │         │                                               │
 │         │ Step 2: HTTPS Request                         │
 │         │ Connects to: https://35.123.45.67             │
-│         │ Host Header: api.electronic-paradise.com      │
+│         │ Host Header: api.freshharvest-market.com      │
 │         ▼                                               │
 └─────────────────────────────────────────────────────────┘
          │
@@ -869,7 +869,7 @@ Browser → Internet DNS → Public IP → Cloud Load Balancer → Ingress → S
 │         │                                               │
 │         │ Step 4: Ingress Routing                       │
 │         │ Reads Host header:                            │
-│         │ "api.electronic-paradise.com"                 │
+│         │ "api.freshharvest-market.com"                 │
 │         │ Reads path: "/api/auth/login"                 │
 │         │ Checks Ingress rules:                         │
 │         │ Routes to: gateway service                    │

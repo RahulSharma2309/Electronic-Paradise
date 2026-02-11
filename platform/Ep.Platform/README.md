@@ -1,6 +1,6 @@
 # Ep.Platform
 
-Shared infrastructure library for Electronic Paradise microservices.
+Shared infrastructure library for FreshHarvest Market microservices.
 
 ## Quick Reference
 

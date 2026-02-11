@@ -1,0 +1,5 @@
+<Project>
+  <!-- Import from gateway root .build folder -->
+  <Import Project="$(MSBuildThisFileDirectory)../.build/test.props" Condition="Exists('$(MSBuildThisFileDirectory)../.build/test.props')" />
+</Project>
+

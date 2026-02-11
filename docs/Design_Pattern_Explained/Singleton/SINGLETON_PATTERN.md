@@ -9,7 +9,7 @@
 5. [Problems with Classic Singleton](#problems-with-classic-singleton)
 6. [Static Class vs Singleton Pattern](#static-class-vs-singleton-pattern)
 7. [Modern Approach: Dependency Injection](#modern-approach-dependency-injection)
-8. [Singleton in Electronic Paradise](#singleton-in-electronic-paradise)
+8. [Singleton in FreshHarvest Market](#singleton-in-freshharvest-market)
 9. [When to Use Singleton](#when-to-use-singleton)
 10. [Summary](#summary)
 
@@ -805,9 +805,9 @@ public void ConfigureServices(IServiceCollection services)
 
 ---
 
-## Singleton in Electronic Paradise
+## Singleton in FreshHarvest Market
 
-The Electronic Paradise codebase uses **DI container singletons** rather than classic singleton pattern. Here are examples:
+The FreshHarvest Market codebase uses **DI container singletons** rather than classic singleton pattern. Here are examples:
 
 ### Example 1: Security Services
 

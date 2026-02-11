@@ -62,7 +62,7 @@ metadata:
 spec:
   # Where to get manifests
   source:
-    repoURL: https://github.com/RahulSharma2309/Electronic-Paradise
+    repoURL: https://github.com/RahulSharma2309/FreshHarvest-Market
     targetRevision: main           # Branch, tag, or commit SHA
     path: infra/k8s/staging/deployments/auth-service  # Folder with YAMLs
   
@@ -330,7 +330,7 @@ SSH known hosts, TLS certificates.
 **Via CLI:**
 ```bash
 argocd app create auth-service-staging \
-  --repo https://github.com/RahulSharma2309/Electronic-Paradise \
+  --repo https://github.com/RahulSharma2309/FreshHarvest-Market \
   --path infra/k8s/staging/deployments/auth-service \
   --dest-server https://kubernetes.default.svc \
   --dest-namespace staging

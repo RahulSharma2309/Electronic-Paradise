@@ -10,7 +10,7 @@ metadata:
   labels:
     app: auth-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: auth-service-sa
@@ -30,7 +30,7 @@ metadata:
   labels:
     app: user-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: user-service-sa
@@ -50,7 +50,7 @@ metadata:
   labels:
     app: product-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: product-service-sa
@@ -70,7 +70,7 @@ metadata:
   labels:
     app: order-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: order-service-sa
@@ -90,7 +90,7 @@ metadata:
   labels:
     app: payment-service
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: payment-service-sa
@@ -110,7 +110,7 @@ metadata:
   labels:
     app: gateway
     environment: production
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 subjects:
   - kind: ServiceAccount
     name: gateway-sa

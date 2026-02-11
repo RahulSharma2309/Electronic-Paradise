@@ -132,13 +132,13 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - { name: "auth", image: "electronic-paradise-auth" }
-          - { name: "user", image: "electronic-paradise-user" }
-          - { name: "product", image: "electronic-paradise-product" }
-          - { name: "order", image: "electronic-paradise-order" }
-          - { name: "payment", image: "electronic-paradise-payment" }
-          - { name: "gateway", image: "electronic-paradise-gateway" }
-          - { name: "frontend", image: "electronic-paradise-frontend" }
+          - { name: "auth", image: "freshharvest-market-auth" }
+          - { name: "user", image: "freshharvest-market-user" }
+          - { name: "product", image: "freshharvest-market-product" }
+          - { name: "order", image: "freshharvest-market-order" }
+          - { name: "payment", image: "freshharvest-market-payment" }
+          - { name: "gateway", image: "freshharvest-market-gateway" }
+          - { name: "frontend", image: "freshharvest-market-frontend" }
     steps:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -180,7 +180,7 @@ jobs:
       contents: read
     environment:
       name: ${{ needs.prepare-deployment.outputs.environment }}
-      url: ${{ needs.prepare-deployment.outputs.environment == 'prod' && 'http://api.electronic-paradise.local' || 'http://staging.electronic-paradise.local' }}
+      url: ${{ needs.prepare-deployment.outputs.environment == 'prod' && 'http://api.freshharvest-market.local' || 'http://staging.freshharvest-market.local' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -355,9 +355,9 @@ jobs:
           echo "1. Verify services are running: \`kubectl get pods -n ${NAMESPACE}\`" >> $GITHUB_STEP_SUMMARY
           echo "2. Check logs: \`kubectl logs -n ${NAMESPACE} deployment/<service-name>\`" >> $GITHUB_STEP_SUMMARY
           if [ "$ENV" == "prod" ]; then
-            echo "3. Access frontend: http://app.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
-            echo "4. Access API: http://api.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+            echo "3. Access frontend: http://app.freshharvest-market.local" >> $GITHUB_STEP_SUMMARY
+            echo "4. Access API: http://api.freshharvest-market.local" >> $GITHUB_STEP_SUMMARY
           else
-            echo "3. Access frontend: http://staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
-            echo "4. Access API: http://api.staging.electronic-paradise.local" >> $GITHUB_STEP_SUMMARY
+            echo "3. Access frontend: http://staging.freshharvest-market.local" >> $GITHUB_STEP_SUMMARY
+            echo "4. Access API: http://api.staging.freshharvest-market.local" >> $GITHUB_STEP_SUMMARY
           fi

@@ -27,4 +27,11 @@ public interface IOrderRepository
     /// <param name="userId">The unique identifier of the user.</param>
     /// <returns>A list of orders with items for the user.</returns>
     Task<List<Order>> GetByUserIdAsync(Guid userId);
+
+    /// <summary>
+    /// Updates an existing order.
+    /// </summary>
+    /// <param name="order">The order to update.</param>
+    /// <returns>The updated order.</returns>
+    Task<Order> UpdateAsync(Order order);
 }

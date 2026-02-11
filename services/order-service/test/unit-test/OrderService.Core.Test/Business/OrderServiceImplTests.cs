@@ -2,9 +2,10 @@ using System.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using OrderService.Abstraction.DTOs;
+using OrderService.Abstraction.DTOs.Requests;
 using OrderService.Abstraction.Models;
 using OrderService.Core.Business;
+using OrderService.Core.Mappers;
 using OrderService.Core.Repository;
 using OrderService.Core.Test.Business.Fakes;
 using Xunit;
@@ -13,22 +14,28 @@ namespace OrderService.Core.Test.Business;
 
 public class OrderServiceImplTests
 {
+    private static OrderServiceImpl CreateSut(Mock<IOrderRepository> repo, IReadOnlyDictionary<string, HttpClient> clients)
+    {
+        var mapper = new OrderMapper();
+        var httpClientFactory = new StubHttpClientFactory(clients);
+        return new OrderServiceImpl(repo.Object, mapper, httpClientFactory, NullLogger<OrderServiceImpl>.Instance);
+    }
+
     [Fact]
     public async Task CreateOrderAsync_WhenItemsEmpty_ShouldThrowArgumentException()
     {
         // Arrange
         var repo = new Mock<IOrderRepository>(MockBehavior.Strict);
-        var factory = new StubHttpClientFactory(new Dictionary<string, HttpClient>());
-        var service = new OrderServiceImpl(repo.Object, factory, NullLogger<OrderServiceImpl>.Instance);
+        var sut = CreateSut(repo, new Dictionary<string, HttpClient>());
 
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto>(),
+            Items = new List<CreateOrderItemRequest>(),
         };
 
         // Act
-        var act = () => service.CreateOrderAsync(dto);
+        var act = () => sut.CreateOrderAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>()
@@ -46,23 +53,21 @@ public class OrderServiceImplTests
             BaseAddress = new Uri("http://user"),
         };
 
-        var factory = new StubHttpClientFactory(new Dictionary<string, HttpClient>
+        var sut = CreateSut(repo, new Dictionary<string, HttpClient>
         {
             ["user"] = userHttp,
             ["product"] = new HttpClient(new StubHttpMessageHandler(_ => StubHttpMessageHandler.Json(HttpStatusCode.OK))) { BaseAddress = new Uri("http://product") },
             ["payment"] = new HttpClient(new StubHttpMessageHandler(_ => StubHttpMessageHandler.Json(HttpStatusCode.OK))) { BaseAddress = new Uri("http://payment") },
         });
 
-        var service = new OrderServiceImpl(repo.Object, factory, NullLogger<OrderServiceImpl>.Instance);
-
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = Guid.NewGuid(),
-            Items = new List<OrderItemDto> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
         };
 
         // Act
-        var act = () => service.CreateOrderAsync(dto);
+        var act = () => sut.CreateOrderAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<KeyNotFoundException>()
@@ -74,9 +79,9 @@ public class OrderServiceImplTests
     {
         // Arrange
         var repo = new Mock<IOrderRepository>(MockBehavior.Strict);
-
         var userId = Guid.NewGuid();
         var profileId = Guid.NewGuid();
+
         var userHttp = new HttpClient(new StubHttpMessageHandler(_ =>
             StubHttpMessageHandler.Json(HttpStatusCode.OK, $$"""{"id":"{{profileId}}","userId":"{{userId}}","walletBalance":999}""")))
         {
@@ -96,23 +101,21 @@ public class OrderServiceImplTests
             BaseAddress = new Uri("http://product"),
         };
 
-        var factory = new StubHttpClientFactory(new Dictionary<string, HttpClient>
+        var sut = CreateSut(repo, new Dictionary<string, HttpClient>
         {
             ["user"] = userHttp,
             ["product"] = productHttp,
             ["payment"] = new HttpClient(new StubHttpMessageHandler(_ => StubHttpMessageHandler.Json(HttpStatusCode.OK))) { BaseAddress = new Uri("http://payment") },
         });
 
-        var service = new OrderServiceImpl(repo.Object, factory, NullLogger<OrderServiceImpl>.Instance);
-
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = Guid.NewGuid(), Quantity = 1 } },
         };
 
         // Act
-        var act = () => service.CreateOrderAsync(dto);
+        var act = () => sut.CreateOrderAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<KeyNotFoundException>()
@@ -140,7 +143,7 @@ public class OrderServiceImplTests
             if (req.Method == HttpMethod.Get && req.RequestUri!.AbsolutePath.EndsWith($"/api/products/{productId}", StringComparison.OrdinalIgnoreCase))
             {
                 // stock 0 but requested 1
-                return StubHttpMessageHandler.Json(HttpStatusCode.OK, $$"""{"id":"{{productId}}","name":"SSD","price":100,"stock":0}""");
+                return StubHttpMessageHandler.Json(HttpStatusCode.OK, $$"""{"id":"{{productId}}","name":"Organic Apples","price":100,"stock":0}""");
             }
 
             return StubHttpMessageHandler.Json(HttpStatusCode.OK);
@@ -149,23 +152,21 @@ public class OrderServiceImplTests
             BaseAddress = new Uri("http://product"),
         };
 
-        var factory = new StubHttpClientFactory(new Dictionary<string, HttpClient>
+        var sut = CreateSut(repo, new Dictionary<string, HttpClient>
         {
             ["user"] = userHttp,
             ["product"] = productHttp,
             ["payment"] = new HttpClient(new StubHttpMessageHandler(_ => StubHttpMessageHandler.Json(HttpStatusCode.OK))) { BaseAddress = new Uri("http://payment") },
         });
 
-        var service = new OrderServiceImpl(repo.Object, factory, NullLogger<OrderServiceImpl>.Instance);
-
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto> { new() { ProductId = productId, Quantity = 1 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = productId, Quantity = 1 } },
         };
 
         // Act
-        var act = () => service.CreateOrderAsync(dto);
+        var act = () => sut.CreateOrderAsync(request);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
@@ -173,7 +174,7 @@ public class OrderServiceImplTests
     }
 
     [Fact]
-    public async Task CreateOrderAsync_WhenHappyPath_ShouldCreateOrderAndPersist()
+    public async Task CreateOrderAsync_WhenHappyPath_ShouldPersistAndReturnOrderDetail()
     {
         // Arrange
         var repo = new Mock<IOrderRepository>(MockBehavior.Strict);
@@ -195,7 +196,7 @@ public class OrderServiceImplTests
             var path = req.RequestUri!.AbsolutePath;
             if (req.Method == HttpMethod.Get && path.EndsWith($"/api/products/{productId}", StringComparison.OrdinalIgnoreCase))
             {
-                return StubHttpMessageHandler.Json(HttpStatusCode.OK, $$"""{"id":"{{productId}}","name":"GPU","price":200,"stock":10}""");
+                return StubHttpMessageHandler.Json(HttpStatusCode.OK, $$"""{"id":"{{productId}}","name":"Organic Bananas","price":200,"stock":10}""");
             }
 
             if (req.Method == HttpMethod.Post && path.EndsWith($"/api/products/{productId}/reserve", StringComparison.OrdinalIgnoreCase))
@@ -222,37 +223,35 @@ public class OrderServiceImplTests
             BaseAddress = new Uri("http://payment"),
         };
 
-        var factory = new StubHttpClientFactory(new Dictionary<string, HttpClient>
+        var sut = CreateSut(repo, new Dictionary<string, HttpClient>
         {
             ["user"] = userHttp,
             ["product"] = productHttp,
             ["payment"] = paymentHttp,
         });
 
-        var service = new OrderServiceImpl(repo.Object, factory, NullLogger<OrderServiceImpl>.Instance);
-
-        var dto = new CreateOrderDto
+        var request = new CreateOrderRequest
         {
             UserId = userId,
-            Items = new List<OrderItemDto> { new() { ProductId = productId, Quantity = 2 } },
+            Items = new List<CreateOrderItemRequest> { new() { ProductId = productId, Quantity = 2 } },
         };
 
         // Act
-        var order = await service.CreateOrderAsync(dto);
+        var order = await sut.CreateOrderAsync(request);
 
         // Assert
         order.UserId.Should().Be(userId);
-        order.TotalAmount.Should().Be(400);
+        order.TotalAmount.Should().Be(400m);
         order.Items.Should().HaveCount(1);
-        order.Items.First().ProductId.Should().Be(productId);
-        order.Items.First().Quantity.Should().Be(2);
-        order.Items.First().UnitPrice.Should().Be(200);
+        order.Items[0].ProductId.Should().Be(productId);
+        order.Items[0].Quantity.Should().Be(2);
+        order.Items[0].UnitPrice.Should().Be(200m);
+        order.Items[0].TotalPrice.Should().Be(400m);
 
         repo.Verify(r => r.AddAsync(It.Is<Order>(o =>
             o.UserId == userId &&
-            o.TotalAmount == 400 &&
+            o.TotalAmount == 400m &&
             o.Items.Count == 1)), Times.Once);
     }
 }
-
 

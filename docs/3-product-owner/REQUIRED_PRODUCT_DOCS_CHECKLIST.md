@@ -10,13 +10,13 @@ It’s written for both **Product Manager** and **Product Owner** responsibiliti
 ## 1) Strategy Layer (Why / Direction)
 
 - [ ] **Product vision + principles** (North Star metric + guardrails)  
-  - **File:** `docs/product-documents/PRODUCT_VISION_AND_PRINCIPLES.md`
+  - **File:** `docs/3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md`
 
 - [ ] **Personas + JTBD** (who we serve + what jobs we solve)  
-  - **File:** `docs/product-documents/USER_PERSONAS_AND_JTBD.md`
+  - **File:** `docs/3-product-owner/USER_PERSONAS_AND_JTBD.md`
 
 - [ ] **SWOT analysis** (internal/external reality check)  
-  - **File:** `docs/product-documents/SWOT_ANALYSIS.md`
+  - **File:** `docs/3-product-owner/SWOT_ANALYSIS.md`
 
 - [ ] **Outcome/KPI framework (OKRs/KPIs)** (how we measure value)  
   - **In this repo:** captured inside `PRODUCT_VISION_AND_PRINCIPLES.md`
@@ -26,10 +26,10 @@ It’s written for both **Product Manager** and **Product Owner** responsibiliti
 ## 2) Planning Layer (What / When)
 
 - [ ] **Product roadmap (Now/Next/Later + quarterly themes)**  
-  - **File:** `docs/product-documents/PRODUCT_ROADMAP_PM_PO.md`
+  - **File:** `docs/3-product-owner/PRODUCT_ROADMAP_PM_PO.md`
 
 - [ ] **Iteration view (sprint goals + product look & feel per phase)**  
-  - **File:** `docs/product-documents/ITERATION_VIEW_PM_PO.md`
+  - **File:** `docs/3-product-owner/ITERATION_VIEW_PM_PO.md`
 
 - [ ] **Release plan + release notes approach**  
   - **In this repo:** embedded in `PRODUCT_ROADMAP_PM_PO.md` (release slices)
@@ -39,23 +39,23 @@ It’s written for both **Product Manager** and **Product Owner** responsibiliti
 ## 3) Execution Layer (How / Build)
 
 - [x] **Engineering roadmap** (epics/PBIs + acceptance criteria)  
-  - **File:** `docs/PROJECT_ROADMAP.md`
+  - **File:** `docs/9-roadmap-and-tracking/PROJECT_ROADMAP.md`
 
 - [x] **Iteration checklist / sprint execution tracking**  
-  - **File:** `docs/ITERATION_CHECKLIST.md`
+  - **File:** `docs/9-roadmap-and-tracking/ITERATION_CHECKLIST.md`
 
 - [x] **User flow docs (end-to-end)**  
-  - **Folder:** `docs/Functionality/`
+  - **Folder:** `docs/5-user-flows/`
 
 - [x] **Service docs (architecture + APIs)**  
-  - **Folder:** `docs/Services/`
+  - **Folder:** `docs/7-services/`
 
 ---
 
 ## 4) Quality Layer (When is it “done”?)
 
 - [ ] **Definition of Done** (story/sprint/release/quarter/half-year/year)  
-  - **File:** `docs/product-documents/DEFINITION_OF_DONE.md`
+  - **File:** `docs/3-product-owner/DEFINITION_OF_DONE.md`
 
 - [ ] **Definition of Ready (DoR)** (optional but recommended)  
   - **In this repo:** included inside `DEFINITION_OF_DONE.md` (DoR section)
@@ -65,10 +65,10 @@ It’s written for both **Product Manager** and **Product Owner** responsibiliti
 ## 5) Governance Layer (How decisions are made)
 
 - [ ] **Decision log** (what we decided + why, links to PRs/issues)  
-  - **Suggested future doc:** `docs/product-documents/DECISION_LOG.md`
+  - **Suggested future doc:** `docs/3-product-owner/DECISION_LOG.md`
 
 - [ ] **Risk register** (top risks, mitigations, owners)  
-  - **Suggested future doc:** `docs/product-documents/RISK_REGISTER.md`
+  - **Suggested future doc:** `docs/3-product-owner/RISK_REGISTER.md`
 
 ---
 

@@ -1,6 +1,6 @@
-# 🎓 E-Commerce Application - Learning Roadmap
+# 🎓 FreshHarvest Market - Learning Roadmap
 
-> **Comprehensive guide to mastering full-stack development, microservices, DevOps, and cloud-native technologies**
+> **Comprehensive guide to mastering full-stack development, microservices, DevOps, and cloud-native technologies through an organic food marketplace**
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 🎯 Overview
 
-This roadmap is designed to take you from **MVP developer** to **Senior Full-Stack/DevOps Engineer** through hands-on development of a production-grade e-commerce platform.
+This roadmap is designed to take you from **MVP developer** to **Senior Full-Stack/DevOps Engineer** through hands-on development of a production-grade organic food marketplace (FreshHarvest Market).
 
 **Unique Approach:**
 - ✅ Learning by doing (not just tutorials)
@@ -276,12 +276,12 @@ By the end of this roadmap, you will:
 ### Creational Patterns
 
 #### 1. Factory Pattern (Epic 1, PBI 1.1)
-**When:** Creating products of different types (Smartphone, Laptop, Tablet)
+**When:** Creating organic products of different types (Fruits, Vegetables, Grains, Dairy)
 
 ```csharp
 public interface IProduct { }
-public class Smartphone : IProduct { }
-public class Laptop : IProduct { }
+public class FreshFruit : IProduct { }
+public class OrganicVegetable : IProduct { }
 
 public class ProductFactory
 {
@@ -289,8 +289,8 @@ public class ProductFactory
     {
         return type switch
         {
-            ProductType.Smartphone => new Smartphone(),
-            ProductType.Laptop => new Laptop(),
+            ProductType.FreshFruit => new FreshFruit(),
+            ProductType.OrganicVegetable => new OrganicVegetable(),
             _ => throw new ArgumentException()
         };
     }
@@ -305,22 +305,28 @@ public class ProductFactory
 ---
 
 #### 2. Builder Pattern (Epic 1, PBI 1.2)
-**When:** Creating complex products with many variants
+**When:** Creating complex organic products with many attributes (pack sizes, certifications, origin)
 
 ```csharp
 public class ProductBuilder
 {
     private Product _product = new();
     
-    public ProductBuilder WithColor(string color) 
+    public ProductBuilder WithCertification(string cert) 
     { 
-        _product.Color = color; 
+        _product.Certification = cert; 
         return this; 
     }
     
-    public ProductBuilder WithStorage(int gb) 
+    public ProductBuilder WithPackSize(string size) 
     { 
-        _product.Storage = gb; 
+        _product.PackSize = size; 
+        return this; 
+    }
+    
+    public ProductBuilder WithFarmOrigin(string origin) 
+    { 
+        _product.FarmOrigin = origin; 
         return this; 
     }
     
@@ -329,8 +335,9 @@ public class ProductBuilder
 
 // Usage
 var product = new ProductBuilder()
-    .WithColor("Black")
-    .WithStorage(256)
+    .WithCertification("India Organic")
+    .WithPackSize("1 kg")
+    .WithFarmOrigin("Nashik, Maharashtra")
     .Build();
 ```
 
@@ -344,7 +351,7 @@ var product = new ProductBuilder()
 ### Behavioral Patterns
 
 #### 3. Strategy Pattern (Epic 1, PBI 1.3)
-**When:** Multiple pricing strategies (Regular, Sale, Bundle)
+**When:** Multiple pricing strategies (Regular, Seasonal, Fresh Discount, Bulk Bundle)
 
 ```csharp
 public interface IPricingStrategy
@@ -357,9 +364,14 @@ public class RegularPricing : IPricingStrategy
     public decimal CalculatePrice(Product product) => product.BasePrice;
 }
 
-public class SalePricing : IPricingStrategy
+public class SeasonalPricing : IPricingStrategy
 {
-    public decimal CalculatePrice(Product product) => product.BasePrice * 0.8m;
+    public decimal CalculatePrice(Product product) => product.BasePrice * 0.85m;
+}
+
+public class NearExpiryDiscount : IPricingStrategy
+{
+    public decimal CalculatePrice(Product product) => product.BasePrice * 0.7m;
 }
 
 public class PricingContext
@@ -379,19 +391,25 @@ public class PricingContext
 ---
 
 #### 4. Observer Pattern (Epic 1, PBI 1.7)
-**When:** Stock alerts, price drop notifications
+**When:** Low stock alerts, freshness expiry notifications, seasonal availability alerts
 
 ```csharp
 public interface IStockObserver
 {
     void OnStockLow(Product product);
+    void OnNearExpiry(Product product);
 }
 
 public class EmailNotifier : IStockObserver
 {
     public void OnStockLow(Product product)
     {
-        // Send email
+        // Send restock alert for organic produce
+    }
+    
+    public void OnNearExpiry(Product product)
+    {
+        // Send freshness alert for perishables
     }
 }
 
@@ -506,7 +524,7 @@ var result = validator.Validate(order);
 ### Structural Patterns
 
 #### 7. Decorator Pattern (Epic 1, PBI 1.9)
-**When:** Adding warranties, insurance to products
+**When:** Adding premium services to organic products (express delivery, gift packaging, freshness guarantee)
 
 ```csharp
 public interface IProduct
@@ -517,25 +535,35 @@ public interface IProduct
 
 public class BaseProduct : IProduct
 {
-    public decimal GetPrice() => 999m;
-    public string GetDescription() => "Smartphone";
+    public decimal GetPrice() => 299m; // INR
+    public string GetDescription() => "Organic Mango (1 kg)";
 }
 
-public class WarrantyDecorator : IProduct
+public class ExpressDeliveryDecorator : IProduct
 {
     private IProduct _product;
     
-    public WarrantyDecorator(IProduct product) => _product = product;
+    public ExpressDeliveryDecorator(IProduct product) => _product = product;
     
-    public decimal GetPrice() => _product.GetPrice() + 99m;
-    public string GetDescription() => $"{_product.GetDescription()} + Warranty";
+    public decimal GetPrice() => _product.GetPrice() + 49m;
+    public string GetDescription() => $"{_product.GetDescription()} + Express Delivery";
+}
+
+public class GiftPackagingDecorator : IProduct
+{
+    private IProduct _product;
+    
+    public GiftPackagingDecorator(IProduct product) => _product = product;
+    
+    public decimal GetPrice() => _product.GetPrice() + 29m;
+    public string GetDescription() => $"{_product.GetDescription()} + Gift Packaging";
 }
 
 // Usage
 IProduct product = new BaseProduct();
-product = new WarrantyDecorator(product);
-product = new InsuranceDecorator(product);
-// Total price includes base + warranty + insurance
+product = new ExpressDeliveryDecorator(product);
+product = new GiftPackagingDecorator(product);
+// Total price includes base + express delivery + gift packaging
 ```
 
 **Learning Outcomes:**
@@ -546,7 +574,7 @@ product = new InsuranceDecorator(product);
 ---
 
 #### 8. Adapter Pattern (Epic 3, PBI 3.1)
-**When:** Multiple payment gateways (Wallet, Credit Card, UPI)
+**When:** Multiple payment gateways (Wallet, Razorpay, UPI, COD)
 
 ```csharp
 public interface IPaymentGateway
@@ -562,16 +590,16 @@ public class WalletPaymentGateway : IPaymentGateway
     }
 }
 
-public class StripeAdapter : IPaymentGateway
+public class RazorpayAdapter : IPaymentGateway
 {
-    private StripeClient _stripeClient;
+    private RazorpayClient _razorpayClient;
     
     public async Task<PaymentResult> ProcessPayment(PaymentRequest request)
     {
-        // Adapt our request to Stripe's format
-        var stripeRequest = MapToStripeRequest(request);
-        var stripeResponse = await _stripeClient.Charge(stripeRequest);
-        return MapFromStripeResponse(stripeResponse);
+        // Adapt our request to Razorpay's format (INR)
+        var razorpayRequest = MapToRazorpayRequest(request);
+        var razorpayResponse = await _razorpayClient.CreateOrder(razorpayRequest);
+        return MapFromRazorpayResponse(razorpayResponse);
     }
 }
 ```
@@ -689,9 +717,9 @@ public class OrderSaga
 - ✅ Strategy Pattern for dynamic pricing
 - ✅ Observer Pattern for stock alerts
 - ✅ Decorator Pattern for add-ons
-- ✅ EAV (Entity-Attribute-Value) pattern
-- ✅ Full-text search implementation
-- ✅ Image upload and optimization
+- ✅ EAV (Entity-Attribute-Value) pattern for organic certifications
+- ✅ Full-text search for organic products by certification/origin
+- ✅ Product image upload and optimization
 - ✅ Advanced Entity Framework (TPH/TPT)
 - ✅ Database indexing for performance
 
@@ -1041,17 +1069,17 @@ After completing this roadmap, you'll be prepared for:
 **Month 1-2:**
 - [ ] Complete Epic 1, PBIs 1.1-1.5
 - [ ] Master Factory, Builder, Strategy patterns
-- [ ] Implement product catalog with variants
+- [ ] Implement organic product catalog with pack sizes and certifications
 
 **Month 3-4:**
 - [ ] Complete Epic 1, PBIs 1.6-1.10 + Epic 2 start
-- [ ] Master Observer, Decorator patterns
-- [ ] Implement order state machine
+- [ ] Master Observer (freshness alerts), Decorator patterns
+- [ ] Implement order state machine with freshness tracking
 
 **Month 5-6:**
 - [ ] Complete Epic 2 + Epic 3
 - [ ] Master State, Chain, Saga, Adapter, Facade patterns
-- [ ] Implement payment integrations
+- [ ] Implement payment integrations (Razorpay, UPI)
 
 **Month 7-8:**
 - [ ] Complete Epic 4

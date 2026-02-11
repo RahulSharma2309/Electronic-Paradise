@@ -1,111 +1,161 @@
-/* Common/Shared Component Styles - E-Commerce Theme */
+/* Common/Shared Component Styles - Calm Organic Theme */
+
+/* ============================================================
+   BUTTONS
+   - Primary: Harvest yellow pill
+   - Secondary: green outline
+   - Text: muted green
+   ============================================================ */
 
 .button {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  padding: 12px 18px;
+  min-height: 44px; /* tap target */
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
+  letter-spacing: 0.1px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  user-select: none;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
-}
+  gap: 10px;
 
-.button::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.button:hover:not(:disabled)::before {
-  width: 300px;
-  height: 300px;
-}
-
-.button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.button:active:not(:disabled) {
-  transform: translateY(0);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease;
   box-shadow: var(--shadow-sm);
 }
 
+/* Default button maps to "primary" */
+.button,
+.button-primary {
+  background: var(--color-cta);
+  color: rgba(46, 46, 46, 0.92);
+}
+
+.button:hover:not(:disabled),
+.button-primary:hover:not(:disabled) {
+  background: #f3b81f; /* gentle darkening */
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+.button:active:not(:disabled),
+.button-primary:active:not(:disabled) {
+  transform: scale(0.99);
+  box-shadow: var(--shadow-sm);
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.18), var(--shadow-sm);
+}
+
 .button:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .button-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
+  background: transparent;
+  color: var(--color-primary-muted);
+  border-color: rgba(95, 163, 106, 0.45);
+  box-shadow: none;
 }
 
 .button-secondary:hover:not(:disabled) {
-  background: var(--bg-secondary);
-  border-color: var(--text-secondary);
+  background: rgba(95, 163, 106, 0.08);
+  border-color: rgba(95, 163, 106, 0.75);
+  transform: scale(1.02);
 }
 
 .button-danger {
-  background: linear-gradient(135deg, var(--error-color) 0%, #DC2626 100%);
+  background: rgba(201, 106, 91, 0.14);
+  color: #7a3c33;
+  border-color: rgba(201, 106, 91, 0.30);
+  box-shadow: none;
 }
 
 .button-danger:hover:not(:disabled) {
-  background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+  background: rgba(201, 106, 91, 0.20);
+  border-color: rgba(201, 106, 91, 0.45);
+  transform: scale(1.02);
+}
+
+.button-text {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--color-primary-muted);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.button-text:hover:not(:disabled) {
+  background: rgba(95, 163, 106, 0.08);
+  transform: scale(1.02);
+}
+
+/* ============================================================
+   INPUTS
+   - Rounded, soft borders
+   - Subtle green focus glow
+   ============================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .input {
-  padding: 12px 16px;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 1rem;
   width: 100%;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  min-height: 46px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-text);
+
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
 .input::placeholder {
-  color: var(--text-light);
+  color: rgba(107, 107, 107, 0.85);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+  border-color: rgba(76, 175, 80, 0.55);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.14);
+  background: rgba(255, 255, 255, 0.98);
   transform: translateY(-1px);
 }
 
 .input.error {
-  border-color: var(--error-color);
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+  border-color: rgba(201, 106, 91, 0.55);
+  box-shadow: 0 0 0 4px rgba(201, 106, 91, 0.12);
+}
+
+.error-message {
+  color: rgba(122, 60, 51, 0.95);
+  font-size: 0.92rem;
+  line-height: 1.35;
 }
 
 .loading-spinner {
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 2px solid rgba(46, 46, 46, 0.18);
+  border-top-color: rgba(46, 46, 46, 0.62);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -116,11 +166,20 @@
   }
 }
 
+/* ============================================================
+   CARDS / SURFACES
+   ============================================================ */
+
 .card {
-  background: #f9fbff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(79, 140, 255, 0.07);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   padding: 18px 20px;
-  margin-bottom: 18px;
+}
+
+.card-soft {
+  background: var(--color-soil);
+  border: 1px solid rgba(141, 110, 99, 0.18);
 }
 

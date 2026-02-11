@@ -4,7 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: electronic-paradise-ingress
+  name: freshharvest-market-ingress
   namespace: prod
   annotations:
     # Use NGINX Ingress Controller
@@ -26,7 +26,7 @@ spec:
   ingressClassName: nginx
   rules:
     # Frontend route - serves the React SPA
-    - host: electronic-paradise.com
+    - host: freshharvest-market.com
       http:
         paths:
           - path: /
@@ -38,7 +38,7 @@ spec:
                   number: 80
     
     # API Gateway route - routes all /api/* requests to gateway
-    - host: api.electronic-paradise.com
+    - host: api.freshharvest-market.com
       http:
         paths:
           - path: /api(/|$)(.*)
@@ -61,8 +61,8 @@ spec:
   # Uncomment when cert-manager is set up:
   # tls:
   #   - hosts:
-  #       - electronic-paradise.com
-  #       - api.electronic-paradise.com
-  #     secretName: electronic-paradise-tls
+  #       - freshharvest-market.com
+  #       - api.freshharvest-market.com
+  #     secretName: freshharvest-market-tls
 
 ---

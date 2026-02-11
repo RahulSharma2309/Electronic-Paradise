@@ -1,6 +1,6 @@
-# Kubernetes Implementation Guide - Electronic Paradise
+# Kubernetes Implementation Guide - FreshHarvest Market
 
-> **Your comprehensive guide to understanding Kubernetes concepts and how they're implemented in Electronic Paradise**
+> **Your comprehensive guide to understanding Kubernetes concepts and how they're implemented in FreshHarvest Market**
 
 ## 📚 Table of Contents
 
@@ -18,7 +18,7 @@
 
 ## Overview
 
-This directory contains comprehensive documentation about Kubernetes implementation for Electronic Paradise. This guide explains:
+This directory contains comprehensive documentation about Kubernetes implementation for FreshHarvest Market. This guide explains:
 
 - **What Kubernetes is** and why we use it
 - **Key concepts** (Namespaces, RBAC, Deployments, Services, etc.)
@@ -35,7 +35,7 @@ This directory contains comprehensive documentation about Kubernetes implementat
 ### Quick Links
 
 #### 🚀 Getting Started
-- **[LOCAL_DEPLOYMENT_GUIDE.md](./LOCAL_DEPLOYMENT_GUIDE.md)** - 🎯 **NEW USERS START HERE!** Complete step-by-step guide to run Varnex Enterprise on your local machine
+- **[LOCAL_DEPLOYMENT_GUIDE.md](./LOCAL_DEPLOYMENT_GUIDE.md)** - 🎯 **NEW USERS START HERE!** Complete step-by-step guide to run FreshHarvest Market on your local machine
 
 #### 📖 Learning Resources
 - **[LEARNING_PATH.md](./LEARNING_PATH.md)** - Complete learning guide for Kubernetes concepts
@@ -80,7 +80,7 @@ Kubernetes Approach:
 
 ### Why Kubernetes?
 
-**For Electronic Paradise:**
+**For FreshHarvest Market:**
 
 1. **Scalability**: Easily scale services based on demand
 2. **High Availability**: Automatic restart of failed containers
@@ -466,7 +466,7 @@ Deployment:
 
 ## Step-by-Step Implementation
 
-This section documents how we implemented Kubernetes for Electronic Paradise.
+This section documents how we implemented Kubernetes for FreshHarvest Market.
 
 ### Phase 1: Understanding Concepts
 

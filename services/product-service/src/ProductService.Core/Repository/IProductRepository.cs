@@ -28,6 +28,20 @@ public interface IProductRepository
     Task AddAsync(Product p);
 
     /// <summary>
+    /// Resolves an existing category by name (or creates one if missing).
+    /// </summary>
+    /// <param name="name">The category name.</param>
+    /// <returns>The resolved category.</returns>
+    Task<Category> GetOrCreateCategoryAsync(string name);
+
+    /// <summary>
+    /// Resolves tags by name (creating any missing tags).
+    /// </summary>
+    /// <param name="tagNames">The tag names.</param>
+    /// <returns>Resolved tags.</returns>
+    Task<List<Tag>> GetOrCreateTagsAsync(IEnumerable<string> tagNames);
+
+    /// <summary>
     /// Reserves a specified quantity of stock for a product within a transaction.
     /// </summary>
     /// <param name="id">The unique identifier of the product.</param>

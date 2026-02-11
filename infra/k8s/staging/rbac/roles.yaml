@@ -11,7 +11,7 @@ metadata:
   name: service-role
   namespace: staging
   labels:
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     environment: staging
 rules:
   # Read ConfigMaps (for application configuration)
@@ -48,7 +48,7 @@ metadata:
   name: deployment-role
   namespace: staging
   labels:
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
     environment: staging
 rules:
   # Full access to Deployments

@@ -1,8 +1,8 @@
-# MY_Practice – High-level Architecture
+# FreshHarvest Market – High-level Architecture
 
 ## 1. Overview
 
-**MY_Practice** is an MVP e-commerce system designed as a small, realistic microservices playground:
+**FreshHarvest Market** is an organic food marketplace designed as a small, realistic microservices playground:
 
 - **Frontend:** React SPA
 - **API Gateway:** YARP (ASP.NET Core reverse proxy)

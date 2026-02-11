@@ -6,32 +6,34 @@
 
 ---
 
-## 📱 What Are We Building? (The Simple Answer)
+## 🌱 What Are We Building? (The Simple Answer)
 
-We're building an **online electronics store** - think of it like Amazon or Best Buy, but specifically for electronics and smart devices.
+We're building **FreshHarvest Market** - an **online organic food marketplace** delivering certified organic products from trusted farms directly to your doorstep.
 
 **What customers can do:**
-- Browse products (phones, laptops, watches, etc.)
-- Search and filter to find what they want
+- Browse organic products (fresh fruits, vegetables, grains, dairy, herbs & spices)
+- Search and filter by category, certification, origin
 - Compare products side-by-side
 - Read reviews from other customers
+- Verify organic certifications (India Organic, USDA, EU Organic)
 - Add items to cart
 - Checkout and pay
 - Track their orders
 - Manage their account
 
-**But wait, there's more!** This isn't just a store - it's also a **learning project**. We're building it to master advanced software engineering skills while creating something real and useful.
+**But wait, there's more!** This isn't just a store - it's also a **learning project**. We're building it to master advanced software engineering skills while creating something real that promotes healthy, sustainable food choices.
 
 ---
 
 ## 🎯 Why Are We Building This?
 
 ### The Business Reason
-We want to create a **production-grade e-commerce platform** that:
-- Works reliably for customers
-- Handles lots of traffic
-- Has all the features customers expect
-- Can grow and scale
+We want to create a **production-grade organic food marketplace** that:
+- Delivers certified organic products reliably
+- Works reliably for customers 24/7
+- Handles lots of traffic during peak hours
+- Has all the features health-conscious customers expect
+- Can grow and scale across India
 
 ### The Learning Reason
 While building this, we're learning:
@@ -62,22 +64,22 @@ While building this, we're learning:
 
 ### ✅ What's Already Done (MVP - Completed!)
 
-**Think of MVP like a basic car:** It has an engine, wheels, and steering wheel. It drives, but it doesn't have air conditioning, GPS, or fancy features yet.
+**Think of MVP like a basic farmers' stall:** It has fresh produce available, customers can browse and buy. But it doesn't have premium features like detailed certifications, farm origin tracking, or advanced filtering yet.
 
 **What customers can do today:**
 1. **Sign up and log in** - Create an account, log in securely
-2. **Browse products** - See a list of products
+2. **Browse products** - See a list of organic products
 3. **Add to cart** - Put items in their shopping cart
-4. **Checkout** - Buy items using wallet payment
+4. **Checkout** - Buy items using wallet payment (₹)
 5. **View orders** - See their order history
 6. **Add money to wallet** - Top up their account balance
 
 **What's working behind the scenes:**
 - 5 separate services (like different departments in a store)
 - Secure authentication (login system)
-- Payment processing
+- Payment processing (in INR)
 - Order management
-- Product catalog
+- Product catalog with organic products
 
 **Progress:** We've completed **89 out of 864 story points** (about 10%). The MVP is done, and now we're building the enhanced features.
 
@@ -100,19 +102,19 @@ Done   Catalog   Checkout     Ready       Platform
 
 **Epic 1: Enhanced Product Domain** (We're starting here!)
 
-**Goal:** Make our product catalog feel like a real electronics store, not just a basic list.
+**Goal:** Make our product catalog feel like a premium organic food marketplace, not just a basic list.
 
 **What customers will see:**
-- Products organized by categories (Smartphones, Laptops, etc.)
-- Product variants (like iPhone in different colors and storage sizes)
-- Product specifications (RAM, storage, screen size, etc.)
+- Products organized by categories (Fresh Fruits, Fresh Vegetables, Grains & Pulses, Dairy & Eggs, Herbs & Spices)
+- Product variants (like Organic Rice in different pack sizes: 1kg, 5kg, 10kg)
+- Product attributes (organic certifications, farm origin, expiry date, nutritional info)
 - Product images and galleries
-- Search and filtering
+- Search and filtering by certification, origin, category
 - Reviews and ratings
 - Wishlist feature
 - Product comparison tool
 
-**Why this matters:** Right now, our catalog is basic. After Epic 1, customers will be able to find exactly what they want, compare options, and make informed decisions - just like on Amazon or Best Buy.
+**Why this matters:** Right now, our catalog is basic. After Epic 1, customers will be able to find exactly what they want, verify certifications, compare options, and make informed decisions - just like on BigBasket or Nature's Basket.
 
 ---
 
@@ -123,15 +125,15 @@ Done   Catalog   Checkout     Ready       Platform
 **Imagine a customer's journey:**
 
 1. **Discovery:** 
-   - Customer searches "laptop under $1000"
-   - Filters by RAM, storage, brand
-   - Compares 3 laptops side-by-side
+   - Customer searches "organic mangoes under ₹500"
+   - Filters by certification (India Organic), origin (Maharashtra), freshness
+   - Compares 3 organic fruit options side-by-side
    - Reads reviews from verified buyers
 
 2. **Decision:**
-   - Sees product variants (color, storage options)
-   - Checks stock availability
-   - Views detailed specifications
+   - Sees product variants (pack sizes: 1kg, 2kg, 5kg)
+   - Checks stock availability and freshness
+   - Views detailed information (farm origin, certifications, expiry date)
    - Adds to wishlist to think about it
 
 3. **Purchase:**
@@ -143,7 +145,7 @@ Done   Catalog   Checkout     Ready       Platform
 4. **Post-Purchase:**
    - Receives order confirmation
    - Tracks order status in real-time
-   - Gets notifications when order ships
+   - Gets notifications when order is out for delivery
    - Can cancel or modify order (if allowed)
    - Receives invoice
    - Leaves a review after delivery
@@ -171,7 +173,7 @@ Done   Catalog   Checkout     Ready       Platform
 **Status:** Complete and working
 
 ### Phase 1: Enhanced Catalog (Epic 1) 🚧 NEXT
-**What we're building:** Professional product catalog
+**What we're building:** Professional organic product catalog with certifications
 **Time planned:** 5 sprints (10 weeks)
 **Status:** Starting now
 
@@ -222,9 +224,9 @@ Done   Catalog   Checkout     Ready       Platform
 ## 🎯 Our Mission & Principles
 
 ### Mission Statement
-**"Enable customers to discover, compare, and purchase electronics confidently with a checkout experience that is fast, trustworthy, and transparent."**
+**"Enable customers to discover, compare, and purchase certified organic products confidently with a checkout experience that is fast, trustworthy, and transparent."**
 
-**In simple terms:** We want customers to feel confident buying electronics from us. They should be able to find what they want, understand what they're buying, and trust that their purchase will go smoothly.
+**In simple terms:** We want customers to feel confident buying organic products from FreshHarvest Market. They should be able to find what they want, verify the organic certifications, understand what they're buying, and trust that fresh, authentic products will be delivered.
 
 ### Our Principles (What We Always Follow)
 
@@ -306,7 +308,7 @@ Done   Catalog   Checkout     Ready       Platform
 
 ### Epics (Big Feature Sets)
 Think of an **Epic** like a major project. For example:
-- **Epic 1:** Enhanced Product Catalog
+- **Epic 1:** Enhanced Product Catalog (organic certifications, categories)
 - **Epic 2:** Advanced Order Management
 - **Epic 3:** Multiple Payment Methods
 
@@ -314,9 +316,9 @@ Each epic takes several sprints to complete.
 
 ### PBIs (Product Backlog Items)
 Think of a **PBI** like a specific feature or task. For example:
-- **PBI 1.1:** Product Categories
-- **PBI 1.2:** Product Variants
-- **PBI 1.3:** Dynamic Pricing
+- **PBI 1.1:** Product Categories (Fresh Fruits, Vegetables, Grains, etc.)
+- **PBI 1.2:** Product Variants (pack sizes: 1kg, 5kg, 10kg)
+- **PBI 1.3:** Dynamic Pricing (seasonal discounts, bulk pricing)
 
 Each PBI is a specific piece of work that can be completed in a sprint.
 
@@ -366,7 +368,7 @@ A **Sprint** is a 2-week period where we:
 ### For Understanding the Product
 - **[Product Vision](../3-product-owner/PRODUCT_VISION_AND_PRINCIPLES.md)** - Our North Star
 - **[User Personas](../3-product-owner/USER_PERSONAS_AND_JTBD.md)** - Who we build for
-- **[Product Strategy](../3-product-owner/PRODUCT_STRATEGY.md)** - Why we chose electronics
+- **[Product Strategy](../3-product-owner/PRODUCT_STRATEGY.md)** - Why we chose organic food
 
 ### For Planning
 - **[Product Roadmap](../3-product-owner/PRODUCT_ROADMAP_PM_PO.md)** - What we're building and when
@@ -444,16 +446,16 @@ A **Sprint** is a 2-week period where we:
 ## 🎉 Final Thoughts
 
 ### What We're Building
-An **electronics e-commerce platform** that's production-grade, user-friendly, and built to learn advanced software engineering.
+**FreshHarvest Market** - an organic food e-commerce platform that's production-grade, user-friendly, and built to learn advanced software engineering while promoting healthy, sustainable food choices.
 
 ### Where We Are
-**MVP is complete!** We have a working store. Now we're building enhanced features to make it production-grade.
+**MVP is complete!** We have a working marketplace. Now we're building enhanced features to make it production-grade.
 
 ### Where We're Going
-**A complete platform** with all modern features, reliable infrastructure, and excellent user experience - ready for real customers.
+**A complete organic marketplace** with all modern features, reliable infrastructure, and excellent user experience - ready for health-conscious customers across India.
 
 ### Your Journey
-You're joining at an exciting time! The foundation is built, and now we're adding the features that will make this a world-class product.
+You're joining at an exciting time! The foundation is built, and now we're adding the features that will make FreshHarvest Market a world-class organic food platform.
 
 **You've got this!** 🚀
 

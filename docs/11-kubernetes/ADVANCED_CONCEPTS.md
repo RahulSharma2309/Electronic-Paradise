@@ -2,7 +2,7 @@
 
 > **Understanding Pods, Nodes, Service Discovery, Ingress, LoadBalancer, and more using real-world analogies**
 
-This document covers advanced Kubernetes concepts with practical examples from the Electronic Paradise project.
+This document covers advanced Kubernetes concepts with practical examples from the FreshHarvest Market project.
 
 ---
 
@@ -47,7 +47,7 @@ Think of a **Container** as a **shipping container** and a **Pod** as a **truck*
 | **Pod**        | Truck carrying containers | Kubernetes unit that runs containers |
 | **Deployment** | Fleet manager             | Manages multiple trucks (pods)       |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 ```yaml
 # Deployment creates Pods
@@ -99,7 +99,7 @@ Think of a **Node** as a **physical server/computer** in your data center:
 | **Master Node** | Building manager | Controls and manages the cluster |
 | **Worker Node** | Office floor     | Runs your applications (pods)    |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 When you deploy `auth-service` with `replicas: 2`:
 
@@ -152,7 +152,7 @@ Think of **Service Discovery** as a **phone directory** or **reception desk**:
    → Routes to: Available pod (load balanced)
 ```
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Service Definition:**
 
@@ -216,7 +216,7 @@ Think of **Ingress** as a **receptionist at the building entrance**:
 | **Load Balancing**     | Multiple reception desks                | Distributes traffic across services          |
 | **Path-based Routing** | "API calls go here, website goes there" | Routes based on URL path                     |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Example Ingress Configuration:**
 
@@ -224,15 +224,15 @@ Think of **Ingress** as a **receptionist at the building entrance**:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: electronic-paradise-ingress
+  name: freshharvest-market-ingress
   namespace: staging
 spec:
   tls:
     - hosts:
-        - api.staging.electronic-paradise.com
+        - api.staging.freshharvest-market.com
       secretName: tls-secret
   rules:
-    - host: api.staging.electronic-paradise.com
+    - host: api.staging.freshharvest-market.com
       http:
         paths:
           - path: /api
@@ -247,7 +247,7 @@ spec:
 **How It Works:**
 
 ```
-External Request: https://api.staging.electronic-paradise.com/api/auth/login
+External Request: https://api.staging.freshharvest-market.com/api/auth/login
          ↓
 Ingress Controller: "This is for /api path"
          ↓
@@ -288,7 +288,7 @@ Think of **LoadBalancer** as a **traffic controller at a busy intersection**:
 | **Traffic Distribution** | Traffic controller        | Distributes traffic across services |
 | **Cloud Integration**    | Works with cloud provider | Creates cloud load balancer         |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **LoadBalancer Service:**
 
@@ -351,7 +351,7 @@ Think of **NodePort** as a **specific door number on every building**:
 | **Direct Access** | "Go to any building, use door 30001" | Access service via `<node-ip>:<port>`             |
 | **Development**   | Quick access for testing             | Useful for development/testing                    |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **NodePort Service:**
 
@@ -413,7 +413,7 @@ Think of **ClusterIP** as an **internal phone extension**:
 | **Stable IP**     | Extension number   | Gets a stable internal IP      |
 | **Default Type**  | Most common        | Default service type           |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **ClusterIP Service (Default):**
 
@@ -477,7 +477,7 @@ Think of **Egress** as **outgoing mail/phone calls** from your office:
 | **Network Policies** | Security rules  | Defines what can connect to external services |
 | **Default Behavior** | Usually allowed | By default, pods can reach external services  |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Egress Network Policy:**
 
@@ -547,7 +547,7 @@ ReplicaSet (Template)
 Pods (Actual workers)
 ```
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Deployment creates ReplicaSet:**
 
@@ -609,7 +609,7 @@ spec:
 | **Scaling**   | Any order                    | Ordered (0, 1, 2...)                     |
 | **Example**   | Web services                 | Databases, message queues                |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Deployment (Current Setup):**
 
@@ -646,7 +646,7 @@ spec:
 
 - **Deployment** = For stateless applications (our services)
 - **StatefulSet** = For stateful applications (databases)
-- Electronic Paradise uses Deployment (services are stateless)
+- FreshHarvest Market uses Deployment (services are stateless)
 
 **Significance:** Use Deployment for stateless apps, StatefulSet for databases or apps that need ordered scaling.
 
@@ -681,7 +681,7 @@ spec:
 | **Example**    | Log levels, URLs        | Passwords, keys  |
 | **Encryption** | At rest (optional)      | At rest (always) |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **ConfigMap:**
 
@@ -734,7 +734,7 @@ Think of **Resources** as **desk space and computer power**:
 | **CPU**     | "Processing power"             | Measured in cores (100m = 0.1 core)       |
 | **Memory**  | "RAM"                          | Measured in bytes (256Mi = 256 megabytes) |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Resource Configuration:**
 
@@ -788,7 +788,7 @@ Think of **Health Checks** as **employee wellness checks**:
 | **Readiness Probe** | "Is employee ready to work?" | Checks if pod can accept traffic |
 | **Startup Probe**   | "Is employee starting up?"   | Checks if pod is starting        |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Health Check Configuration:**
 
@@ -857,7 +857,7 @@ metadata:
   labels:
     app: auth-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 ```
 
 **Selector (in Service):**
@@ -870,13 +870,13 @@ spec:
   # Routes to all pods with these labels
 ```
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Labels Used:**
 
 - `app: auth-service` - Which service
 - `environment: staging` - Which environment
-- `managed-by: electronic-paradise` - Who manages it
+- `managed-by: freshharvest-market` - Who manages it
 
 **Selectors Used:**
 
@@ -915,7 +915,7 @@ Think of **Annotations** as **sticky notes** with extra information:
 | **Not for Selection** | Can't search by these | Not used for filtering    |
 | **Tooling**           | For external tools    | Used by monitoring, CI/CD |
 
-### In Electronic Paradise
+### In FreshHarvest Market
 
 **Example Annotations:**
 
@@ -924,7 +924,7 @@ metadata:
   annotations:
     description: "Staging environment for final testing"
     last-updated: "2024-01-15"
-    managed-by: "electronic-paradise-ci"
+    managed-by: "freshharvest-market-ci"
 ```
 
 **Key Points:**
@@ -962,10 +962,10 @@ Pods (Running on Nodes)
     └── Health Checks: Liveness + Readiness
 ```
 
-### In Electronic Paradise Context
+### In FreshHarvest Market Context
 
 ```
-1. User → https://api.staging.electronic-paradise.com/api/auth/login
+1. User → https://api.staging.freshharvest-market.com/api/auth/login
 2. Ingress → Routes to gateway service
 3. Gateway Service → Routes to auth-service pod
 4. Auth-Service Pod:

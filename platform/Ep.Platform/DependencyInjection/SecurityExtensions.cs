@@ -1,36 +1,24 @@
-using Ep.Platform.Security;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Ep.Platform.DependencyInjection;
-
-public static class SecurityExtensions
+namespace Ep.Platform.DependencyInjection
 {
+    using Ep.Platform.Security;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
-    /// Registers platform security services (Password Hashing and JWT Token Generation)
+    /// Provides DI extension methods for registering platform security services.
     /// </summary>
-    public static IServiceCollection AddEpSecurityServices(this IServiceCollection services)
+    public static class SecurityExtensions
     {
-        services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        
-        return services;
+        /// <summary>
+        /// Registers platform security services (password hashing and JWT token generation).
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <returns>The same service collection to allow call chaining.</returns>
+        public static IServiceCollection AddEpSecurityServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
+            return services;
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

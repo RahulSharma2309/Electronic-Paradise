@@ -1,6 +1,6 @@
 # Local Kubernetes Deployment with ArgoCD
 
-This folder contains comprehensive guides for deploying Electronic Paradise to your local Docker Desktop Kubernetes cluster using GitOps principles with ArgoCD.
+This folder contains comprehensive guides for deploying FreshHarvest Market to your local Docker Desktop Kubernetes cluster using GitOps principles with ArgoCD.
 
 ## 📚 Documentation Structure
 
@@ -43,7 +43,7 @@ By completing this guide, you will:
 - Git and basic Git knowledge
 - PowerShell or Command Prompt
 - Basic Kubernetes concepts (pods, deployments, services)
-- Your Electronic Paradise repository cloned locally
+- Your FreshHarvest Market repository cloned locally
 
 ## 🔗 Related Documentation
 

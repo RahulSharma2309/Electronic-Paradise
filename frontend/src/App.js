@@ -1,21 +1,38 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import { useCart } from "./hooks/useCart";
 import api from "./api";
 import { userApi } from "./api/userApi";
 import { API_ENDPOINTS } from "./config/apiEndpoints";
 import { ROUTES, CURRENCY_CONFIG } from "./config/constants";
+import { BRAND, ICONS } from "./config/branding";
 import { formatINR, calculateCartQuantity } from "./utils/formatters";
 import { formatErrorMessage } from "./utils/formatters";
 import { createRoutes } from "./config/routes";
+import Header from "./components/Header";
+import { useWishlist } from "./hooks/useWishlist";
 import "./styles/index.css";
 
 export default function App() {
   const { token, userId, isAuthenticated, isValidating, login, logout } =
     useAuth();
-  const { cart, addToCart, removeFromCart, clearCart, total, itemCount } =
-    useCart();
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    total,
+    itemCount,
+  } = useCart();
+  const {
+    items: wishlistItems,
+    count: wishlistCount,
+    isWishlisted,
+    toggleWishlist,
+    removeFromWishlist,
+  } = useWishlist();
   const [products, setProducts] = useState([]);
   const [wallet, setWallet] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -100,10 +117,12 @@ export default function App() {
     return createRoutes({
       isAuthenticated,
       handleLogin,
+      handleLogout,
       products,
       addToCart,
       cart,
       removeFromCart,
+      updateQuantity,
       clearCart,
       userId,
       wallet,
@@ -114,6 +133,11 @@ export default function App() {
       checkoutSuccess,
       onBalanceUpdate: handleBalanceUpdate,
       onOrderSuccess: handleOrderSuccess,
+      wishlistItems,
+      removeFromWishlist,
+      addWishlistToCart: addToCart,
+      isWishlisted,
+      toggleWishlist,
     });
   }, [
     isAuthenticated,
@@ -125,6 +149,9 @@ export default function App() {
     loading,
     checkoutError,
     checkoutSuccess,
+    wishlistItems,
+    isWishlisted,
+    toggleWishlist,
   ]);
 
   // Show loading state while validating token
@@ -147,42 +174,12 @@ export default function App() {
   return (
     <Router>
       <div className="app">
-        <header className="header">
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <Link
-              to={isAuthenticated ? ROUTES.PRODUCTS : ROUTES.HOME}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <h2>MVP E-Commerce</h2>
-            </Link>
-            {isAuthenticated && (
-              <Link
-                to={ROUTES.PRODUCTS}
-                className="button button-secondary"
-                style={{ marginLeft: "8px" }}
-              >
-                Home
-              </Link>
-            )}
-          </div>
-          {isAuthenticated && (
-            <div className="header-actions">
-              <span className="wallet-badge">Wallet: {formatINR(wallet)}</span>
-              <Link to={ROUTES.CART} className="button button-secondary">
-                Cart ({itemCount})
-              </Link>
-              <Link to={ROUTES.ORDERS} className="button button-secondary">
-                Orders
-              </Link>
-              <Link to={ROUTES.PROFILE} className="button button-secondary">
-                Profile
-              </Link>
-              <button className="button" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
-          )}
-        </header>
+        <Header
+          isAuthenticated={isAuthenticated}
+          wallet={wallet}
+          itemCount={itemCount}
+          wishlistCount={wishlistCount}
+        />
         <main>
           <Routes key={isAuthenticated ? "authenticated" : "unauthenticated"}>
             {routes.map((route) => (

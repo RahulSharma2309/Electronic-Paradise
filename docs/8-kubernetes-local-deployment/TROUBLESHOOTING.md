@@ -278,7 +278,7 @@ kubectl create secret docker-registry ghcr-secret \
 # Go to: https://github.com/YOUR_USERNAME?tab=packages
 
 # Or try pulling manually
-docker pull ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3
+docker pull ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.2.3
 ```
 
 If image doesn't exist:
@@ -292,7 +292,7 @@ Ensure GitHub PAT has `read:packages` scope.
 **4. Wrong Registry:**
 Check deployment YAML:
 ```yaml
-image: ghcr.io/rahulsharma2309/electronic-paradise-auth:v1.2.3
+image: ghcr.io/rahulsharma2309/freshharvest-market-auth:v1.2.3
 #      ^^^ Correct registry
 ```
 
@@ -526,7 +526,7 @@ kubectl get pods -n kube-system | grep coredns
 ### Issue: Ingress Not Working
 
 **Symptoms:**
-- http://electronic-paradise.local doesn't load
+- http://freshharvest-market.local doesn't load
 - "This site can't be reached"
 
 **Diagnosis:**
@@ -541,7 +541,7 @@ kubectl get ingress -n NAMESPACE
 
 # Check hosts file
 notepad C:\Windows\System32\drivers\etc\hosts
-# Should have: 127.0.0.1 electronic-paradise.local
+# Should have: 127.0.0.1 freshharvest-market.local
 ```
 
 **Solutions:**
@@ -563,8 +563,8 @@ kubectl wait --namespace ingress-nginx \
 Run Notepad as Administrator:
 ```
 # Add these lines
-127.0.0.1 electronic-paradise.local
-127.0.0.1 electronic-paradise-api.local
+127.0.0.1 freshharvest-market.local
+127.0.0.1 freshharvest-market-api.local
 ```
 
 **4. Check Ingress Rules:**

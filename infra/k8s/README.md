@@ -1,7 +1,7 @@
-# Kubernetes Manifests - Electronic Paradise
+# Kubernetes Manifests - FreshHarvest Market
 
 ## Overview
-This directory contains all Kubernetes configuration files for deploying Electronic Paradise to a Kubernetes cluster (Docker Desktop).
+This directory contains all Kubernetes configuration files for deploying FreshHarvest Market to a Kubernetes cluster (Docker Desktop).
 
 ## Structure
 ```

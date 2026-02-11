@@ -1,4 +1,4 @@
-MY_Practice — Architecture Summary
+FreshHarvest Market — Architecture Summary
 
 Purpose
 - MVP e-commerce system: React frontend + YARP API Gateway + ASP.NET Core microservices + SQL Server.
@@ -84,7 +84,7 @@ How to render locally (quick steps)
 2) Install mermaid-cli globally
    - `npm install -g @mermaid-js/mermaid-cli`
 3) Run the render script from repo root
-   - `cd C:\Users\rahul\source\repos\MY_Practice`
+   - `cd C:\Users\rahul\source\repos\FreshHarvest Market`
    - `.\docs\render-diagrams.ps1`
 4) Open generated files in `docs/` (SVG/PNG) with default image viewer or browser
    - `Start-Process docs\architecture-system.png`
@@ -166,7 +166,7 @@ Smoke test criteria (from `infra/smoke-test.sh`)
 
 Manifest (AI/automation-friendly)
 ---
-project: MY_Practice
+project: FreshHarvest Market
 owner: RahulSharma2309
 description: MVP e-commerce microservices (React frontend, API gateway, ASP.NET Core microservices, SQL Server)
 languages:

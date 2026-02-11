@@ -13,13 +13,13 @@ The MVP already supports:
 - Checkout using wallet payment
 - Order creation + order history
 
-Key gap: the product is functional but not yet “best-in-class” for **electronics decisioning** (variants/specs/search/compare/reviews) or **production maturity** (tests, CI/CD, observability, security hardening).
+Key gap: the product is functional but not yet “best-in-class” for **organic food decisioning** (variants/specs/search/compare/reviews) or **production maturity** (tests, CI/CD, observability, security hardening).
 
 ---
 
 ## Roadmap Principles (How we prioritize)
 
-1. **User decisioning first** (electronics buyers need specs/variants/search)
+1. **User decisioning first** (organic buyers need certifications/origin/freshness/search)
 2. **Checkout trust second** (order lifecycle clarity, safe failure handling)
 3. **Quality gates enable scale** (tests/CI/observability/security)
 4. **Admin + growth levers last** (dashboard, recommendations, promos, advanced search)
@@ -29,8 +29,8 @@ Key gap: the product is functional but not yet “best-in-class” for **electro
 ## Now / Next / Later
 
 ### Now (0–3 months)
-- Make product browsing and selection *feel like electronics commerce*, not a generic catalog.
-- Improve discovery and transparency: categories, variants, pricing logic, specs, images, search/filter.
+- Make product browsing and selection *feel like organic food commerce*, not a generic catalog.
+- Improve discovery and transparency: categories, certifications, origin, pricing logic, freshness, images, search/filter.
 
 **Engineering mapping:** Epic 1 (Enhanced Product Domain)
 

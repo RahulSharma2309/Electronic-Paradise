@@ -3,6 +3,7 @@
     <EpPlatformVersion>1.0.3</EpPlatformVersion>
     <AspNetCoreVersion>8.0.0</AspNetCoreVersion>
     <EntityFrameworkVersion>8.0.0</EntityFrameworkVersion>
+    <AspNetCoreTestingVersion>10.0.2</AspNetCoreTestingVersion>
     <SerilogVersion>4.1.0</SerilogVersion>
     <SerilogAspNetCoreVersion>8.0.3</SerilogAspNetCoreVersion>
     <SerilogSinksConsoleVersion>6.0.0</SerilogSinksConsoleVersion>
@@ -13,6 +14,26 @@
     <AutoMapperVersion>12.0.1</AutoMapperVersion>
     <FluentValidationVersion>11.9.0</FluentValidationVersion>
     <MediatRVersion>12.2.0</MediatRVersion>
+
+    <!-- Build variables -->
+    <NetCoreVersion>net10.0</NetCoreVersion>
+    <LangVersion>12</LangVersion>
+    <NullableReferences>enable</NullableReferences>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+
+    <!-- Test package versions -->
+    <AutoFixtureVersion>4.18.1</AutoFixtureVersion>
+    <XunitVersion>2.6.6</XunitVersion>
+    <XunitRunnerVersion>2.5.6</XunitRunnerVersion>
+    <MoqVersion>4.20.70</MoqVersion>
+    <FluentAssertionsVersion>6.12.0</FluentAssertionsVersion>
+    <CoverletVersion>6.0.0</CoverletVersion>
+    <MicrosoftTestSdkVersion>17.9.0</MicrosoftTestSdkVersion>
+    <EFCoreInMemoryVersion>8.0.0</EFCoreInMemoryVersion>
+
+    <!-- Code quality tooling versions -->
+    <StyleCopAnalyzersVersion>1.2.0-beta.556</StyleCopAnalyzersVersion>
+    <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
   </PropertyGroup>
 </Project>
 

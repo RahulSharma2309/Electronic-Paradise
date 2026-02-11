@@ -23,7 +23,7 @@ The **Repository Pattern** is a design pattern that provides an abstraction laye
 
 **In simple terms**: Instead of directly accessing the database from business logic, the repository pattern creates a layer that handles all database operations, making the code more maintainable, testable, and flexible.
 
-This guide uses the **Product Service** from the Electronic Paradise codebase to demonstrate every aspect of the repository pattern, from the problems it solves to its complete implementation.
+This guide uses the **Product Service** from the FreshHarvest Market codebase to demonstrate every aspect of the repository pattern, from the problems it solves to its complete implementation.
 
 ---
 

@@ -1,4 +1,4 @@
-﻿---
+---
 # Auth Service Kubernetes Service for Staging
 # This makes auth-service accessible at http://auth-service:80
 apiVersion: v1
@@ -9,7 +9,7 @@ metadata:
   labels:
     app: auth-service
     environment: staging
-    managed-by: electronic-paradise
+    managed-by: freshharvest-market
 spec:
   type: ClusterIP  # Internal service (only accessible within cluster)
   ports:

@@ -1,0 +1,26 @@
+# Staging Environment Values
+# Usage: helm install freshharvest-market . -f values-staging.yaml -n staging
+
+global:
+  environment: staging
+
+ingress:
+  enabled: true
+  hosts:
+    - host: staging.freshharvest-market.local
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+    - host: api.staging.freshharvest-market.local
+      paths:
+        - path: /api(/|$)(.*)
+          pathType: ImplementationSpecific
+          service: gateway
+        - path: /health
+          pathType: Prefix
+          service: gateway
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+
+---

@@ -7,6 +7,7 @@ import CartPage from '../components/CartPage';
 import CheckoutPage from '../components/CheckoutPage';
 import Profile from '../components/Profile';
 import OrderHistory from '../components/OrderHistory';
+import WishlistPage from '../components/WishlistPage';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from './constants';
 
@@ -46,10 +47,12 @@ export const PublicRoute = ({
 export const createRoutes = ({
   isAuthenticated,
   handleLogin,
+  handleLogout,
   products,
   addToCart,
   cart,
   removeFromCart,
+  updateQuantity,
   clearCart,
   userId,
   wallet,
@@ -60,6 +63,11 @@ export const createRoutes = ({
   checkoutSuccess,
   onBalanceUpdate,
   onOrderSuccess,
+  wishlistItems,
+  removeFromWishlist,
+  addWishlistToCart,
+  isWishlisted,
+  toggleWishlist,
 }) => [
   {
     path: ROUTES.HOME,
@@ -97,6 +105,8 @@ export const createRoutes = ({
         component={ProductSearchPage}
         products={products}
         onAdd={addToCart}
+        isWishlisted={isWishlisted}
+        onToggleWishlist={toggleWishlist}
       />
     ),
   },
@@ -108,6 +118,7 @@ export const createRoutes = ({
         component={CartPage}
         items={cart}
         remove={removeFromCart}
+        updateQuantity={updateQuantity}
         clearCart={clearCart}
         userId={userId}
         wallet={wallet}
@@ -138,6 +149,7 @@ export const createRoutes = ({
         component={Profile}
         userId={userId}
         onBalanceUpdate={onBalanceUpdate}
+        onLogout={handleLogout}
       />
     ),
   },
@@ -148,6 +160,19 @@ export const createRoutes = ({
         isAuthenticated={isAuthenticated}
         component={OrderHistory}
         userId={userId}
+        products={products}
+      />
+    ),
+  },
+  {
+    path: ROUTES.WISHLIST,
+    element: (
+      <ProtectedRoute
+        isAuthenticated={isAuthenticated}
+        component={WishlistPage}
+        items={wishlistItems}
+        onRemove={removeFromWishlist}
+        onAddToCart={addWishlistToCart}
       />
     ),
   },

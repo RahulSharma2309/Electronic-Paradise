@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UserRepository.cs" company="Electronic-Paradise">
-//   © Electronic-Paradise. All rights reserved.
+// <copyright file="UserRepository.cs" company="FreshHarvest-Market">
+//   © FreshHarvest-Market. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -150,6 +150,30 @@ public class UserRepository : IUserRepository
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to update user: {UserId}, Email: {Email}", user.Id, user.Email);
+            throw;
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task DeleteAsync(Guid id)
+    {
+        try
+        {
+            _logger.LogDebug("Deleting user by ID: {UserId}", id);
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                _logger.LogDebug("Delete skipped; user not found: {UserId}", id);
+                return;
+            }
+
+            _db.Users.Remove(user);
+            await _db.SaveChangesAsync();
+            _logger.LogInformation("User deleted successfully: {UserId}", id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to delete user: {UserId}", id);
             throw;
         }
     }

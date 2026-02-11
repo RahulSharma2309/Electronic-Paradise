@@ -2,8 +2,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using ProductService.Abstraction.DTOs;
-using ProductService.Abstraction.Models;
+using ProductService.Abstraction.DTOs.Requests;
+using ProductService.Abstraction.DTOs.Responses;
 using ProductService.API.Controllers;
 using ProductService.Core.Business;
 using Xunit;
@@ -17,7 +17,7 @@ public class ProductsControllerTests
     {
         // Arrange
         var service = new Mock<IProductService>();
-        service.Setup(s => s.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Product?)null);
+        service.Setup(s => s.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((ProductDetailResponse?)null);
 
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
@@ -33,10 +33,10 @@ public class ProductsControllerTests
     {
         // Arrange
         var service = new Mock<IProductService>();
-        service.Setup(s => s.CreateAsync(It.IsAny<Product>())).ThrowsAsync(new ArgumentException("Name is required"));
+        service.Setup(s => s.CreateAsync(It.IsAny<CreateProductRequest>())).ThrowsAsync(new ArgumentException("Name is required"));
 
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
-        var dto = new CreateProductDto
+        var request = new CreateProductRequest
         {
             Name = string.Empty,
             Price = 0,
@@ -44,7 +44,7 @@ public class ProductsControllerTests
         };
 
         // Act
-        var result = await controller.Create(dto);
+        var result = await controller.Create(request);
 
         // Assert
         var badRequest = result.Should().BeOfType<BadRequestObjectResult>().Subject;
@@ -63,7 +63,7 @@ public class ProductsControllerTests
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
         // Act
-        var result = await controller.Reserve(Guid.NewGuid(), new ReleaseDto { Quantity = 0 });
+        var result = await controller.Reserve(Guid.NewGuid(), new ReserveStockRequest { Quantity = 0 });
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
@@ -79,7 +79,7 @@ public class ProductsControllerTests
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
         // Act
-        var result = await controller.Reserve(Guid.NewGuid(), new ReleaseDto { Quantity = 1 });
+        var result = await controller.Reserve(Guid.NewGuid(), new ReserveStockRequest { Quantity = 1 });
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
@@ -96,7 +96,7 @@ public class ProductsControllerTests
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
         // Act
-        var result = await controller.Reserve(Guid.NewGuid(), new ReleaseDto { Quantity = 1 });
+        var result = await controller.Reserve(Guid.NewGuid(), new ReserveStockRequest { Quantity = 1 });
 
         // Assert
         var conflict = result.Should().BeOfType<ConflictObjectResult>().Subject;
@@ -115,7 +115,7 @@ public class ProductsControllerTests
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
         // Act
-        var result = await controller.Release(Guid.NewGuid(), new ReleaseDto { Quantity = -1 });
+        var result = await controller.Release(Guid.NewGuid(), new ReserveStockRequest { Quantity = -1 });
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
@@ -131,7 +131,7 @@ public class ProductsControllerTests
         var controller = new ProductsController(service.Object, NullLogger<ProductsController>.Instance);
 
         // Act
-        var result = await controller.Release(Guid.NewGuid(), new ReleaseDto { Quantity = 1 });
+        var result = await controller.Release(Guid.NewGuid(), new ReserveStockRequest { Quantity = 1 });
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();

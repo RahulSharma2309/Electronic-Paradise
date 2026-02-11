@@ -1,38 +1,51 @@
+// -----------------------------------------------------------------------
+// <copyright file="ProductServiceImpl.cs" company="FreshHarvest-Market">
+// Copyright (c) FreshHarvest-Market. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using Microsoft.Extensions.Logging;
+using ProductService.Abstraction.DTOs.Requests;
+using ProductService.Abstraction.DTOs.Responses;
 using ProductService.Abstraction.Models;
+using ProductService.Core.Mappers;
 using ProductService.Core.Repository;
 
 namespace ProductService.Core.Business;
 
 /// <summary>
 /// Provides implementation for product-related business operations.
+/// Simplified for FreshHarvest Market's organic food marketplace.
 /// </summary>
 public class ProductServiceImpl : IProductService
 {
     private readonly IProductRepository _repo;
+    private readonly IProductMapper _mapper;
     private readonly ILogger<ProductServiceImpl> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductServiceImpl"/> class.
     /// </summary>
     /// <param name="repo">The product repository.</param>
+    /// <param name="mapper">The product mapper.</param>
     /// <param name="logger">The logger instance.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="repo"/> or <paramref name="logger"/> is null.</exception>
-    public ProductServiceImpl(IProductRepository repo, ILogger<ProductServiceImpl> logger)
+    /// <exception cref="ArgumentNullException">Thrown if parameters are null.</exception>
+    public ProductServiceImpl(IProductRepository repo, IProductMapper mapper, ILogger<ProductServiceImpl> logger)
     {
         _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />
-    public async Task<List<Product>> ListAsync()
+    public async Task<List<ProductResponse>> ListAsync()
     {
         _logger.LogDebug("Fetching all products");
         try
         {
             var products = await _repo.GetAllAsync();
             _logger.LogInformation("Retrieved {ProductCount} products", products.Count);
-            return products;
+            return products.Select(_mapper.ToResponse).ToList();
         }
         catch (Exception ex)
         {
@@ -42,7 +55,7 @@ public class ProductServiceImpl : IProductService
     }
 
     /// <inheritdoc />
-    public async Task<Product?> GetByIdAsync(Guid id)
+    public async Task<ProductDetailResponse?> GetByIdAsync(Guid id)
     {
         _logger.LogDebug("Fetching product {ProductId}", id);
         try
@@ -51,13 +64,11 @@ public class ProductServiceImpl : IProductService
             if (product == null)
             {
                 _logger.LogDebug("Product {ProductId} not found", id);
-            }
-            else
-            {
-                _logger.LogDebug("Product {ProductId} found: {ProductName}, Stock: {Stock}", id, product.Name, product.Stock);
+                return null;
             }
 
-            return product;
+            _logger.LogDebug("Product {ProductId} found: {ProductName}, Stock: {Stock}", id, product.Name, product.Stock);
+            return _mapper.ToDetailResponse(product);
         }
         catch (Exception ex)
         {
@@ -67,23 +78,46 @@ public class ProductServiceImpl : IProductService
     }
 
     /// <inheritdoc />
-    public async Task CreateAsync(Product p)
+    public async Task<ProductDetailResponse> CreateAsync(CreateProductRequest request)
     {
-        _logger.LogInformation("Creating new product: {ProductName}, Price: {Price}, Stock: {Stock}", p.Name, p.Price, p.Stock);
+        _logger.LogInformation(
+            "Creating new product: {ProductName}, Price: {Price}, Stock: {Stock}, IsOrganic: {IsOrganic}",
+            request.Name,
+            request.Price,
+            request.Stock,
+            request.IsOrganic);
         try
         {
-            ValidateForCreate(p);
-            await _repo.AddAsync(p);
-            _logger.LogInformation("Product created successfully: {ProductId}, Name: {ProductName}", p.Id, p.Name);
+            var product = _mapper.ToEntity(request);
+            ValidateForCreate(product);
+
+            // Resolve tags and create join rows (tags are now directly on request)
+            if (request.Tags != null && request.Tags.Length > 0)
+            {
+                var tags = await _repo.GetOrCreateTagsAsync(request.Tags);
+                foreach (var tag in tags)
+                {
+                    product.ProductTags.Add(new ProductTag
+                    {
+                        ProductId = product.Id,
+                        TagId = tag.Id,
+                        Tag = tag,
+                    });
+                }
+            }
+
+            await _repo.AddAsync(product);
+            _logger.LogInformation("Product created successfully: {ProductId}, Name: {ProductName}", product.Id, product.Name);
+            return _mapper.ToDetailResponse(product);
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Product creation validation failed for product: {ProductName}", p.Name);
+            _logger.LogWarning(ex, "Product creation validation failed for product: {ProductName}", request.Name);
             throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating product: {ProductName}", p.Name);
+            _logger.LogError(ex, "Error creating product: {ProductName}", request.Name);
             throw;
         }
     }
@@ -157,6 +191,11 @@ public class ProductServiceImpl : IProductService
         if (string.IsNullOrWhiteSpace(p.Name))
         {
             throw new ArgumentException("Name is required", nameof(p.Name));
+        }
+
+        if (string.IsNullOrWhiteSpace(p.Slug))
+        {
+            throw new ArgumentException("Slug is required", nameof(p.Slug));
         }
 
         if (p.Price < 0)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Electronic-Paradise" Description="Code quality and style rules for Electronic-Paradise microservices." ToolsVersion="17.0">
+<RuleSet Name="FreshHarvest-Market" Description="Code quality and style rules for FreshHarvest-Market microservices." ToolsVersion="17.0">
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
     <Rule Id="IDE0001" Action="None" />
     <Rule Id="IDE0002" Action="None" />

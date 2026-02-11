@@ -1,0 +1,73 @@
+# Docker Compose override for using local SQL Server (not LocalDB)
+# Requirements:
+#   - SQL Server Express/Developer Edition with TCP/IP enabled
+#   - SQL Authentication enabled with sa account or create a dedicated user
+#   - Firewall allows connections on port 1433
+#
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.local-sql.yml up --build
+#
+# NOTE: LocalDB will NOT work with Docker containers. You need SQL Server with TCP/IP enabled.
+
+services:
+  # Remove the mssql container - we're using local SQL Server
+  mssql:
+    profiles:
+      - disabled
+
+  gateway:
+    depends_on:
+      - auth-service
+      - product-service
+      - payment-service
+      - order-service
+      - user-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  auth-service:
+    depends_on: []
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_AuthDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  product-service:
+    depends_on: []
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_ProductDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  payment-service:
+    depends_on: []
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_PaymentDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  order-service:
+    depends_on:
+      - product-service
+      - payment-service
+      - user-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_OrderDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ServiceUrls__ProductService=http://product-service:80
+      - ServiceUrls__PaymentService=http://payment-service:80
+      - ServiceUrls__UserService=http://user-service:80
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  user-service:
+    depends_on: []
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=EP_Local_UserDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIRONMENT=Development
