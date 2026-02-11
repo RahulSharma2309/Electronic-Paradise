@@ -32,6 +32,16 @@ public class UserProfileResponse
     public string FullName => $"{FirstName} {LastName}".Trim();
 
     /// <summary>
+    /// Gets or sets the user's address.
+    /// </summary>
+    public string? Address { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user's phone number.
+    /// </summary>
+    public string? PhoneNumber { get; set; }
+
+    /// <summary>
     /// Gets or sets the wallet balance.
     /// </summary>
     public decimal WalletBalance { get; set; }

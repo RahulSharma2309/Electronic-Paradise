@@ -18,6 +18,8 @@ public class UserProfileMapper : IUserProfileMapper
             UserId = profile.UserId,
             FirstName = profile.FirstName,
             LastName = profile.LastName,
+            Address = profile.Address,
+            PhoneNumber = profile.PhoneNumber,
             WalletBalance = profile.WalletBalance,
         };
     }

@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------
+// <copyright file="ProductsController.cs" company="FreshHarvest-Market">
+// Copyright (c) FreshHarvest-Market. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Abstraction.DTOs.Requests;
 using ProductService.Abstraction.DTOs.Responses;
@@ -7,6 +13,7 @@ namespace ProductService.API.Controllers;
 
 /// <summary>
 /// Controller for managing products and stock operations.
+/// FreshHarvest Market organic food marketplace API.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]

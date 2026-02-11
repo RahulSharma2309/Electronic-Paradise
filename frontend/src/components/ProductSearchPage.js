@@ -14,10 +14,11 @@ export default function ProductSearchPage({
   const [inStockOnly, setInStockOnly] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBadges, setSelectedBadges] = useState({
-    seasonal: false,
+    organic: false,
     fresh: false,
     local: false,
-    farmTrust: false,
+    certified: false,
+    featured: false,
   });
   const [sortKey, setSortKey] = useState("featured");
 
@@ -44,49 +45,41 @@ export default function ProductSearchPage({
     return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
   }, [products]);
 
+  // Get unique origins for filtering
+  const origins = useMemo(() => {
+    const values = (products ?? [])
+      .map((p) => p.origin)
+      .filter(Boolean)
+      .map((o) => String(o).trim())
+      .filter((o) => o.length > 0);
+    return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+  }, [products]);
+
+  const [selectedOrigins, setSelectedOrigins] = useState([]);
+
   const hasAnyBadge = (badges) =>
-    Boolean(badges.seasonal || badges.fresh || badges.local || badges.farmTrust);
+    Boolean(badges.organic || badges.fresh || badges.local || badges.certified || badges.featured);
 
-  const isSeasonal = (p) => {
-    const category = (p.category ?? "").toString().toLowerCase();
-    const name = (p.name ?? "").toString().toLowerCase();
-    // Heuristic: mostly produce/herbs are seasonal.
-    return (
-      category.includes("vegetable") ||
-      category.includes("fruit") ||
-      category.includes("herb") ||
-      ["kale", "spinach", "broccoli", "carrot", "tomato", "cauliflower"].some((x) =>
-        name.includes(x)
-      )
-    );
-  };
+  // Use actual API data for organic status
+  const isOrganic = (p) => Boolean(p.isOrganic);
 
+  // Fresh items have a bestBefore date within 7 days
   const isFresh = (p) => {
-    const category = (p.category ?? "").toString().toLowerCase();
-    const unit = (p.unit ?? "").toString().toLowerCase();
-    // Heuristic: perishable categories/units.
-    return (
-      category.includes("vegetable") ||
-      category.includes("fruit") ||
-      category.includes("dairy") ||
-      category.includes("herb") ||
-      ["bunch", "kg", "pack", "bottle"].some((x) => unit.includes(x))
-    );
+    if (!p.bestBefore) return false;
+    const date = new Date(p.bestBefore);
+    const now = new Date();
+    const daysUntil = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+    return daysUntil > 0 && daysUntil <= 7;
   };
 
-  const isLocal = (p) => {
-    const category = (p.category ?? "").toString().toLowerCase();
-    // Heuristic: local-market items (avoid packaged categories like nuts/grains).
-    if (category.includes("nut") || category.includes("grain") || category.includes("beverage")) {
-      return false;
-    }
-    return category.includes("vegetable") || category.includes("fruit") || category.includes("herb");
-  };
+  // Local items have origin specified (indicates local sourcing)
+  const isLocal = (p) => Boolean(p.origin || p.farmName);
 
-  const isFarmTrust = (p) => {
-    // Best available lightweight signal in ProductResponse.
-    return Boolean(p.hasCertification || p.certificationType);
-  };
+  // Certified items have certification details
+  const isCertified = (p) => Boolean(p.certificationType || p.certificationNumber);
+
+  // Featured items
+  const isFeatured = (p) => Boolean(p.isFeatured);
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -98,7 +91,14 @@ export default function ProductSearchPage({
       if (normalizedQuery) {
         const name = (p.name ?? "").toString().toLowerCase();
         const desc = (p.description ?? "").toString().toLowerCase();
-        if (!name.includes(normalizedQuery) && !desc.includes(normalizedQuery)) {
+        const origin = (p.origin ?? "").toString().toLowerCase();
+        const farm = (p.farmName ?? "").toString().toLowerCase();
+        if (
+          !name.includes(normalizedQuery) &&
+          !desc.includes(normalizedQuery) &&
+          !origin.includes(normalizedQuery) &&
+          !farm.includes(normalizedQuery)
+        ) {
           return false;
         }
       }
@@ -113,6 +113,12 @@ export default function ProductSearchPage({
         }
       }
 
+      if (selectedOrigins.length > 0) {
+        if (!selectedOrigins.includes(p.origin)) {
+          return false;
+        }
+      }
+
       if (min !== null && Number.isFinite(min) && Number(p.price ?? 0) < min) {
         return false;
       }
@@ -122,10 +128,11 @@ export default function ProductSearchPage({
 
       if (hasAnyBadge(selectedBadges)) {
         const matches =
-          (!selectedBadges.seasonal || isSeasonal(p)) &&
+          (!selectedBadges.organic || isOrganic(p)) &&
           (!selectedBadges.fresh || isFresh(p)) &&
           (!selectedBadges.local || isLocal(p)) &&
-          (!selectedBadges.farmTrust || isFarmTrust(p));
+          (!selectedBadges.certified || isCertified(p)) &&
+          (!selectedBadges.featured || isFeatured(p));
         if (!matches) {
           return false;
         }
@@ -148,8 +155,22 @@ export default function ProductSearchPage({
       case "stock":
         sorted.sort((a, b) => (b.stock ?? 0) - (a.stock ?? 0));
         break;
+      case "freshness":
+        // Sort by bestBefore date (soonest first)
+        sorted.sort((a, b) => {
+          if (!a.bestBefore && !b.bestBefore) return 0;
+          if (!a.bestBefore) return 1;
+          if (!b.bestBefore) return -1;
+          return new Date(a.bestBefore) - new Date(b.bestBefore);
+        });
+        break;
       default:
-        // featured: keep API order
+        // featured: prioritize isFeatured items, then keep API order
+        sorted.sort((a, b) => {
+          if (a.isFeatured && !b.isFeatured) return -1;
+          if (!a.isFeatured && b.isFeatured) return 1;
+          return 0;
+        });
         break;
     }
 
@@ -159,6 +180,7 @@ export default function ProductSearchPage({
     normalizedQuery,
     inStockOnly,
     selectedCategories,
+    selectedOrigins,
     priceMin,
     priceMax,
     selectedBadges,
@@ -178,15 +200,26 @@ export default function ProductSearchPage({
     });
   };
 
+  const toggleOrigin = (origin) => {
+    setSelectedOrigins((prev) => {
+      if (prev.includes(origin)) {
+        return prev.filter((o) => o !== origin);
+      }
+      return [...prev, origin];
+    });
+  };
+
   const resetFilters = () => {
     setQuery("");
     setInStockOnly(false);
     setSelectedCategories([]);
+    setSelectedOrigins([]);
     setSelectedBadges({
-      seasonal: false,
+      organic: false,
       fresh: false,
       local: false,
-      farmTrust: false,
+      certified: false,
+      featured: false,
     });
     setSortKey("featured");
     setPriceMin("");
@@ -206,10 +239,10 @@ export default function ProductSearchPage({
           <div className="filter-chips" aria-label="Quick filters">
             <button
               type="button"
-              className={`chip ${selectedBadges.seasonal ? "chip-active" : ""}`}
-              onClick={() => toggleBadge("seasonal")}
+              className={`chip ${selectedBadges.organic ? "chip-active" : ""}`}
+              onClick={() => toggleBadge("organic")}
             >
-              ☀️ Seasonal
+              🌱 Organic
             </button>
             <button
               type="button"
@@ -223,14 +256,21 @@ export default function ProductSearchPage({
               className={`chip ${selectedBadges.local ? "chip-active" : ""}`}
               onClick={() => toggleBadge("local")}
             >
-              🧺 Local
+              📍 Local
             </button>
             <button
               type="button"
-              className={`chip ${selectedBadges.farmTrust ? "chip-active" : ""}`}
-              onClick={() => toggleBadge("farmTrust")}
+              className={`chip ${selectedBadges.certified ? "chip-active" : ""}`}
+              onClick={() => toggleBadge("certified")}
             >
-              💧 Farm-trust
+              ✓ Certified
+            </button>
+            <button
+              type="button"
+              className={`chip ${selectedBadges.featured ? "chip-active" : ""}`}
+              onClick={() => toggleBadge("featured")}
+            >
+              ⭐ Featured
             </button>
           </div>
 
@@ -253,6 +293,7 @@ export default function ProductSearchPage({
               <option value="price-desc">Price: High to Low</option>
               <option value="name">Name</option>
               <option value="stock">Stock</option>
+              <option value="freshness">Freshness</option>
             </select>
           </div>
         </div>
@@ -343,14 +384,14 @@ export default function ProductSearchPage({
             </div>
 
             <div className="filters-section">
-              <div className="filters-section-title">Badges</div>
+              <div className="filters-section-title">Product Type</div>
               <label className="filters-check">
                 <input
                   type="checkbox"
-                  checked={selectedBadges.seasonal}
-                  onChange={() => toggleBadge("seasonal")}
+                  checked={selectedBadges.organic}
+                  onChange={() => toggleBadge("organic")}
                 />
-                <span>Seasonal</span>
+                <span>🌱 Organic certified</span>
               </label>
               <label className="filters-check">
                 <input
@@ -358,7 +399,7 @@ export default function ProductSearchPage({
                   checked={selectedBadges.fresh}
                   onChange={() => toggleBadge("fresh")}
                 />
-                <span>Fresh</span>
+                <span>🌿 Fresh (expires soon)</span>
               </label>
               <label className="filters-check">
                 <input
@@ -366,19 +407,24 @@ export default function ProductSearchPage({
                   checked={selectedBadges.local}
                   onChange={() => toggleBadge("local")}
                 />
-                <span>Local</span>
+                <span>📍 Local sourced</span>
               </label>
               <label className="filters-check">
                 <input
                   type="checkbox"
-                  checked={selectedBadges.farmTrust}
-                  onChange={() => toggleBadge("farmTrust")}
+                  checked={selectedBadges.certified}
+                  onChange={() => toggleBadge("certified")}
                 />
-                <span>Farm-trust</span>
+                <span>✓ Has certification</span>
               </label>
-              <div className="filters-hint">
-                Note: Badges use lightweight heuristics from product data.
-              </div>
+              <label className="filters-check">
+                <input
+                  type="checkbox"
+                  checked={selectedBadges.featured}
+                  onChange={() => toggleBadge("featured")}
+                />
+                <span>⭐ Featured</span>
+              </label>
             </div>
 
             {categories.length > 0 && (
@@ -393,6 +439,24 @@ export default function ProductSearchPage({
                         onChange={() => toggleCategory(c)}
                       />
                       <span>{c}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {origins.length > 0 && (
+              <div className="filters-section">
+                <div className="filters-section-title">Origin</div>
+                <div className="filters-list">
+                  {origins.map((o) => (
+                    <label className="filters-check" key={o}>
+                      <input
+                        type="checkbox"
+                        checked={selectedOrigins.includes(o)}
+                        onChange={() => toggleOrigin(o)}
+                      />
+                      <span>{o}</span>
                     </label>
                   ))}
                 </div>

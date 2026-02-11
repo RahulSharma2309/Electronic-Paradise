@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------
+// <copyright file="ProductServiceImpl.cs" company="FreshHarvest-Market">
+// Copyright (c) FreshHarvest-Market. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using Microsoft.Extensions.Logging;
 using ProductService.Abstraction.DTOs.Requests;
 using ProductService.Abstraction.DTOs.Responses;
@@ -9,6 +15,7 @@ namespace ProductService.Core.Business;
 
 /// <summary>
 /// Provides implementation for product-related business operations.
+/// Simplified for FreshHarvest Market's organic food marketplace.
 /// </summary>
 public class ProductServiceImpl : IProductService
 {
@@ -73,22 +80,21 @@ public class ProductServiceImpl : IProductService
     /// <inheritdoc />
     public async Task<ProductDetailResponse> CreateAsync(CreateProductRequest request)
     {
-        _logger.LogInformation("Creating new product: {ProductName}, Price: {Price}, Stock: {Stock}", request.Name, request.Price, request.Stock);
+        _logger.LogInformation(
+            "Creating new product: {ProductName}, Price: {Price}, Stock: {Stock}, IsOrganic: {IsOrganic}",
+            request.Name,
+            request.Price,
+            request.Stock,
+            request.IsOrganic);
         try
         {
             var product = _mapper.ToEntity(request);
             ValidateForCreate(product);
 
-            // Normalize taxonomy: resolve Category (string request -> Category row -> FK)
-            if (!string.IsNullOrWhiteSpace(request.Category))
+            // Resolve tags and create join rows (tags are now directly on request)
+            if (request.Tags != null && request.Tags.Length > 0)
             {
-                product.Category = await _repo.GetOrCreateCategoryAsync(request.Category);
-            }
-
-            // Normalize tags: resolve tags and create join rows (request.Metadata.Tags)
-            if (request.Metadata?.Tags != null && request.Metadata.Tags.Length > 0)
-            {
-                var tags = await _repo.GetOrCreateTagsAsync(request.Metadata.Tags);
+                var tags = await _repo.GetOrCreateTagsAsync(request.Tags);
                 foreach (var tag in tags)
                 {
                     product.ProductTags.Add(new ProductTag
@@ -185,6 +191,11 @@ public class ProductServiceImpl : IProductService
         if (string.IsNullOrWhiteSpace(p.Name))
         {
             throw new ArgumentException("Name is required", nameof(p.Name));
+        }
+
+        if (string.IsNullOrWhiteSpace(p.Slug))
+        {
+            throw new ArgumentException("Slug is required", nameof(p.Slug));
         }
 
         if (p.Price < 0)

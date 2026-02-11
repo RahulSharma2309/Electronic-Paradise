@@ -1,6 +1,6 @@
 # Product Service - Complete Documentation
 
-**Product Catalog & Inventory Management Microservice**
+**FreshHarvest Market - Organic Product Catalog & Inventory Management**
 
 ---
 
@@ -22,14 +22,26 @@
 
 ### Purpose
 
-The **Product Service** is the central catalog management system for FreshHarvest Market. It handles:
+The **Product Service** is the central catalog management system for FreshHarvest Market, specifically designed for an organic food marketplace. It handles:
 
-- **Product Catalog** - Store and manage all product information
+- **Product Catalog** - Store and manage all organic product information
 - **Inventory Management** - Track stock levels and availability
 - **Stock Reservation** - Reserve inventory during checkout
-- **Category Taxonomy** - Organize products hierarchically
-- **Product Discovery** - Tags, attributes, and SEO metadata
-- **Certification Tracking** - Organic/quality certifications (for fresh products)
+- **Category Taxonomy** - Organize products hierarchically (Fruits, Vegetables, etc.)
+- **Organic Tracking** - Track certification, origin, farm source, and freshness
+- **Product Discovery** - Tags and search optimization
+
+### Key Design Decisions
+
+The schema is **simplified and domain-specific** for an organic food marketplace:
+
+| Decision | Rationale |
+|----------|-----------|
+| **Inline organic fields** | `IsOrganic`, `Origin`, `FarmName`, `HarvestDate`, `BestBefore` are core to every organic product |
+| **Inline certification** | Organic certification is product-specific; a separate table adds unnecessary joins |
+| **Inline SEO** | Simple `SeoTitle`/`SeoDescription` fields suffice; no need for complex JSON |
+| **No EAV pattern** | Removed `ProductAttributes` table - organic food has consistent attributes |
+| **JSON for nutrition** | `NutritionJson` allows flexible nutrition data without schema changes |
 
 ### Technology Stack
 
@@ -58,93 +70,89 @@ The **Product Service** is the central catalog management system for FreshHarves
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                         PRODUCT SERVICE DATABASE SCHEMA                          │
+│               FRESHHARVEST MARKET - PRODUCT SERVICE DATABASE                     │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                  │
-│  ┌──────────────────┐         ┌──────────────────────────────────────────────┐  │
-│  │    Categories    │         │                   Products                    │  │
-│  ├──────────────────┤         ├──────────────────────────────────────────────┤  │
-│  │ Id (PK)          │◄───────┐│ Id (PK)                                      │  │
-│  │ Name             │        ││ Name                                         │  │
-│  │ Slug (Unique)    │        ││ Description                                  │  │
-│  │ Description      │        ││ Price (int - in paise)                       │  │
-│  │ ParentId (FK)────┼──┐     ││ Stock                                        │  │
-│  │ IsActive         │  │     ││ CategoryId (FK)─────────────────────────────►│  │
-│  │ CreatedAt        │  │     ││ Brand                                        │  │
-│  │ UpdatedAt        │  │     ││ Sku                                          │  │
-│  └────────┬─────────┘  │     ││ Unit                                         │  │
-│           │            │     ││ IsActive                                     │  │
-│           └────────────┘     ││ CreatedAt                                    │  │
-│      (Self-referencing       ││ UpdatedAt                                    │  │
-│       for hierarchy)         │└──────────────┬───────────────────────────────┘  │
-│                              │               │                                   │
-│                              │               │ 1:N                               │
-│                              │               ▼                                   │
-│  ┌───────────────────────────┼───────────────┼───────────────────────────────┐  │
-│  │                           │               │                               │  │
-│  │  ┌────────────────────┐   │  ┌────────────┴───────────┐                   │  │
-│  │  │   ProductImages    │   │  │   ProductAttributes    │                   │  │
-│  │  ├────────────────────┤   │  ├────────────────────────┤                   │  │
-│  │  │ Id (PK)            │   │  │ Id (PK)                │                   │  │
-│  │  │ ProductId (FK)─────┼───┤  │ ProductId (FK)─────────┼───────────────┐   │  │
-│  │  │ Url                │   │  │ Key                    │               │   │  │
-│  │  │ AltText            │   │  │ Group                  │               │   │  │
-│  │  │ SortOrder          │   │  │ Unit                   │               │   │  │
-│  │  │ IsPrimary          │   │  │ ValueString            │               │   │  │
-│  │  │ CreatedAt          │   │  │ ValueNumber            │               │   │  │
-│  │  └────────────────────┘   │  │ ValueBoolean           │               │   │  │
-│  │                           │  │ CreatedAt              │               │   │  │
-│  │                           │  └────────────────────────┘               │   │  │
-│  │                           │                                           │   │  │
-│  │  ┌────────────────────┐   │  ┌────────────────────────┐               │   │  │
-│  │  │ProductCertification│   │  │   ProductMetadata      │               │   │  │
-│  │  ├────────────────────┤   │  ├────────────────────────┤               │   │  │
-│  │  │ Id (PK)            │   │  │ Id (PK)                │               │   │  │
-│  │  │ ProductId (FK,Uniq)┼───┤  │ ProductId (FK, Unique)─┼───────────────┤   │  │
-│  │  │ CertificationNumber│   │  │ Slug (Unique)          │               │   │  │
-│  │  │ CertificationType  │   │  │ SeoMetadataJson        │               │   │  │
-│  │  │ Origin             │   │  │ CreatedAt              │               │   │  │
-│  │  │ CertifyingAgency   │   │  │ UpdatedAt              │               │   │  │
-│  │  │ IssuedDate         │   │  └────────────────────────┘               │   │  │
-│  │  │ ExpiryDate         │   │                                           │   │  │
-│  │  │ IsValid            │   │                                           │   │  │
-│  │  │ ProductExpiryDate  │   │                                           │   │  │
-│  │  │ Notes              │   │                                           │   │  │
-│  │  │ CreatedAt          │   │                                           │   │  │
-│  │  │ UpdatedAt          │   │                                           │   │  │
-│  │  └────────────────────┘   │                                           │   │  │
-│  │                           │                                           │   │  │
-│  └───────────────────────────┼───────────────────────────────────────────┘   │  │
-│                              │                                               │  │
-│                              │                                               │  │
-│  ┌───────────────────────────┼───────────────────────────────────────────┐   │  │
-│  │       MANY-TO-MANY: Products ←→ Tags                                  │   │  │
-│  │                              │                                        │   │  │
-│  │  ┌──────────────┐    ┌──────┴───────┐    ┌──────────────┐            │   │  │
-│  │  │    Tags      │    │  ProductTags │    │   Products   │            │   │  │
-│  │  ├──────────────┤    ├──────────────┤    │   (above)    │            │   │  │
-│  │  │ Id (PK)      │◄───┤ TagId (PK,FK)│    │              │            │   │  │
-│  │  │ Name         │    │ ProductId(PK)├───►│              │            │   │  │
-│  │  │ Slug (Unique)│    └──────────────┘    └──────────────┘            │   │  │
-│  │  └──────────────┘     (Composite PK)                                  │   │  │
-│  │                                                                       │   │  │
-│  └───────────────────────────────────────────────────────────────────────┘   │  │
-│                                                                              │  │
-└──────────────────────────────────────────────────────────────────────────────┘
+│  ┌──────────────────┐                                                           │
+│  │    Categories    │                                                           │
+│  ├──────────────────┤                                                           │
+│  │ Id (PK)          │◄───────────┐                                              │
+│  │ Name             │            │                                              │
+│  │ Slug (Unique)    │            │                                              │
+│  │ Description      │            │                                              │
+│  │ ParentId (FK)────┼──┐         │                                              │
+│  │ IsActive         │  │         │                                              │
+│  │ CreatedAt        │  │         │                                              │
+│  │ UpdatedAt        │  │         │                                              │
+│  └────────┬─────────┘  │         │                                              │
+│           │            │         │                                              │
+│           └────────────┘         │                                              │
+│      (Self-referencing           │                                              │
+│       for hierarchy)             │                                              │
+│                                  │                                              │
+│  ┌───────────────────────────────┴──────────────────────────────────────────┐   │
+│  │                              Products                                     │   │
+│  │                    (CORE TABLE - SIMPLIFIED SCHEMA)                       │   │
+│  ├───────────────────────────────────────────────────────────────────────────┤   │
+│  │ ┌─────────────────────────────────────────────────────────────────────┐   │   │
+│  │ │ CORE IDENTITY                                                        │   │   │
+│  │ │ • Id (PK)          • Name              • Slug (Unique)               │   │   │
+│  │ │ • Description      • Price (paise)     • Stock                       │   │   │
+│  │ │ • Unit             • Sku (Unique)      • Brand                       │   │   │
+│  │ │ • CategoryId (FK)                                                    │   │   │
+│  │ └─────────────────────────────────────────────────────────────────────┘   │   │
+│  │ ┌─────────────────────────────────────────────────────────────────────┐   │   │
+│  │ │ ORGANIC & FRESHNESS (Key differentiator)                             │   │   │
+│  │ │ • IsOrganic        • Origin            • FarmName                    │   │   │
+│  │ │ • HarvestDate      • BestBefore                                      │   │   │
+│  │ └─────────────────────────────────────────────────────────────────────┘   │   │
+│  │ ┌─────────────────────────────────────────────────────────────────────┐   │   │
+│  │ │ CERTIFICATION (Inline - no separate table)                           │   │   │
+│  │ │ • CertificationNumber    • CertificationType    • CertifyingAgency   │   │   │
+│  │ └─────────────────────────────────────────────────────────────────────┘   │   │
+│  │ ┌─────────────────────────────────────────────────────────────────────┐   │   │
+│  │ │ NUTRITION & SEO                                                      │   │   │
+│  │ │ • NutritionJson    • SeoTitle          • SeoDescription              │   │   │
+│  │ └─────────────────────────────────────────────────────────────────────┘   │   │
+│  │ ┌─────────────────────────────────────────────────────────────────────┐   │   │
+│  │ │ STATUS & TIMESTAMPS                                                  │   │   │
+│  │ │ • IsActive         • IsFeatured        • CreatedAt    • UpdatedAt    │   │   │
+│  │ └─────────────────────────────────────────────────────────────────────┘   │   │
+│  └───────────────────────────────────────────────────────────────────────────┘   │
+│                              │                                                    │
+│              ┌───────────────┼───────────────┐                                   │
+│              │               │               │                                   │
+│              ▼               │               ▼                                   │
+│  ┌────────────────────┐      │   ┌───────────────────────────────────────────┐  │
+│  │   ProductImages    │      │   │       MANY-TO-MANY: Products ↔ Tags       │  │
+│  ├────────────────────┤      │   │                                           │  │
+│  │ Id (PK)            │      │   │  ┌──────────────┐    ┌──────────────┐     │  │
+│  │ ProductId (FK)─────┼──────┤   │  │    Tags      │    │  ProductTags │     │  │
+│  │ Url                │      │   │  ├──────────────┤    ├──────────────┤     │  │
+│  │ AltText            │      │   │  │ Id (PK)      │◄───┤ TagId (PK,FK)│     │  │
+│  │ SortOrder          │      │   │  │ Name         │    │ ProductId(PK)├─────┤  │
+│  │ IsPrimary          │      │   │  │ Slug (Unique)│    └──────────────┘     │  │
+│  │ CreatedAt          │      │   │  └──────────────┘     (Composite PK)      │  │
+│  └────────────────────┘      │   │                                           │  │
+│                              │   └───────────────────────────────────────────┘  │
+│                              │                                                   │
+└──────────────────────────────┴───────────────────────────────────────────────────┘
 ```
 
-### Tables Summary
+### Tables Summary (5 Tables - Simplified)
 
 | Table | Purpose | Relationship to Product |
 |-------|---------|-------------------------|
-| `Products` | Core product data | - |
+| `Products` | Core product data with organic fields | - |
 | `Categories` | Product taxonomy/hierarchy | Many Products → One Category |
 | `ProductImages` | Product image gallery | One Product → Many Images |
-| `ProductAttributes` | Flexible key-value specs | One Product → Many Attributes |
-| `ProductCertifications` | Organic/quality certs | One Product → One Certification |
-| `ProductMetadata` | SEO and slugs | One Product → One Metadata |
-| `Tags` | Reusable labels | - |
+| `Tags` | Reusable discovery labels | - |
 | `ProductTags` | Product-Tag junction | Many-to-Many |
+
+**Removed Tables (vs. old schema):**
+- ~~ProductAttributes~~ - Organic food has consistent attributes; use inline fields
+- ~~ProductCertification~~ - Moved inline to Product
+- ~~ProductMetadata~~ - SEO fields moved inline to Product
 
 ---
 
@@ -161,17 +169,15 @@ The **Product Service** is the central catalog management system for FreshHarves
 │  ────────────────                                               │
 │  • Category → Products     (One category has many products)     │
 │  • Product → Images        (One product has many images)        │
-│  • Product → Attributes    (One product has many attributes)    │
 │  • Category → Categories   (Self-ref: parent → children)        │
-│                                                                  │
-│  ONE-TO-ONE (1:1)                                               │
-│  ────────────────                                               │
-│  • Product → Certification (One product, one cert record)       │
-│  • Product → Metadata      (One product, one metadata record)   │
 │                                                                  │
 │  MANY-TO-MANY (N:M)                                             │
 │  ─────────────────                                              │
 │  • Products ↔ Tags         (Via ProductTags junction table)     │
+│                                                                  │
+│  NO 1:1 RELATIONSHIPS                                           │
+│  ─────────────────────                                          │
+│  Certification & Metadata moved inline for simplicity           │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -183,65 +189,115 @@ The **Product Service** is the central catalog management system for FreshHarves
 | Category → Products | SET NULL | Products keep existing, CategoryId becomes null |
 | Category → Parent | RESTRICT | Cannot delete parent with children |
 | Product → Images | CASCADE | Delete product = delete all its images |
-| Product → Attributes | CASCADE | Delete product = delete all its attributes |
-| Product → Certification | CASCADE | Delete product = delete its certification |
-| Product → Metadata | CASCADE | Delete product = delete its metadata |
 | Product ↔ Tags | CASCADE | Delete product = remove from ProductTags |
 
 ---
 
 ## 4. Tables Deep Dive
 
-### 4.1 Products (Core Table)
+### 4.1 Products (Core Table - Simplified)
 
-**Purpose:** Stores the main product information.
+**Purpose:** Stores all product information with organic-specific fields inline.
+
+#### Core Identity Fields
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | `Id` | GUID | PK, Default NewGuid | Unique identifier |
-| `Name` | nvarchar(200) | Required | Product name |
-| `Description` | nvarchar(2000) | Nullable | Detailed description |
+| `Name` | nvarchar(300) | Required | Product name (e.g., "Organic Bananas") |
+| `Slug` | nvarchar(300) | Required, Unique | SEO-friendly URL slug |
+| `Description` | nvarchar(4000) | Nullable | Detailed description |
 | `Price` | int | Default 0 | Price in **paise** (₹1 = 100 paise) |
 | `Stock` | int | Default 0 | Available inventory count |
+| `Unit` | nvarchar(50) | Nullable | Unit of measure (kg, dozen, bunch) |
+| `Sku` | nvarchar(100) | Unique, Nullable | Stock Keeping Unit code |
 | `CategoryId` | GUID | FK, Nullable | Link to Categories table |
-| `Brand` | nvarchar(100) | Nullable | Manufacturer/brand name |
-| `Sku` | nvarchar(100) | Nullable | Stock Keeping Unit code |
-| `Unit` | nvarchar(50) | Nullable | Unit of measure (kg, piece, bunch) |
-| `IsActive` | bit | Default true | Visibility flag |
-| `CreatedAt` | datetime2 | Default UtcNow | Creation timestamp |
-| `UpdatedAt` | datetime2 | Nullable | Last modification timestamp |
+| `Brand` | nvarchar(150) | Nullable | Brand or farm name |
+
+#### Organic & Freshness Fields (Key Differentiator)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `IsOrganic` | bit | Whether certified organic |
+| `Origin` | nvarchar(200) | Source location (e.g., "Karnataka, India") |
+| `FarmName` | nvarchar(200) | Farm or producer name |
+| `HarvestDate` | datetime2 | Harvest/production date |
+| `BestBefore` | datetime2 | Expiry date for perishables |
+
+#### Certification Fields (Inline)
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `CertificationNumber` | nvarchar(100) | Cert ID (e.g., "IN-ORG-123456") |
+| `CertificationType` | nvarchar(100) | Type (e.g., "India Organic", "USDA Organic") |
+| `CertifyingAgency` | nvarchar(200) | Issuing authority (e.g., "APEDA", "Ecocert") |
+
+#### Nutrition & SEO Fields
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `NutritionJson` | nvarchar(4000) | JSON nutrition data |
+| `SeoTitle` | nvarchar(200) | Meta title for SEO |
+| `SeoDescription` | nvarchar(500) | Meta description for SEO |
+
+#### Status Fields
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `IsActive` | bit | Visibility flag (default: true) |
+| `IsFeatured` | bit | Featured product flag |
+| `CreatedAt` | datetime2 | Creation timestamp |
+| `UpdatedAt` | datetime2 | Last modification timestamp |
 
 **Price Storage:** Prices are stored in **paise** (smallest currency unit) to avoid floating-point precision issues.
 
 ```
-Database: 1999 paise → Display: ₹19.99
-Database: 99900 paise → Display: ₹999.00
+Database: 9900 paise → Display: ₹99.00
+Database: 14999 paise → Display: ₹149.99
+```
+
+**NutritionJson Example:**
+```json
+{
+  "calories": 89,
+  "protein": 1.1,
+  "carbs": 23,
+  "fiber": 2.6,
+  "sugar": 12,
+  "fat": 0.3
+}
 ```
 
 ---
 
 ### 4.2 Categories (Taxonomy)
 
-**Purpose:** Hierarchical product categorization (e.g., Electronics → Phones → Smartphones).
+**Purpose:** Hierarchical product categorization for organic food.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | `Id` | GUID | PK | Unique identifier |
 | `Name` | nvarchar(200) | Required | Display name |
 | `Slug` | nvarchar(200) | Required, Unique | URL-friendly identifier |
-| `Description` | nvarchar(max) | Nullable | Category description |
+| `Description` | nvarchar(1000) | Nullable | Category description |
 | `ParentId` | GUID | FK (self), Nullable | Parent category for hierarchy |
 | `IsActive` | bit | Default true | Visibility flag |
 | `CreatedAt` | datetime2 | Default UtcNow | Creation timestamp |
 | `UpdatedAt` | datetime2 | Nullable | Last modification timestamp |
 
-**Hierarchy Example:**
+**Hierarchy Example (Organic Food):**
 ```
-Electronics (ParentId: null)
-├── Phones (ParentId: Electronics.Id)
-│   ├── Smartphones (ParentId: Phones.Id)
-│   └── Feature Phones (ParentId: Phones.Id)
-└── Laptops (ParentId: Electronics.Id)
+Fruits (ParentId: null)
+├── Citrus (ParentId: Fruits.Id)
+│   ├── Oranges
+│   └── Lemons
+├── Berries
+└── Tropical
+
+Vegetables (ParentId: null)
+├── Leafy Greens
+├── Root Vegetables
+└── Herbs
 ```
 
 ---
@@ -264,76 +320,7 @@ Electronics (ParentId: null)
 
 ---
 
-### 4.4 ProductAttributes (EAV Pattern)
-
-**Purpose:** Flexible key-value storage for product specifications. Uses Entity-Attribute-Value pattern for extensibility.
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `Id` | GUID | PK | Unique identifier |
-| `ProductId` | GUID | FK, Required | Link to product |
-| `Key` | nvarchar(200) | Required | Attribute name |
-| `Group` | nvarchar(100) | Nullable | UI grouping (e.g., "Technical", "Physical") |
-| `Unit` | nvarchar(50) | Nullable | Unit of measure |
-| `ValueString` | nvarchar(4000) | Nullable | Text value |
-| `ValueNumber` | decimal(18,4) | Nullable | Numeric value |
-| `ValueBoolean` | bit | Nullable | Boolean value |
-| `CreatedAt` | datetime2 | Default UtcNow | Creation timestamp |
-
-**Example Data:**
-| Key | Group | ValueString | ValueNumber | ValueBoolean |
-|-----|-------|-------------|-------------|--------------|
-| screenSize | Display | null | 6.5 | null |
-| color | Appearance | Space Gray | null | null |
-| isWaterproof | Features | null | null | true |
-| weight | Physical | null | 180 | null |
-
----
-
-### 4.5 ProductCertification (Quality/Organic)
-
-**Purpose:** Store certification details for verified/organic products.
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `Id` | GUID | PK | Unique identifier |
-| `ProductId` | GUID | FK, Unique | One cert per product |
-| `CertificationNumber` | nvarchar(100) | Required | Cert ID (e.g., "IN-ORG-123") |
-| `CertificationType` | nvarchar(100) | Required | Type (e.g., "USDA Organic") |
-| `Origin` | nvarchar(200) | Nullable | Product source location |
-| `CertifyingAgency` | nvarchar(200) | Nullable | Issuing authority |
-| `IssuedDate` | datetime2 | Nullable | Cert issue date |
-| `ExpiryDate` | datetime2 | Nullable | Cert expiry date |
-| `IsValid` | bit | Default true | Current validity status |
-| `ProductExpirationDate` | datetime2 | Nullable | Product expiry (perishables) |
-| `Notes` | nvarchar(1000) | Nullable | Additional notes |
-
----
-
-### 4.6 ProductMetadata (SEO)
-
-**Purpose:** SEO-friendly slugs and metadata for product pages.
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `Id` | GUID | PK | Unique identifier |
-| `ProductId` | GUID | FK, Unique | One metadata per product |
-| `Slug` | nvarchar(200) | Unique, Nullable | URL slug (e.g., "iphone-15-pro-256gb") |
-| `SeoMetadataJson` | nvarchar(4000) | Nullable | JSON with title, description, keywords |
-
-**SeoMetadataJson Structure:**
-```json
-{
-  "title": "iPhone 15 Pro - Buy Online",
-  "description": "Latest iPhone 15 Pro with A17 chip...",
-  "keywords": ["iphone", "apple", "smartphone"],
-  "canonicalUrl": "https://example.com/products/iphone-15-pro"
-}
-```
-
----
-
-### 4.7 Tags & ProductTags (Discovery)
+### 4.4 Tags & ProductTags (Discovery)
 
 **Purpose:** Reusable labels for product discovery and filtering.
 
@@ -350,12 +337,12 @@ Electronics (ParentId: null)
 | `ProductId` | GUID | PK, FK | Link to product |
 | `TagId` | GUID | PK, FK | Link to tag |
 
-**Example:**
+**Example (Organic Food Tags):**
 ```
-Tags: [organic, bestseller, new-arrival, eco-friendly]
+Tags: [organic, local, seasonal, farm-fresh, pesticide-free, non-gmo]
 
-Product "Organic Apples" → Tags: [organic, eco-friendly]
-Product "iPhone 15" → Tags: [bestseller, new-arrival]
+Product "Organic Bananas" → Tags: [organic, local, farm-fresh]
+Product "Seasonal Mangoes" → Tags: [organic, seasonal]
 ```
 
 ---
@@ -420,7 +407,6 @@ Product "iPhone 15" → Tags: [bestseller, new-arrival]
 | **Service Layer** | `IProductService` / `ProductServiceImpl` | Business logic encapsulation |
 | **DTO** | Request/Response classes | API contracts, hide internals |
 | **Mapper** | `IProductMapper` / `ProductMapper` | Entity ↔ DTO conversion |
-| **EAV** | `ProductAttributes` table | Flexible attribute storage |
 
 ---
 
@@ -443,13 +429,23 @@ Product "iPhone 15" → Tags: [bestseller, new-arrival]
 [
   {
     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    "name": "iPhone 15 Pro",
-    "price": 129900,
+    "name": "Organic Bananas",
+    "slug": "organic-bananas-kerala",
+    "description": "Fresh organic bananas from Kerala farms",
+    "price": 9900,
     "stock": 50,
-    "brand": "Apple",
-    "categoryName": "Smartphones",
-    "primaryImageUrl": "https://cdn.example.com/iphone15.jpg",
-    "isActive": true
+    "unit": "dozen",
+    "category": "Fruits",
+    "brand": "Green Valley Farms",
+    "imageUrl": "https://cdn.freshharvest.com/bananas.jpg",
+    "isOrganic": true,
+    "origin": "Kerala, India",
+    "farmName": "Green Valley Organics",
+    "bestBefore": "2026-02-15T00:00:00Z",
+    "certificationType": "India Organic",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-01-31T10:00:00Z"
   }
 ]
 ```
@@ -460,42 +456,84 @@ Product "iPhone 15" → Tags: [bestseller, new-arrival]
 ```json
 {
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "name": "iPhone 15 Pro",
-  "description": "Latest Apple smartphone with A17 chip",
-  "price": 129900,
+  "name": "Organic Bananas",
+  "slug": "organic-bananas-kerala",
+  "description": "Fresh organic bananas from Kerala farms, grown without pesticides",
+  "price": 9900,
   "stock": 50,
-  "brand": "Apple",
-  "sku": "APPL-IP15P-256-BLK",
-  "unit": "piece",
+  "unit": "dozen",
+  "sku": "FRU-BAN-ORG-001",
   "categoryId": "...",
-  "categoryName": "Smartphones",
+  "category": "Fruits",
+  "brand": "Green Valley Farms",
+  
+  "isOrganic": true,
+  "origin": "Kerala, India",
+  "farmName": "Green Valley Organics",
+  "harvestDate": "2026-01-28T00:00:00Z",
+  "bestBefore": "2026-02-15T00:00:00Z",
+  
+  "certificationNumber": "IN-ORG-123456",
+  "certificationType": "India Organic",
+  "certifyingAgency": "APEDA",
+  
+  "nutritionJson": "{\"calories\":89,\"protein\":1.1,\"carbs\":23,\"fiber\":2.6}",
+  
+  "seoTitle": "Buy Organic Bananas Online | Fresh from Kerala",
+  "seoDescription": "Fresh organic bananas from certified Kerala farms...",
+  
   "isActive": true,
+  "isFeatured": true,
   "createdAt": "2026-01-31T10:00:00Z",
+  "updatedAt": "2026-01-31T12:00:00Z",
+  
+  "imageUrl": "https://cdn.freshharvest.com/bananas.jpg",
   "images": [
     {
-      "url": "https://cdn.example.com/iphone15.jpg",
-      "altText": "iPhone 15 Pro front view",
+      "id": "...",
+      "url": "https://cdn.freshharvest.com/bananas.jpg",
+      "altText": "Fresh organic bananas",
+      "sortOrder": 0,
       "isPrimary": true
     }
   ],
-  "attributes": [
-    { "key": "screenSize", "group": "Display", "valueNumber": 6.1 },
-    { "key": "storage", "group": "Memory", "valueString": "256GB" }
-  ],
-  "tags": ["bestseller", "new-arrival"],
-  "certification": {
-    "certificationNumber": "CE-12345",
-    "certificationType": "CE Mark",
-    "isValid": true
-  },
-  "metadata": {
-    "slug": "iphone-15-pro-256gb",
-    "seo": {
-      "title": "Buy iPhone 15 Pro Online",
-      "description": "...",
-      "keywords": ["iphone", "apple"]
-    }
-  }
+  "tags": ["organic", "local", "farm-fresh"]
+}
+```
+
+### POST /api/products - Create Product
+
+**Request:**
+```json
+{
+  "name": "Organic Tomatoes",
+  "slug": "organic-tomatoes-pune",
+  "description": "Vine-ripened organic tomatoes",
+  "price": 4500,
+  "stock": 100,
+  "unit": "kg",
+  "categoryId": "vegetables-category-id",
+  "brand": "Sharma Family Farm",
+  
+  "isOrganic": true,
+  "origin": "Pune, Maharashtra",
+  "farmName": "Sharma Family Farm",
+  "harvestDate": "2026-01-30T00:00:00Z",
+  "bestBefore": "2026-02-10T00:00:00Z",
+  
+  "certificationNumber": "IN-ORG-789012",
+  "certificationType": "India Organic",
+  "certifyingAgency": "Ecocert",
+  
+  "nutritionJson": "{\"calories\":18,\"protein\":0.9,\"carbs\":3.9,\"fiber\":1.2}",
+  
+  "seoTitle": "Buy Organic Tomatoes Online",
+  "seoDescription": "Fresh vine-ripened organic tomatoes...",
+  
+  "isActive": true,
+  "isFeatured": false,
+  "imageUrl": "https://cdn.freshharvest.com/tomatoes.jpg",
+  "tags": ["organic", "local", "seasonal"]
 }
 ```
 
@@ -513,7 +551,7 @@ Product "iPhone 15" → Tags: [bestseller, new-arrival]
 
 **Error (409 Conflict):**
 ```json
-{ "error": "Insufficient stock. Available: 1, Requested: 2" }
+{ "error": "Insufficient stock" }
 ```
 
 ---
@@ -577,6 +615,7 @@ Product "iPhone 15" → Tags: [bestseller, new-arrival]
 | Field | Rule | Error |
 |-------|------|-------|
 | Name | Required, not empty | "Name is required" |
+| Slug | Required, lowercase/hyphens only | "Slug is required" |
 | Price | Must be >= 0 | "Price must be >= 0" |
 | Stock | Must be >= 0 | "Stock must be >= 0" |
 | Reserve Quantity | Must be > 0 | "Quantity must be > 0" |
@@ -650,23 +689,19 @@ product-service/
 │   │
 │   └── ProductService.Abstraction/            # Contracts Layer
 │       ├── Models/                            # Entity classes
-│       │   ├── Product.cs
-│       │   ├── Category.cs
-│       │   ├── ProductImage.cs
-│       │   ├── ProductAttribute.cs
-│       │   ├── ProductCertification.cs
-│       │   ├── ProductMetadata.cs
-│       │   ├── SeoMetadata.cs
-│       │   ├── Tag.cs
-│       │   └── ProductTag.cs
+│       │   ├── Product.cs                     # Core entity (simplified)
+│       │   ├── Category.cs                    # Taxonomy
+│       │   ├── ProductImage.cs                # Images
+│       │   ├── Tag.cs                         # Tags
+│       │   └── ProductTag.cs                  # Junction table
 │       └── DTOs/                              # Data Transfer Objects
 │           ├── Requests/
 │           │   ├── CreateProductRequest.cs
 │           │   ├── UpdateProductRequest.cs
 │           │   └── ReserveStockRequest.cs
 │           └── Responses/
-│               ├── ProductResponse.cs
-│               └── ProductDetailResponse.cs
+│               ├── ProductResponse.cs         # List view
+│               └── ProductDetailResponse.cs   # Detail view
 │
 └── test/                                      # Tests
     ├── unit-test/
@@ -680,15 +715,20 @@ product-service/
 
 ## Summary
 
-The Product Service is a comprehensive catalog management system with:
+The Product Service is a **simplified, domain-specific** catalog management system for FreshHarvest Market:
 
-- **8 database tables** working together
-- **Normalized schema** following best practices
-- **Flexible extensibility** via EAV attributes and JSON metadata
+- **5 database tables** (reduced from 8)
+- **Inline organic fields** - No unnecessary joins for core organic attributes
+- **Inline certification** - Product-specific, not a separate table
 - **Stock management** with reserve/release operations
-- **Hierarchical categories** for product taxonomy
+- **Hierarchical categories** for organic food taxonomy
 - **Many-to-many tags** for product discovery
 - **Clean architecture** with separation of concerns
+
+### Schema Philosophy
+
+> "Keep it simple. Organic food products have consistent attributes. 
+> Don't over-engineer with EAV patterns or unnecessary 1:1 tables."
 
 **Database:** `EP_Local_ProductDb` (Local) | `EP_Staging_ProductDb` (Staging)  
 **Port:** 5002  
@@ -696,5 +736,5 @@ The Product Service is a comprehensive catalog management system with:
 
 ---
 
-*Document Version: 2.0*  
+*Document Version: 3.0 (Simplified Schema)*  
 *Last Updated: January 31, 2026*

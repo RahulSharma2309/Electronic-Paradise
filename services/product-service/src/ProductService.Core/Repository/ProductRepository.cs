@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------
+// <copyright file="ProductRepository.cs" company="FreshHarvest-Market">
+// Copyright (c) FreshHarvest-Market. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProductService.Abstraction.Models;
@@ -7,6 +13,7 @@ namespace ProductService.Core.Repository;
 
 /// <summary>
 /// Provides data access operations for <see cref="Product"/> entities.
+/// Simplified for FreshHarvest Market's organic food schema.
 /// </summary>
 public class ProductRepository : IProductRepository
 {
@@ -34,7 +41,6 @@ public class ProductRepository : IProductRepository
             var products = await _db.Products
                 .AsNoTracking()
                 .Include(p => p.Category)
-                .Include(p => p.Certification)
                 .Include(p => p.Images)
                 .ToListAsync();
             _logger.LogDebug("Retrieved {ProductCount} products from database", products.Count);
@@ -55,10 +61,7 @@ public class ProductRepository : IProductRepository
         {
             var product = await _db.Products
                 .Include(p => p.Category)
-                .Include(p => p.Certification)
-                .Include(p => p.Metadata)
                 .Include(p => p.Images)
-                .Include(p => p.Attributes)
                 .Include(p => p.ProductTags)
                 .ThenInclude(pt => pt.Tag)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -198,6 +201,7 @@ public class ProductRepository : IProductRepository
             }
 
             product.Stock -= quantity;
+            product.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
             if (tx != null)
             {
@@ -242,6 +246,7 @@ public class ProductRepository : IProductRepository
             }
 
             product.Stock += quantity;
+            product.UpdatedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
             if (tx != null)
             {
